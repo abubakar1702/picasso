@@ -241,25 +241,38 @@ function cache_key(target) {
 	return target.kind === "file" ? target.url : target.doctype + "/" + target.name;
 }
 
+function peek_fetch(method, args) {
+	const body = new URLSearchParams();
+	Object.entries(args).forEach(([key, value]) => {
+		if (value != null) body.set(key, value);
+	});
+	return fetch("/api/method/" + method, {
+		method: "POST",
+		credentials: "same-origin",
+		headers: {
+			Accept: "application/json",
+			"X-Frappe-CSRF-Token": (window.frappe && frappe.csrf_token) || "",
+		},
+		body,
+	}).then(async (res) => {
+		const data = await res.json();
+		if (!res.ok || data.exc) {
+			throw new Error(data.exception || data._server_messages || res.statusText);
+		}
+		return data.message;
+	});
+}
+
 async function load(target) {
 	const key = cache_key(target);
 	if (cache.has(key)) return cache.get(key);
 	const promise =
 		target.kind === "file"
-			? frappe
-					.call({
-						method: "picasso.appearance.peek_file",
-						args: { file_url: target.url },
-						freeze: false,
-					})
-					.then((r) => r.message)
-			: frappe
-					.call({
-						method: "picasso.appearance.peek_doc",
-						args: { doctype: target.doctype, name: target.name },
-						freeze: false,
-					})
-					.then((r) => r.message);
+			? peek_fetch("picasso.appearance.peek_file", { file_url: target.url })
+			: peek_fetch("picasso.appearance.peek_doc", {
+					doctype: target.doctype,
+					name: target.name,
+				});
 	cache.set(key, promise);
 	return promise;
 }

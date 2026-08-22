@@ -44,13 +44,17 @@
 	}
 
 	function add_button(report) {
-		if (!report.page || !report.page.page_form) return;
-		const $form = report.page.page_form;
-		$form.find("." + BTN).remove();
+		const page = report.page;
+		if (!page || !page.wrapper) return;
+
+		// Never leave a copy in the filter form.
+		page.page_form && page.page_form.find("." + BTN).remove();
+		page.wrapper.find("." + BTN).remove();
+
 		if (!report.filters || !report.filters.length) return;
 
 		const icon =
-			(frappe.utils && frappe.utils.icon && frappe.utils.icon("filter", "sm")) || "";
+			(frappe.utils && frappe.utils.icon && frappe.utils.icon("filter", "xs")) || "";
 		const $btn = $(
 			`<button type="button" class="btn btn-default btn-sm ${BTN}" title="${__(
 				"Reset filters to defaults"
@@ -62,7 +66,20 @@
 			e.preventDefault();
 			reset_filters(report);
 		});
-		$form.append($btn);
+
+		// Page-head actions (same row as Refresh). Avoid inner_toolbar —
+		// query reports call clear_custom_actions() after filters setup.
+		const $primary = page.btn_primary;
+		if ($primary && $primary.length) {
+			$btn.insertBefore($primary);
+			return;
+		}
+		const $actions = page.page_actions && page.page_actions.find(".standard-actions");
+		if ($actions && $actions.length) {
+			$actions.prepend($btn);
+			return;
+		}
+		page.page_actions && page.page_actions.prepend($btn);
 	}
 
 	function wrap_query_report() {
@@ -75,6 +92,24 @@
 			snapshot_defaults(this);
 			add_button(this);
 		};
+		const orig_head = Report.prototype.setup_page_head;
+		if (typeof orig_head === "function") {
+			Report.prototype.setup_page_head = function () {
+				orig_head.apply(this, arguments);
+				add_button(this);
+			};
+		}
+		const orig_refresh = Report.prototype.refresh_report;
+		if (typeof orig_refresh === "function") {
+			Report.prototype.refresh_report = function () {
+				const result = orig_refresh.apply(this, arguments);
+				if (result && typeof result.then === "function") {
+					return result.then(() => add_button(this));
+				}
+				add_button(this);
+				return result;
+			};
+		}
 		Report.prototype._picasso_reset_wrapped = true;
 	}
 

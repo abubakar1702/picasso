@@ -1,0 +1,129 @@
+/* Workspace widgets: Picasso overrides Frappe stock card chrome. */
+
+html.picasso-desk-theme {
+	.layout-main-section .widget,
+	.codex-editor .widget,
+	.desk-page .widget,
+	[data-page-route="Workspaces"] .widget {
+		background-image: none !important;
+
+		.widget-head,
+		.widget-head .widget-label,
+		.widget-head .widget-title {
+			background: none !important;
+			background-image: none !important;
+		}
+	}
+
+	&.picasso-feat-cards .layout-main-section .widget:hover,
+	&.picasso-feat-cards .codex-editor .widget:hover,
+	&.picasso-feat-cards [data-page-route="Workspaces"] .widget:hover {
+		transform: none;
+		box-shadow: none;
+	}
+
+	.widget.links-widget-box .widget-head .widget-title,
+	.widget.quick-list-widget-box .widget-head .widget-title {
+		font-weight: 700;
+		color: var(--heading-color);
+	}
+
+	.widget.links-widget-box .link-item,
+	.widget.quick-list-widget-box .quick-list-item {
+		position: relative;
+		align-items: center;
+		padding: 4px 4px 4px 0;
+		margin-left: 0;
+		border-radius: 0;
+		transition: transform 0.16s ease, color 0.16s ease;
+
+		&::before {
+			content: "";
+			display: inline-block;
+			width: 5px;
+			height: 5px;
+			margin-right: 10px;
+			border-radius: 50%;
+			background: currentColor;
+			flex-shrink: 0;
+			opacity: 0.7;
+		}
+
+		&:hover,
+		&:focus-visible {
+			transform: translateX(8px);
+			background: transparent !important;
+			color: var(--picasso-desk-accent);
+			outline: none;
+			text-decoration: none;
+
+			.link-content,
+			.left {
+				color: var(--picasso-desk-accent);
+			}
+		}
+	}
+
+	.widget.shortcut-widget-box {
+		.widget-title {
+			display: flex;
+			align-items: center;
+			transition: transform 0.16s ease, color 0.16s ease;
+
+			&::before {
+				content: "";
+				display: inline-block;
+				width: 5px;
+				height: 5px;
+				margin-right: 10px;
+				border-radius: 50%;
+				background: currentColor;
+				flex-shrink: 0;
+				opacity: 0.7;
+			}
+		}
+
+		&:hover {
+			border-color: var(--border-color);
+			transform: translateX(8px);
+
+			.widget-title {
+				color: var(--picasso-desk-accent);
+			}
+		}
+	}
+}
+
+html.picasso-feat-tilt .layout-main-section .widget,
+html.picasso-feat-tilt .codex-editor .widget,
+html.picasso-feat-tilt [data-page-route="Workspaces"] .widget {
+	background-image: none !important;
+}
+
+html.picasso-desk-theme {
+	.ce-header,
+	.widget.header {
+		background: transparent !important;
+		background-image: none !important;
+		box-shadow: none !important;
+		border: none !important;
+		border-radius: 0 !important;
+		min-height: 0 !important;
+		padding: 0 2px !important;
+
+		.h4,
+		.h5,
+		b {
+			color: var(--text-muted);
+			font-weight: 600;
+			font-size: var(--text-base);
+			letter-spacing: 0.01em;
+		}
+	}
+
+	.codex-editor .ce-block:has(.ce-header) .ce-block__content,
+	.codex-editor .ce-block:has(.widget.header) .ce-block__content {
+		padding-top: 2px;
+		padding-bottom: 2px;
+	}
+}
