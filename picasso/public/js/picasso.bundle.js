@@ -3,7 +3,6 @@ import * as recents from "./studio/recents";
 import * as dock from "./studio/dock";
 import * as panel from "./studio/panel";
 import * as palette from "./studio/palette";
-import * as quicklook from "./studio/quicklook";
 import * as charts from "./studio/charts";
 import * as motion from "./studio/motion";
 
@@ -13,7 +12,6 @@ function boot() {
 	dock.init();
 	panel.init();
 	palette.init();
-	quicklook.init();
 	charts.init();
 	motion.init();
 	window.picasso = window.picasso || {};

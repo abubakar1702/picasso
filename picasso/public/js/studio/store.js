@@ -18,7 +18,6 @@ export const FEATURES = [
 	{ key: "app_icons", label: "Accent icons", hint: "Tint workspace icons to the accent" },
 	{ key: "dock_autohide", label: "Auto-hide dock", hint: "Studio dock tucks away until hover" },
 	{ key: "gradients", label: "Brand gradients", hint: "Off = flat navbar and sidebar fills" },
-	{ key: "quicklook", label: "Quick Look", hint: "Hover to peek, Space to open" },
 	{ key: "signin_entrance", label: "Sign-in entrance", hint: "Login shell eases in" },
 ];
 

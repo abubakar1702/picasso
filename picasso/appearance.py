@@ -1,31 +1,14 @@
 # Copyright (c) 2026, Akash and contributors
 # License: MIT. See LICENSE
 
-import csv
-import io
 import json
 from typing import Any
-from urllib.parse import unquote, urlparse
 
 import frappe
 from frappe import _
-from frappe.model import no_value_fields, table_fields
-from frappe.utils import cint, cstr, strip_html
+from frappe.utils import cstr
 
-from picasso.picasso.doctype.picasso_quick_look.picasso_quick_look import get_quicklook_map
 
-SKIP_PEEK_TYPES = set(no_value_fields) | set(table_fields) | {
-	"Password",
-	"Attach",
-	"Attach Image",
-	"Signature",
-	"Code",
-	"Text Editor",
-	"HTML Editor",
-	"Markdown Editor",
-	"JSON",
-	"Geolocation",
-}
 
 STUDIO_KEY = "picasso_studio"
 FEATURE_KEYS = (
@@ -45,7 +28,6 @@ FEATURE_KEYS = (
 	"app_icons",
 	"dock_autohide",
 	"gradients",
-	"quicklook",
 	"signin_entrance",
 )
 DENSITIES = ("compact", "cozy", "roomy")
@@ -58,8 +40,6 @@ TOAST_POS = (
 	"bottom-right",
 )
 DOCK_CORNERS = ("br", "bl", "tr", "tl")
-MAX_PREVIEW_ROWS = 40
-MAX_PREVIEW_COLS = 12
 
 
 def default_studio() -> dict:
@@ -120,199 +100,3 @@ def save_studio(studio=None):
 	return clean
 
 
-@frappe.whitelist()
-def peek_doc(doctype: str, name: str):
-	doctype = _resolve_doctype(cstr(doctype))
-	name = cstr(name)
-	if not doctype or not name:
-		frappe.throw(_("Missing document"))
-	if not frappe.has_permission(doctype, "read", name):
-		frappe.throw(_("Not permitted"), frappe.PermissionError)
-
-	mapping = get_quicklook_map().get(doctype)
-	if not mapping:
-		return None
-
-	doc = frappe.get_doc(doctype, name)
-	meta = frappe.get_meta(doctype)
-	title = doc.get_title() if hasattr(doc, "get_title") else name
-	image = ""
-	if mapping.get("show_image") and meta.image_field:
-		image = cstr(doc.get(meta.image_field) or "")
-
-	return {
-		"doctype": doctype,
-		"name": name,
-		"title": cstr(title) or name,
-		"image": image,
-		"modified": cstr(doc.modified),
-		"fields": _peek_field_rows(doc, meta, mapping),
-		"route": f"/desk/{frappe.scrub(doctype)}/{name}",
-	}
-
-
-def _hook_peek_fields(doctype: str) -> list[str]:
-	hooks = frappe.get_hooks("picasso_peek_fields") or {}
-	if not isinstance(hooks, dict):
-		return []
-	forced = hooks.get(doctype) or []
-	if isinstance(forced, str):
-		forced = [forced]
-	names = []
-	for item in forced:
-		if isinstance(item, (list, tuple)):
-			names.extend(cstr(x) for x in item if cstr(x))
-		elif cstr(item):
-			names.append(cstr(item))
-	return names
-
-
-def _peek_fieldnames(doctype: str, mapping: dict | None) -> list[str]:
-	forced = _hook_peek_fields(doctype)
-	if forced:
-		return forced[:12]
-	return ((mapping or {}).get("fields") or [])[:12]
-
-
-def _format_peek_value(doc, df, value) -> str:
-	formatted = frappe.format(value, df=df, doc=doc, translated=True)
-	text = strip_html(cstr(formatted)).strip()
-	return text or cstr(value)
-
-
-def _peek_field_rows(doc, meta, mapping: dict | None = None) -> list[dict]:
-	rows = []
-	for fieldname in _peek_fieldnames(doc.doctype, mapping):
-		df = meta.get_field(fieldname)
-		if not df or df.fieldtype in SKIP_PEEK_TYPES:
-			continue
-		if not doc.has_permlevel_access_to(fieldname, df):
-			continue
-		value = doc.get(fieldname)
-		if value in (None, ""):
-			continue
-		rows.append(
-			{
-				"label": _(df.label or fieldname),
-				"value": _format_peek_value(doc, df, value),
-				"fieldname": fieldname,
-			}
-		)
-	return rows
-
-
-def _resolve_doctype(value: str) -> str:
-	value = cstr(value).strip()
-	if not value:
-		return ""
-	# MySQL collation is case-insensitive, so exists("employee") is true
-	# while the controller is registered as "Employee". Always return the
-	# stored DocType name, not the URL slug.
-	name = frappe.db.get_value("DocType", value, "name")
-	if name:
-		return name
-	guess = value.replace("-", " ").replace("_", " ")
-	name = frappe.db.get_value("DocType", guess, "name")
-	if name:
-		return name
-	# Try title-case before falling back to a LIKE query.
-	name = frappe.db.get_value("DocType", guess.title(), "name")
-	if name:
-		return name
-	# Last resort: LIKE match. Limit to 1 result to prevent ambiguous matches.
-	results = frappe.get_all(
-		"DocType",
-		filters={"name": ["like", value.replace("-", "%")]},
-		pluck="name",
-		limit=1,
-	)
-	return results[0] if results else value
-
-
-def _normalize_file_url(file_url: str) -> str:
-	file_url = cstr(file_url).strip()
-	if not file_url:
-		return ""
-	parsed = urlparse(file_url)
-	path = unquote(parsed.path or file_url)
-	if path.startswith("/private/files/") or path.startswith("/files/"):
-		return path
-	return unquote(file_url.split("?", 1)[0])
-
-
-def _get_file_doc(file_url: str):
-	file_url = _normalize_file_url(file_url)
-	if not file_url:
-		frappe.throw(_("Missing file"))
-	name = frappe.db.get_value("File", {"file_url": file_url}, "name")
-	if not name:
-		name = frappe.db.get_value("File", {"file_url": unquote(file_url)}, "name")
-	if not name:
-		frappe.throw(_("File not found"), frappe.DoesNotExistError)
-	doc = frappe.get_doc("File", name)
-	doc.check_permission("read")
-	return doc
-
-
-@frappe.whitelist()
-def peek_file(file_url: str):
-	doc = _get_file_doc(file_url)
-	ext = (doc.file_name or "").rsplit(".", 1)
-	ext = ext[-1].lower() if len(ext) == 2 else ""
-	payload = {
-		"name": doc.file_name,
-		"url": doc.file_url,
-		"size": cint(doc.file_size),
-		"ext": ext,
-		"kind": "file",
-	}
-	if ext in ("csv", "txt"):
-		payload["kind"] = "table"
-		payload["sheets"] = [{"name": doc.file_name, "rows": _read_csv(doc)}]
-	elif ext in ("xlsx", "xlsm"):
-		payload["kind"] = "table"
-		payload["sheets"] = _read_xlsx(doc)
-	elif ext in ("png", "jpg", "jpeg", "gif", "webp", "svg", "bmp"):
-		payload["kind"] = "image"
-	elif ext == "pdf":
-		payload["kind"] = "pdf"
-	elif ext in ("mp4", "webm"):
-		payload["kind"] = "video"
-	elif ext in ("mp3", "wav", "ogg"):
-		payload["kind"] = "audio"
-	return payload
-
-
-def _file_bytes(doc) -> bytes:
-	content = doc.get_content()
-	if isinstance(content, str):
-		return content.encode("utf-8", errors="replace")
-	return content or b""
-
-
-def _read_csv(doc) -> list[list[str]]:
-	text = _file_bytes(doc).decode("utf-8", errors="replace")
-	reader = csv.reader(io.StringIO(text))
-	rows = []
-	for i, row in enumerate(reader):
-		if i >= MAX_PREVIEW_ROWS:
-			break
-		rows.append([cstr(cell)[:200] for cell in row[:MAX_PREVIEW_COLS]])
-	return rows
-
-
-def _read_xlsx(doc) -> list[dict]:
-	try:
-		from openpyxl import load_workbook
-	except ImportError:
-		return []
-	bio = io.BytesIO(_file_bytes(doc))
-	wb = load_workbook(bio, read_only=True, data_only=True)
-	sheets = []
-	for ws in wb.worksheets[:6]:
-		rows = []
-		for i, row in enumerate(ws.iter_rows(max_row=MAX_PREVIEW_ROWS, max_col=MAX_PREVIEW_COLS, values_only=True)):
-			rows.append([cstr(cell)[:200] if cell is not None else "" for cell in row])
-		sheets.append({"name": ws.title, "rows": rows})
-	wb.close()
-	return sheets

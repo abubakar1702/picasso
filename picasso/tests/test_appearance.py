@@ -6,7 +6,7 @@ from frappe.tests import IntegrationTestCase
 
 
 class TestAppearance(IntegrationTestCase):
-	"""Tests for picasso.appearance — peek_doc, save_studio, _clean_studio."""
+	"""Tests for picasso.appearance — save_studio, _clean_studio."""
 
 	# ── save_studio ──────────────────────────────────────────────────────
 
@@ -114,40 +114,4 @@ class TestAppearance(IntegrationTestCase):
 		self.assertEqual(result["density"], "cozy")
 		self.assertEqual(result["motion"], "on")
 
-	# ── peek_doc ─────────────────────────────────────────────────────────
 
-	def test_peek_doc_requires_doctype_and_name(self):
-		"""Missing doctype/name should throw."""
-		from picasso.appearance import peek_doc
-
-		self.assertRaises(frappe.ValidationError, peek_doc, doctype="", name="test")
-		self.assertRaises(frappe.ValidationError, peek_doc, doctype="User", name="")
-
-	def test_peek_doc_checks_permission(self):
-		"""peek_doc should respect read permissions."""
-		from picasso.appearance import peek_doc
-
-		# Create a test user with no permissions.
-		if not frappe.db.exists("User", "test_picasso_noperm@example.com"):
-			user = frappe.get_doc(
-				{
-					"doctype": "User",
-					"email": "test_picasso_noperm@example.com",
-					"first_name": "Picasso Test",
-					"send_welcome_email": 0,
-					"roles": [],
-				}
-			)
-			user.insert(ignore_permissions=True)
-
-		frappe.set_user("test_picasso_noperm@example.com")
-		try:
-			# This user shouldn't be able to peek at DocType (system manager only).
-			self.assertRaises(
-				frappe.PermissionError,
-				peek_doc,
-				doctype="DocType",
-				name="User",
-			)
-		finally:
-			frappe.set_user("Administrator")
