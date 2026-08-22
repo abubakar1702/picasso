@@ -46,13 +46,19 @@ html.picasso-flat {
 }
 
 html.picasso-feat-cards .widget,
-html.picasso-feat-cards .frappe-card {
+html.picasso-feat-cards .frappe-card,
+html.picasso-feat-cards .shortcut-widget-box,
+html.picasso-feat-cards .number-card-widget,
+html.picasso-feat-cards .workspace-widget-box {
 	transition: transform var(--picasso-dur-2) var(--picasso-ease),
 		box-shadow var(--picasso-dur-2) var(--picasso-ease);
 }
 
 html.picasso-feat-cards .widget:hover,
-html.picasso-feat-cards .frappe-card:hover {
+html.picasso-feat-cards .frappe-card:hover,
+html.picasso-feat-cards .shortcut-widget-box:hover,
+html.picasso-feat-cards .number-card-widget:hover,
+html.picasso-feat-cards .workspace-widget-box:hover {
 	transform: translateY(-2px);
 	box-shadow: 0 10px 28px color-mix(in srgb, var(--picasso-desk-accent) 16%, transparent);
 }
@@ -66,12 +72,18 @@ html.picasso-feat-tilt .frappe-card:not(.widget) {
 }
 
 html.picasso-feat-app_icons .standard-sidebar-item .sidebar-item-icon,
-html.picasso-feat-app_icons .widget .widget-icon {
+html.picasso-feat-app_icons .sidebar-item-icon,
+html.picasso-feat-app_icons .desk-sidebar .sidebar-item-icon,
+html.picasso-feat-app_icons .widget .widget-icon,
+html.picasso-feat-app_icons .widget-head .widget-title .icon {
 	color: var(--picasso-desk-accent);
 }
 
 html.picasso-feat-reveal .list-row-container.picasso-revealed,
-html.picasso-feat-reveal .widget.picasso-revealed {
+html.picasso-feat-reveal .list-row.picasso-revealed,
+html.picasso-feat-reveal .widget.picasso-revealed,
+html.picasso-feat-reveal .shortcut-widget-box.picasso-revealed,
+html.picasso-feat-reveal .number-card-widget.picasso-revealed {
 	animation: picasso-reveal var(--picasso-dur-3) var(--picasso-ease);
 }
 
@@ -86,7 +98,10 @@ html.picasso-feat-reveal .widget.picasso-revealed {
 	}
 }
 
-html.picasso-route-in .layout-main-section {
+html.picasso-route-in .layout-main-section,
+html.picasso-route-in .main-section,
+html.picasso-route-in .page-container,
+html.picasso-route-in .layout-main {
 	animation: picasso-route var(--picasso-dur-3) var(--picasso-ease);
 }
 
@@ -99,6 +114,14 @@ html.picasso-route-in .layout-main-section {
 		opacity: 1;
 		transform: none;
 	}
+}
+
+.page-head {
+	transition: padding 200ms var(--picasso-ease);
+}
+
+.page-head .title-text {
+	transition: font-size 200ms var(--picasso-ease);
 }
 
 html.picasso-head-condensed .page-head {

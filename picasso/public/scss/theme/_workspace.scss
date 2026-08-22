@@ -20,11 +20,28 @@ html.picasso-desk-theme {
 		}
 	}
 
-	&.picasso-feat-cards .layout-main-section .widget:hover,
-	&.picasso-feat-cards .codex-editor .widget:hover,
-	&.picasso-feat-cards [data-page-route="Workspaces"] .widget:hover {
-		transform: none;
-		box-shadow: none;
+	&.picasso-feat-cards {
+		.widget,
+		.frappe-card,
+		.shortcut-widget-box,
+		.number-card-widget,
+		.links-widget-box,
+		.quick-list-widget-box,
+		.dashboard-widget-box {
+			transition: transform var(--picasso-dur-2, 200ms) var(--picasso-ease, ease),
+				box-shadow var(--picasso-dur-2, 200ms) var(--picasso-ease, ease) !important;
+		}
+
+		.widget:hover,
+		.frappe-card:hover,
+		.shortcut-widget-box:hover,
+		.number-card-widget:hover,
+		.links-widget-box:hover,
+		.quick-list-widget-box:hover,
+		.dashboard-widget-box:hover {
+			transform: translateY(-4px) !important;
+			box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12), 0 4px 12px color-mix(in srgb, var(--picasso-desk-accent, #2563eb) 20%, transparent) !important;
+		}
 	}
 
 	.widget.links-widget-box .widget-head .widget-title,

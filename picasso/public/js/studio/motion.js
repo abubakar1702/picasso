@@ -43,7 +43,7 @@ function init_transitions() {
 function init_ripple() {
 	document.addEventListener("pointerdown", (e) => {
 		if (!can("ripple")) return;
-		const btn = e.target.closest(".btn, .picasso-dock__btn, .picasso-palette__item");
+		const btn = e.target.closest(".btn, .primary-action, .btn-primary, .btn-default, .picasso-dock__btn, .picasso-palette__item");
 		if (!btn) return;
 		const ink = document.createElement("span");
 		ink.className = "picasso-ink";
@@ -68,7 +68,7 @@ function init_reveal() {
 	);
 	const watch = () => {
 		if (!store.feature("reveal")) return;
-		document.querySelectorAll(".list-row-container, .widget").forEach((n) => io.observe(n));
+		document.querySelectorAll(".list-row-container, .list-row, .widget, .shortcut-widget-box, .number-card-widget").forEach((n) => io.observe(n));
 	};
 	$(document).on("page-change", () => setTimeout(watch, 200));
 	let mo_timer = null;
@@ -78,7 +78,7 @@ function init_reveal() {
 	});
 	const start = () => {
 		watch();
-		const host = document.querySelector(".main-section") || document.body;
+		const host = document.querySelector(".main-section, .page-container, .layout-main-section") || document.body;
 		if (host) mo.observe(host, { childList: true, subtree: true });
 	};
 	if (document.body) start();
