@@ -43,15 +43,32 @@
 		});
 	}
 
+	function action_slot(page) {
+		if (page.standard_actions && page.standard_actions.length) return page.standard_actions;
+		if (page.page_actions && page.page_actions.length) {
+			const $std = page.page_actions.find(".standard-actions");
+			if ($std.length) return $std;
+			return page.page_actions;
+		}
+		if (page.page_head && page.page_head.length) {
+			const $std = page.page_head.find(".standard-actions");
+			if ($std.length) return $std;
+			return page.page_head.find(".page-actions");
+		}
+		return $(document).find(".page-head .standard-actions").first();
+	}
+
 	function add_button(report) {
-		const page = report.page;
-		if (!page || !page.wrapper) return;
+		const page = report && report.page;
+		if (!page) return;
 
-		// Never leave a copy in the filter form.
-		page.page_form && page.page_form.find("." + BTN).remove();
-		page.wrapper.find("." + BTN).remove();
-
+		$(document)
+			.find("." + BTN)
+			.remove();
 		if (!report.filters || !report.filters.length) return;
+
+		const $slot = action_slot(page);
+		if (!$slot || !$slot.length) return;
 
 		const icon =
 			(frappe.utils && frappe.utils.icon && frappe.utils.icon("filter", "xs")) || "";
@@ -67,19 +84,22 @@
 			reset_filters(report);
 		});
 
-		// Page-head actions (same row as Refresh). Avoid inner_toolbar —
-		// query reports call clear_custom_actions() after filters setup.
-		const $primary = page.btn_primary;
+		const $primary =
+			(page.btn_primary &&
+				page.btn_primary.length &&
+				$slot.has(page.btn_primary).length &&
+				page.btn_primary) ||
+			$slot.find(".primary-action").first();
 		if ($primary && $primary.length) {
 			$btn.insertBefore($primary);
-			return;
+		} else {
+			$slot.prepend($btn);
 		}
-		const $actions = page.page_actions && page.page_actions.find(".standard-actions");
-		if ($actions && $actions.length) {
-			$actions.prepend($btn);
-			return;
-		}
-		page.page_actions && page.page_actions.prepend($btn);
+	}
+
+	function after_filters(report) {
+		snapshot_defaults(report);
+		add_button(report);
 	}
 
 	function wrap_query_report() {
@@ -89,24 +109,17 @@
 		if (typeof orig !== "function") return;
 		Report.prototype.setup_filters = function () {
 			orig.apply(this, arguments);
-			snapshot_defaults(this);
-			add_button(this);
+			after_filters(this);
 		};
-		const orig_head = Report.prototype.setup_page_head;
-		if (typeof orig_head === "function") {
-			Report.prototype.setup_page_head = function () {
-				orig_head.apply(this, arguments);
-				add_button(this);
-			};
-		}
 		const orig_refresh = Report.prototype.refresh_report;
 		if (typeof orig_refresh === "function") {
 			Report.prototype.refresh_report = function () {
 				const result = orig_refresh.apply(this, arguments);
+				const paint = () => after_filters(this);
 				if (result && typeof result.then === "function") {
-					return result.then(() => add_button(this));
+					return result.then(paint);
 				}
-				add_button(this);
+				window.setTimeout(paint, 0);
 				return result;
 			};
 		}
@@ -117,9 +130,8 @@
 	$(document).on("page-change", () => {
 		window.setTimeout(() => {
 			wrap_query_report();
-			if (window.frappe && frappe.query_report) {
-				if (frappe.query_report._picasso_defaults) add_button(frappe.query_report);
-			}
-		}, 80);
+			const report = window.frappe && frappe.query_report;
+			if (report) after_filters(report);
+		}, 200);
 	});
 })();

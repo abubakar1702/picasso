@@ -236,24 +236,13 @@ html[data-bs-theme="dark"] .picasso-page-wrap .page-body {
 }
 
 .picasso-tile::after {
-	content: "";
-	position: absolute;
-	inset: 0;
-	background: linear-gradient(135deg, var(--_tone-soft, var(--picasso-accent-soft)) 0%, transparent 60%);
-	opacity: 0.35;
-	pointer-events: none;
-	border-radius: inherit;
-	transition: opacity 0.18s ease;
+	content: none;
 }
 
 .picasso-tile:hover {
 	transform: translateY(-2px);
 	box-shadow: var(--picasso-shadow-hover);
 	border-color: var(--picasso-border-2);
-}
-
-.picasso-tile:hover::after {
-	opacity: 0.55;
 }
 
 .picasso-tile:active {

@@ -57,8 +57,7 @@ html.picasso-feat-cards .frappe-card:hover {
 	box-shadow: 0 10px 28px color-mix(in srgb, var(--picasso-desk-accent) 16%, transparent);
 }
 
-html.picasso-feat-tilt .widget,
-html.picasso-feat-tilt .frappe-card {
+html.picasso-feat-tilt .frappe-card:not(.widget) {
 	background-image: radial-gradient(
 		420px circle at var(--picasso-mx, 50%) var(--picasso-my, 0%),
 		color-mix(in srgb, var(--picasso-desk-accent) 14%, transparent),

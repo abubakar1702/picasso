@@ -1,6 +1,11 @@
 /* Workspace widgets: Picasso overrides Frappe stock card chrome. */
 
 html.picasso-desk-theme {
+	.widget,
+	.widget.number-widget-box,
+	.widget.shortcut-widget-box,
+	.widget.dashboard-widget-box,
+	.dashboard-page .widget,
 	.layout-main-section .widget,
 	.codex-editor .widget,
 	.desk-page .widget,
@@ -92,12 +97,6 @@ html.picasso-desk-theme {
 			}
 		}
 	}
-}
-
-html.picasso-feat-tilt .layout-main-section .widget,
-html.picasso-feat-tilt .codex-editor .widget,
-html.picasso-feat-tilt [data-page-route="Workspaces"] .widget {
-	background-image: none !important;
 }
 
 html.picasso-desk-theme {
