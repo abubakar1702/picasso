@@ -5,10 +5,27 @@ import csv
 import io
 import json
 from typing import Any
+from urllib.parse import unquote, urlparse
 
 import frappe
 from frappe import _
-from frappe.utils import cint, cstr
+from frappe.model import no_value_fields, table_fields
+from frappe.utils import cint, cstr, strip_html
+
+from picasso.picasso.doctype.picasso_quick_look.picasso_quick_look import get_quicklook_map
+
+SKIP_PEEK_TYPES = set(no_value_fields) | set(table_fields) | {
+	"Password",
+	"Attach",
+	"Attach Image",
+	"Signature",
+	"Code",
+	"Text Editor",
+	"HTML Editor",
+	"Markdown Editor",
+	"JSON",
+	"Geolocation",
+}
 
 STUDIO_KEY = "picasso_studio"
 FEATURE_KEYS = (
@@ -112,64 +129,114 @@ def peek_doc(doctype: str, name: str):
 	if not frappe.has_permission(doctype, "read", name):
 		frappe.throw(_("Not permitted"), frappe.PermissionError)
 
+	mapping = get_quicklook_map().get(doctype)
+	if not mapping:
+		return None
+
 	doc = frappe.get_doc(doctype, name)
 	meta = frappe.get_meta(doctype)
 	title = doc.get_title() if hasattr(doc, "get_title") else name
-	fields = []
-	for df in meta.fields:
-		if df.hidden or df.fieldtype in (
-			"Section Break",
-			"Column Break",
-			"Tab Break",
-			"Table",
-			"Table MultiSelect",
-			"HTML",
-			"Button",
-			"Fold",
-			"Heading",
-			"Password",
-			"Attach",
-			"Attach Image",
-			"Signature",
-			"Code",
-			"Text Editor",
-			"HTML Editor",
-		):
-			continue
-		if not doc.has_permlevel_access_to(df.fieldname, df):
-			continue
-		value = doc.get(df.fieldname)
-		if value in (None, ""):
-			continue
-		fields.append({"label": _(df.label or df.fieldname), "value": cstr(value)})
-		if len(fields) >= 8:
-			break
+	image = ""
+	if mapping.get("show_image") and meta.image_field:
+		image = cstr(doc.get(meta.image_field) or "")
 
 	return {
 		"doctype": doctype,
 		"name": name,
 		"title": cstr(title) or name,
+		"image": image,
 		"modified": cstr(doc.modified),
-		"fields": fields,
-		"route": f"/app/{frappe.scrub(doctype)}/{name}",
+		"fields": _peek_field_rows(doc, meta, mapping),
+		"route": f"/desk/{frappe.scrub(doctype)}/{name}",
 	}
 
 
+def _hook_peek_fields(doctype: str) -> list[str]:
+	hooks = frappe.get_hooks("picasso_peek_fields") or {}
+	if not isinstance(hooks, dict):
+		return []
+	forced = hooks.get(doctype) or []
+	if isinstance(forced, str):
+		forced = [forced]
+	names = []
+	for item in forced:
+		if isinstance(item, (list, tuple)):
+			names.extend(cstr(x) for x in item if cstr(x))
+		elif cstr(item):
+			names.append(cstr(item))
+	return names
+
+
+def _peek_fieldnames(doctype: str, mapping: dict | None) -> list[str]:
+	forced = _hook_peek_fields(doctype)
+	if forced:
+		return forced[:12]
+	return ((mapping or {}).get("fields") or [])[:12]
+
+
+def _format_peek_value(doc, df, value) -> str:
+	formatted = frappe.format(value, df=df, doc=doc, translated=True)
+	text = strip_html(cstr(formatted)).strip()
+	return text or cstr(value)
+
+
+def _peek_field_rows(doc, meta, mapping: dict | None = None) -> list[dict]:
+	rows = []
+	for fieldname in _peek_fieldnames(doc.doctype, mapping):
+		df = meta.get_field(fieldname)
+		if not df or df.fieldtype in SKIP_PEEK_TYPES:
+			continue
+		if not doc.has_permlevel_access_to(fieldname, df):
+			continue
+		value = doc.get(fieldname)
+		if value in (None, ""):
+			continue
+		rows.append(
+			{
+				"label": _(df.label or fieldname),
+				"value": _format_peek_value(doc, df, value),
+				"fieldname": fieldname,
+			}
+		)
+	return rows
+
+
 def _resolve_doctype(value: str) -> str:
-	if frappe.db.exists("DocType", value):
-		return value
-	guess = value.replace("-", " ").title()
-	if frappe.db.exists("DocType", guess):
-		return guess
+	value = cstr(value).strip()
+	if not value:
+		return ""
+	# MySQL collation is case-insensitive, so exists("employee") is true
+	# while the controller is registered as "Employee". Always return the
+	# stored DocType name, not the URL slug.
+	name = frappe.db.get_value("DocType", value, "name")
+	if name:
+		return name
+	guess = value.replace("-", " ").replace("_", " ")
+	name = frappe.db.get_value("DocType", guess, "name")
+	if name:
+		return name
 	name = frappe.db.get_value("DocType", {"name": ["like", value.replace("-", "%")]}, "name")
 	return name or value
 
 
+def _normalize_file_url(file_url: str) -> str:
+	file_url = cstr(file_url).strip()
+	if not file_url:
+		return ""
+	parsed = urlparse(file_url)
+	path = unquote(parsed.path or file_url)
+	if path.startswith("/private/files/") or path.startswith("/files/"):
+		return path
+	return unquote(file_url.split("?", 1)[0])
+
+
 def _get_file_doc(file_url: str):
-	file_url = cstr(file_url)
+	file_url = _normalize_file_url(file_url)
 	if not file_url:
 		frappe.throw(_("Missing file"))
 	name = frappe.db.get_value("File", {"file_url": file_url}, "name")
+	if not name:
+		name = frappe.db.get_value("File", {"file_url": unquote(file_url)}, "name")
 	if not name:
 		frappe.throw(_("File not found"), frappe.DoesNotExistError)
 	doc = frappe.get_doc("File", name)

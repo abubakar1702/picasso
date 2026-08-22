@@ -5,6 +5,7 @@ from urllib.parse import quote
 
 from picasso.appearance import get_studio
 from picasso.picasso.desk_settings import get_picasso_desk_settings
+from picasso.picasso.doctype.picasso_quick_look.picasso_quick_look import allowed_doctypes
 
 
 def _encode_file_url(url: str) -> str:
@@ -24,6 +25,7 @@ def extend_bootinfo(bootinfo):
 		desk["app_logo"] = _encode_file_url(desk["app_logo"])
 	bootinfo["picasso_desk"] = desk
 	bootinfo["picasso_studio"] = get_studio()
+	bootinfo["picasso_quicklook"] = allowed_doctypes()
 
 	logo = desk.get("app_logo") if desk.get("enabled") else ""
 	if not logo:

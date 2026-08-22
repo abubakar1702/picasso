@@ -1,0 +1,71 @@
+{
+ "actions": [],
+ "autoname": "field:doc_type",
+ "creation": "2026-08-22 15:50:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "doc_type",
+  "enabled",
+  "show_image",
+  "fields"
+ ],
+ "fields": [
+  {
+   "fieldname": "doc_type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "DocType",
+   "options": "DocType",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "default": "1",
+   "fieldname": "enabled",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Enabled"
+  },
+  {
+   "default": "1",
+   "description": "Show the DocType image field at the top of the peek card.",
+   "fieldname": "show_image",
+   "fieldtype": "Check",
+   "label": "Show Image"
+  },
+  {
+   "description": "Fields shown on the peek card, in this order. Leave empty to show only the title (and image). Hidden, table, and password fields are skipped.",
+   "fieldname": "fields",
+   "fieldtype": "Table",
+   "label": "Fields",
+   "options": "Picasso Quick Look Field"
+  }
+ ],
+ "links": [],
+ "modified": "2026-08-22 15:50:00.000000",
+ "modified_by": "Administrator",
+ "module": "Picasso",
+ "name": "Picasso Quick Look",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}
