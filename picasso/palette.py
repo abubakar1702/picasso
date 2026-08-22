@@ -307,15 +307,11 @@ STOCK_PALETTES = [
 	},
 ]
 
-COLOR_FIELDS = COLOR_FIELDS
-DEFAULT_COLORS = DEFAULT_COLORS
-STOCK_PALETTES = STOCK_PALETTES
-
 
 def colors_from_doc(doc) -> dict:
 	out = dict(DEFAULT_COLORS)
 	for key in COLOR_FIELDS:
-		value = doc.get(key) if hasattr(doc, "get") else doc.get(key)
+		value = doc.get(key)
 		if value:
 			out[key] = value
 	return out

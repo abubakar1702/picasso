@@ -215,8 +215,18 @@ def _resolve_doctype(value: str) -> str:
 	name = frappe.db.get_value("DocType", guess, "name")
 	if name:
 		return name
-	name = frappe.db.get_value("DocType", {"name": ["like", value.replace("-", "%")]}, "name")
-	return name or value
+	# Try title-case before falling back to a LIKE query.
+	name = frappe.db.get_value("DocType", guess.title(), "name")
+	if name:
+		return name
+	# Last resort: LIKE match. Limit to 1 result to prevent ambiguous matches.
+	results = frappe.get_all(
+		"DocType",
+		filters={"name": ["like", value.replace("-", "%")]},
+		pluck="name",
+		limit=1,
+	)
+	return results[0] if results else value
 
 
 def _normalize_file_url(file_url: str) -> str:

@@ -55,6 +55,13 @@ html.picasso-desk-theme.picasso-enhanced-list {
 
 			&:has(input.list-row-checkbox:checked) .list-row {
 				background: var(--highlight-color);
+
+				.level-right {
+					box-shadow: none;
+					background-color: var(--highlight-color);
+					border-radius: 0 var(--picasso-surface-radius, 8px)
+						var(--picasso-surface-radius, 8px) 0;
+				}
 			}
 		}
 

@@ -105,7 +105,11 @@ def apps_context(context):
 
 
 def install_apps_overrides():
-	"""Rebind frappe.apps lookups used by boot / website (whitelist override is not enough)."""
+	"""Rebind frappe.apps lookups used by boot / website (whitelist override is not enough).
+
+	Called once at module import time (i.e. once per worker process) rather than
+	on every request.
+	"""
 	import frappe.apps as apps_mod
 	import frappe.sessions as sessions_mod
 	import frappe.website.utils as website_utils
@@ -121,5 +125,12 @@ def install_apps_overrides():
 	website_utils.get_apps = get_apps
 
 
+# Run once per worker process at import time.
+install_apps_overrides()
+
+
 def before_request():
-	install_apps_overrides()
+	# Patching is now done at module import time above.
+	# This hook is kept as a no-op for forward-compatibility in case
+	# future per-request setup is needed.
+	pass

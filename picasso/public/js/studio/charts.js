@@ -1,6 +1,8 @@
 import * as store from "./store";
 
-const registry = new Set();
+// Array of WeakRefs so chart instances can be GC'd when their DOM elements are
+// removed on page navigation.  Dead refs are pruned on each accent-change pass.
+let registry = [];
 
 function hex_to_hsl(hex) {
 	let h = hex.replace("#", "");
@@ -52,7 +54,7 @@ export function init() {
 	const Orig = frappe.Chart;
 	function PicassoChart(element, options) {
 		const chart = new Orig(element, inject(options));
-		registry.add(chart);
+		registry.push(new WeakRef(chart));
 		return chart;
 	}
 	PicassoChart.prototype = Orig.prototype;
@@ -60,12 +62,18 @@ export function init() {
 	frappe.Chart = PicassoChart;
 	document.addEventListener(store.EVENT_NAME, () => {
 		if (!store.feature("charts")) return;
-		registry.forEach((chart) => {
+		const alive = [];
+		registry.forEach((ref) => {
+			const chart = ref.deref();
+			if (!chart) return; // GC'd — skip
+			alive.push(ref);
 			try {
 				if (chart.updateOptions) chart.updateOptions({ colors: series_colors(6) });
 			} catch (e) {
 				/* chart API varies */
 			}
 		});
+		registry = alive; // prune dead refs
 	});
 }
+

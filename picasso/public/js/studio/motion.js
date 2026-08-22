@@ -193,19 +193,6 @@ function init_save() {
 		});
 	};
 	$(document).on("form-saved after_save", pulse);
-	if (frappe.ui && frappe.ui.form && frappe.ui.form.Form) {
-		const proto = frappe.ui.form.Form.prototype;
-		if (proto.save && !proto.__picassoSave) {
-			const save = proto.save;
-			proto.save = function () {
-				return Promise.resolve(save.apply(this, arguments)).then((r) => {
-					pulse();
-					return r;
-				});
-			};
-			proto.__picassoSave = true;
-		}
-	}
 }
 
 export function init() {
