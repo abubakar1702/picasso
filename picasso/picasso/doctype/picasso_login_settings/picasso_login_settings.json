@@ -21,6 +21,7 @@
   "back_to_website_url",
   "back_to_website_label",
   "colors_section",
+  "use_theme_palette",
   "page_background",
   "form_background",
   "accent_color",
@@ -56,7 +57,7 @@
   {
    "default": "1",
    "depends_on": "enabled",
-   "description": "Show the left visual / carousel panel. Turn off for a form-only login card.",
+   "description": "Allow the left photo carousel. It only appears when at least one slide has an image (or a video is set).",
    "fieldname": "show_visual_panel",
    "fieldtype": "Check",
    "label": "Show Visual Panel"
@@ -148,19 +149,27 @@
    "label": "Colors"
   },
   {
-   "default": "#0B0B12",
+   "default": "1",
+   "depends_on": "enabled",
+   "description": "Use the Desk palette (Picasso Desk Settings) for login colors, including light and dark. Turn off to pick custom login colors below.",
+   "fieldname": "use_theme_palette",
+   "fieldtype": "Check",
+   "label": "Use Theme Palette"
+  },
+  {
+   "depends_on": "eval:doc.enabled && !doc.use_theme_palette",
    "fieldname": "page_background",
    "fieldtype": "Color",
    "label": "Page Background"
   },
   {
-   "default": "#16161F",
+   "depends_on": "eval:doc.enabled && !doc.use_theme_palette",
    "fieldname": "form_background",
    "fieldtype": "Color",
    "label": "Form Background"
   },
   {
-   "default": "#7C3AED",
+   "depends_on": "eval:doc.enabled && !doc.use_theme_palette",
    "fieldname": "accent_color",
    "fieldtype": "Color",
    "label": "Accent Color"
@@ -170,25 +179,25 @@
    "fieldtype": "Column Break"
   },
   {
-   "default": "#FFFFFF",
+   "depends_on": "eval:doc.enabled && !doc.use_theme_palette",
    "fieldname": "text_color",
    "fieldtype": "Color",
    "label": "Text Color"
   },
   {
-   "default": "#A1A1AA",
+   "depends_on": "eval:doc.enabled && !doc.use_theme_palette",
    "fieldname": "muted_text_color",
    "fieldtype": "Color",
    "label": "Muted Text Color"
   },
   {
-   "default": "#1F1F2B",
+   "depends_on": "eval:doc.enabled && !doc.use_theme_palette",
    "fieldname": "input_background",
    "fieldtype": "Color",
    "label": "Input Background"
   },
   {
-   "default": "#2E2E3A",
+   "depends_on": "eval:doc.enabled && !doc.use_theme_palette",
    "fieldname": "input_border_color",
    "fieldtype": "Color",
    "label": "Input Border Color"
@@ -220,14 +229,14 @@
    "label": "Copyright URL Label"
   },
   {
-   "default": "#A1A1AA",
+   "depends_on": "eval:doc.enabled && !doc.use_theme_palette",
    "fieldname": "copyright_text_color",
    "fieldtype": "Color",
    "label": "Copyright Text Color"
   },
   {
    "depends_on": "eval:doc.enabled && doc.show_visual_panel",
-   "description": "Carousel slides for the visual panel. Leave empty for a solid-color panel with logo only.",
+   "description": "Photos for the left carousel. If none have an image, the left panel is hidden.",
    "fieldname": "slides_section",
    "fieldtype": "Section Break",
    "label": "Visual Slides"
@@ -254,7 +263,7 @@
  ],
  "issingle": 1,
  "links": [],
- "modified": "2026-08-21 14:45:00.000000",
+ "modified": "2026-08-22 21:00:00.000000",
  "modified_by": "Administrator",
  "module": "Picasso",
  "name": "Picasso Login Settings",

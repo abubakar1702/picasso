@@ -399,3 +399,4 @@ def _ensure_desk_palette():
 		return
 	desk.db_set("palette", "Paper", update_modified=False)
 	frappe.cache.delete_value("picasso_desk_settings")
+	frappe.cache.delete_value("picasso_login_settings")

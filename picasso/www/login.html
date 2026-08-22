@@ -136,15 +136,25 @@
 
 {% macro copyright_block() %}
 {% if pl.copyright_text or pl.copyright_url %}
-<p class="picasso-copyright" style="color: {{ pl.copyright_text_color or '#A1A1AA' }}">
+<p class="picasso-copyright">
 	{% if pl.copyright_text %}{{ pl.copyright_text | e }}{% endif %}
 	{% if pl.copyright_url %}
-	<a href="{{ pl.copyright_url | e }}" style="color: {{ pl.copyright_text_color or '#A1A1AA' }}">
+	<a href="{{ pl.copyright_url | e }}">
 		{{ _(pl.copyright_url_label or pl.copyright_url) | e }}
 	</a>
 	{% endif %}
 </p>
 {% endif %}
+{% endmacro %}
+
+{% macro login_color_vars(c) %}
+		--picasso-page-bg: {{ c.page_background or "#F4F5F8" }};
+		--picasso-form-bg: {{ c.form_background or "#FFFFFF" }};
+		--picasso-accent: {{ c.accent_color or "#2563EB" }};
+		--picasso-text: {{ c.text_color or "#1F2937" }};
+		--picasso-muted: {{ c.muted_text_color or "#6B7280" }};
+		--picasso-input-bg: {{ c.input_background or "#FFFFFF" }};
+		--picasso-input-border: {{ c.input_border_color or "#E5E7EB" }};
 {% endmacro %}
 
 {% macro login_language_switch() %}
@@ -186,7 +196,7 @@
 	<div class="picasso-carousel" data-picasso-carousel data-interval="{{ pl.carousel_interval or 5 }}">
 		{% for slide in pl.slides %}
 		<div class="picasso-slide{% if loop.first %} is-active{% endif %}"
-			{% if slide.image %}style="background-image: url('{{ slide.image }}');"{% endif %}>
+			style="background-image: url('{{ slide.image }}');">
 			<div class="picasso-slide-overlay"></div>
 			<div class="picasso-slide-copy">
 				{% if slide.title %}<p class="picasso-slide-title">{{ slide.title }}</p>{% endif %}
@@ -203,10 +213,6 @@
 		</div>
 		{% endif %}
 	</div>
-	{% else %}
-	<div class="picasso-visual-empty">
-		<div class="picasso-slide-overlay"></div>
-	</div>
 	{% endif %}
 </aside>
 {% endmacro %}
@@ -217,14 +223,19 @@
 	:root,
 	body[data-path="login"],
 	.picasso-login {
-		--picasso-page-bg: {{ pl.page_background or "#0B0B12" }};
-		--picasso-form-bg: {{ pl.form_background or "#16161F" }};
-		--picasso-accent: {{ pl.accent_color or "#7C3AED" }};
-		--picasso-text: {{ pl.text_color or "#FFFFFF" }};
-		--picasso-muted: {{ pl.muted_text_color or "#A1A1AA" }};
-		--picasso-input-bg: {{ pl.input_background or "#1F1F2B" }};
-		--picasso-input-border: {{ pl.input_border_color or "#2E2E3A" }};
+		color-scheme: light;
+		{{ login_color_vars(pl) }}
 	}
+	{% if pl.use_theme_palette and pl.dark %}
+	@media (prefers-color-scheme: dark) {
+		:root,
+		body[data-path="login"],
+		.picasso-login {
+			color-scheme: dark;
+			{{ login_color_vars(pl.dark) }}
+		}
+	}
+	{% endif %}
 </style>
 {% else %}
 {{ include_style('login.bundle.css') }}
@@ -234,7 +245,7 @@
 {% block page_content %}
 <!-- {{ for_test }} -->
 {% if picasso_enabled %}
-<div class="picasso-login {% if pl.show_visual_panel %}has-visual{% else %}form-only{% endif %}">
+<div class="picasso-login {% if pl.has_visual %}has-visual{% else %}form-only{% endif %}">
 	<noscript>
 		<div class="text-center my-5" style="color: var(--picasso-text);">
 			<h4>{{ _("Javascript is disabled on your browser") }}</h4>
@@ -243,7 +254,7 @@
 	</noscript>
 
 	<div class="picasso-shell">
-		{% if pl.show_visual_panel %}
+		{% if pl.has_visual %}
 		{{ visual_panel() }}
 		{% endif %}
 

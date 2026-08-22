@@ -17,6 +17,7 @@
 	--dark-border-color: var(--picasso-list-border);
 	--table-border-color: var(--picasso-list-border);
 	--btn-primary: var(--picasso-desk-accent);
+	--btn-primary-color: var(--picasso-on-accent, #ffffff);
 	--primary: var(--picasso-desk-accent);
 	--primary-color: var(--picasso-desk-accent);
 	--brand-color: var(--picasso-desk-accent);
@@ -28,6 +29,7 @@
 
 html.picasso-desk-theme {
 	--picasso-desk-accent: var(--picasso-light-accent, #2563eb);
+	--picasso-on-accent: #ffffff;
 	--picasso-navbar-start: var(--picasso-light-navbar-start, #ffffff);
 	--picasso-navbar-end: var(--picasso-light-navbar-end, #ffffff);
 	--picasso-navbar-text: var(--picasso-light-navbar-text, #1f2937);
@@ -61,6 +63,7 @@ html.picasso-desk-theme[data-theme="dark"],
 html.picasso-desk-theme[data-bs-theme="dark"],
 html.picasso-desk-theme.picasso-dark-theme {
 	--picasso-desk-accent: var(--picasso-dark-accent, #2563eb);
+	--picasso-on-accent: #ffffff;
 	--picasso-navbar-start: var(--picasso-dark-navbar-start, #13151c);
 	--picasso-navbar-end: var(--picasso-dark-navbar-end, #13151c);
 	--picasso-navbar-text: var(--picasso-dark-navbar-text, #e5e7eb);

@@ -22,4 +22,5 @@ class PicassoPalette(Document):
 
 	def _clear_desk_cache(self):
 		frappe.cache.delete_value("picasso_desk_settings")
+		frappe.cache.delete_value("picasso_login_settings")
 		frappe.cache.delete_keys("bootinfo")

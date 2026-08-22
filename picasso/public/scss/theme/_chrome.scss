@@ -56,13 +56,11 @@ html.picasso-desk-theme {
 		.page-title *,
 		.title-text,
 		.sidebar-toggle-btn,
-		.btn,
+		.btn:not(.btn-primary),
 		.btn-default,
 		.icon-btn,
-		.menu-btn-group .btn,
-		.actions-btn-group .btn,
-		svg,
-		.icon {
+		.menu-btn-group .btn:not(.btn-primary),
+		.actions-btn-group .btn:not(.btn-primary) {
 			color: var(--picasso-page-head-text) !important;
 			fill: currentColor;
 			stroke: currentColor;
@@ -74,14 +72,17 @@ html.picasso-desk-theme {
 			color: var(--picasso-page-head-text) !important;
 		}
 
-		.btn-primary {
+		.btn-primary,
+		.actions-btn-group .btn-primary,
+		.page-actions .btn-primary {
 			background: var(--picasso-desk-accent) !important;
 			border-color: var(--picasso-desk-accent) !important;
-			color: #ffffff !important;
+			color: var(--picasso-on-accent, #ffffff) !important;
 
 			svg,
-			.icon {
-				color: #ffffff !important;
+			.icon,
+			span {
+				color: var(--picasso-on-accent, #ffffff) !important;
 				stroke: currentColor;
 			}
 		}
