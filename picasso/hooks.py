@@ -12,6 +12,7 @@ app_include_js = [
 	"picasso.bundle.js",
 	"/assets/picasso/js/desk_boot.js",
 	"/assets/picasso/js/link_workspaces.js",
+	"/assets/picasso/js/sidebar_active.js",
 	"/assets/picasso/js/language_switch.js",
 	"/assets/picasso/js/form_actions.js",
 	"/assets/picasso/js/list_select.js",

@@ -4,6 +4,19 @@
 
 html.picasso-desk-theme {
 	.body-sidebar {
+		--icon-stroke: var(--picasso-sidebar-text);
+		--ink-gray-7: var(--picasso-sidebar-text);
+		--sidebar-hover-color: color-mix(
+			in srgb,
+			var(--picasso-sidebar-text) 14%,
+			var(--picasso-sidebar-start)
+		);
+		--sidebar-active-color: color-mix(
+			in srgb,
+			var(--picasso-desk-accent) 40%,
+			var(--picasso-sidebar-start)
+		);
+		color: var(--picasso-sidebar-text);
 		background: linear-gradient(
 			180deg,
 			var(--picasso-sidebar-start) 0%,
@@ -11,13 +24,80 @@ html.picasso-desk-theme {
 		);
 		border-right: 1px solid var(--sidebar-border-color);
 
-		.item-anchor {
+		.item-anchor,
+		.navbar-search-bar,
+		.sidebar-notification,
+		.collapse-sidebar-link {
 			color: var(--picasso-sidebar-text);
+			--icon-stroke: var(--picasso-sidebar-text);
+		}
+
+		.sidebar-item-icon,
+		.sidebar-item-icon.text-ink-gray-7,
+		.sidebar-item-icon .icon,
+		.sidebar-item-icon svg,
+		.navbar-search-bar .icon,
+		.sidebar-notification .icon,
+		.collapse-sidebar-link .icon {
+			color: var(--picasso-sidebar-text) !important;
+			stroke: currentColor;
+			--icon-stroke: var(--picasso-sidebar-text);
+		}
+
+		.standard-sidebar-item:not(.active-sidebar):has(a:not(.section-break)):hover,
+		.standard-sidebar-item.hover {
+			background-color: var(--sidebar-hover-color) !important;
+		}
+
+		.standard-sidebar-item.active-sidebar,
+		.sidebar-item-container.active-sidebar > .standard-sidebar-item {
+			background-color: var(--sidebar-active-color) !important;
+			box-shadow: none;
 		}
 
 		.active-sidebar .item-anchor {
 			color: var(--picasso-sidebar-text);
 			font-weight: 600;
+			--icon-stroke: var(--picasso-desk-accent);
+		}
+
+		.sidebar-header,
+		.header-title,
+		.drop-icon {
+			color: var(--picasso-sidebar-text);
+			--icon-stroke: var(--picasso-sidebar-text);
+		}
+
+		.header-subtitle {
+			color: color-mix(in srgb, var(--picasso-sidebar-text) 62%, transparent);
+		}
+
+		.dropdown-navbar-user {
+			margin-top: 8px;
+			background: transparent !important;
+
+			&:hover {
+				background: transparent !important;
+			}
+
+			.nav-link {
+				height: auto !important;
+				width: 100%;
+				padding: 8px 10px;
+				border-radius: 10px;
+				gap: 8px;
+				color: var(--picasso-sidebar-text);
+
+				.text-secondary {
+					color: color-mix(in srgb, var(--picasso-sidebar-text) 62%, transparent);
+				}
+			}
+
+			&:hover .nav-link,
+			.nav-link:hover,
+			&.show .nav-link {
+				background-color: var(--sidebar-hover-color);
+			}
 		}
 	}
 

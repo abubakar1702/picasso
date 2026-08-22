@@ -15,6 +15,8 @@ html.picasso-desk-theme {
 	header.navbar,
 	.navbar,
 	.navbar.navbar-expand {
+		--icon-stroke: var(--picasso-navbar-text);
+		--ink-gray-7: var(--picasso-navbar-text);
 		background: linear-gradient(
 			135deg,
 			var(--picasso-navbar-start) 0%,
@@ -26,24 +28,30 @@ html.picasso-desk-theme {
 
 		.nav-link,
 		.navbar-brand,
-		.btn:not(.desktop-navbar-modal-search) {
+		.btn:not(.desktop-navbar-modal-search),
+		.text-muted,
+		.text-light {
 			color: var(--picasso-navbar-text) !important;
 		}
 
 		.search-bar input,
-		.desktop-navbar-modal-search {
-			color: var(--picasso-navbar-text);
+		.desktop-navbar-modal-search,
+		.desktop-search-wrapper span,
+		.desktop-search-icon {
+			color: var(--picasso-navbar-text) !important;
 		}
 
-		.search-bar svg,
-		.search-bar .icon,
-		.desktop-search-icon svg,
-		.desktop-search-icon .icon,
-		.desktop-navbar-modal-search svg,
-		.desktop-navbar-modal-search .icon {
+		.search-bar input::placeholder,
+		.desktop-navbar-modal-search > span:last-child {
+			color: color-mix(in srgb, var(--picasso-navbar-text) 62%, transparent) !important;
+		}
+
+		svg,
+		.icon {
 			fill: none !important;
 			color: var(--picasso-navbar-text) !important;
 			stroke: var(--picasso-navbar-text) !important;
+			--icon-stroke: var(--picasso-navbar-text);
 		}
 	}
 
@@ -62,14 +70,28 @@ html.picasso-desk-theme {
 		.menu-btn-group .btn:not(.btn-primary),
 		.actions-btn-group .btn:not(.btn-primary) {
 			color: var(--picasso-page-head-text) !important;
-			fill: currentColor;
-			stroke: currentColor;
 		}
 
-		.navbar-breadcrumbs a,
-		.navbar-breadcrumbs a:hover,
-		.navbar-breadcrumbs li:last-child > a {
-			color: var(--picasso-page-head-text) !important;
+		.navbar-breadcrumbs {
+			--icon-fill: transparent;
+			--icon-stroke: var(--picasso-page-head-text);
+
+			a,
+			a:hover,
+			li:last-child > a {
+				color: var(--picasso-page-head-text) !important;
+			}
+
+			svg,
+			.icon {
+				fill: none !important;
+				stroke: var(--picasso-page-head-text) !important;
+			}
+		}
+
+		.sidebar-toggle-btn svg.icon:not(.es-icon) {
+			fill: none !important;
+			stroke: currentColor;
 		}
 
 		.btn-primary,
