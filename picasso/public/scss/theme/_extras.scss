@@ -1,0 +1,55 @@
+html.picasso-desk-theme.picasso-full-number-card {
+	.widget.number-widget-box .number,
+	.number-card-widget .widget-body .number {
+		white-space: normal !important;
+		overflow: visible !important;
+		text-overflow: unset !important;
+		font-variant-numeric: tabular-nums;
+	}
+}
+
+html.picasso-desk-theme .picasso-lang-switch {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	margin-right: 8px;
+	padding: 4px 10px;
+	border-radius: 999px;
+	border: 1px solid color-mix(in srgb, var(--picasso-navbar-text) 25%, transparent);
+	background: color-mix(in srgb, var(--picasso-navbar-text) 10%, transparent);
+	color: var(--picasso-navbar-text) !important;
+	font-size: 12px;
+	font-weight: 600;
+	line-height: 1.2;
+
+	&__a,
+	&__b {
+		opacity: 0.55;
+	}
+
+	.is-active {
+		opacity: 1;
+	}
+
+	&__sep {
+		opacity: 0.4;
+	}
+}
+
+.picasso-lang-switch {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	margin-right: 8px;
+	padding: 4px 10px;
+	border-radius: 999px;
+	border: 1px solid var(--border-color, #d1d5db);
+	background: var(--control-bg, #fff);
+	font-size: 12px;
+	font-weight: 600;
+	line-height: 1.2;
+
+	.is-active {
+		color: var(--picasso-desk-accent, var(--primary, #2563eb));
+	}
+}

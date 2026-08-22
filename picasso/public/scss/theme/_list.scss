@@ -1,0 +1,92 @@
+/* ERPExtra card shell. Hover / header / borders use remapped Frappe tokens
+   (--highlight-color, --subtle-accent, --card-bg, --border-color).
+   Only result-container height needs !important — Frappe sets it inline. */
+
+html.picasso-desk-theme.picasso-enhanced-list {
+	.layout-main-list {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+		overflow: visible;
+		height: auto;
+
+		> .page-form {
+			background: var(--picasso-list-filter-bg);
+			margin: 0;
+			padding: 12px 16px;
+			border: none;
+			border-bottom: 1px solid var(--border-color);
+			flex-shrink: 0;
+		}
+	}
+
+	.layout-main-list,
+	.list-view {
+		overflow: visible;
+		height: auto;
+	}
+
+	.frappe-list {
+		--border-radius: var(--picasso-surface-radius, 8px);
+		background: var(--card-bg);
+		border: 1px solid var(--border-color);
+		border-radius: var(--picasso-surface-radius, 10px);
+		margin: 0 12px 12px;
+		padding: 12px 10px 10px;
+
+		.result-container,
+		.result {
+			height: auto !important;
+			min-height: 0 !important;
+			overflow: visible;
+		}
+
+		.result {
+			padding-top: 4px;
+		}
+
+		.list-row-container {
+			border-bottom-color: var(--border-color);
+
+			&:last-child {
+				border-bottom: none;
+			}
+
+			&:has(input.list-row-checkbox:checked) .list-row {
+				background: var(--highlight-color);
+			}
+		}
+
+		.list-row {
+			border-bottom: none;
+
+			.level-right {
+				background-color: var(--card-bg);
+			}
+
+			&:hover:not(.list-row-head) .level-right {
+				box-shadow: none;
+				background-color: var(--highlight-color);
+			}
+		}
+
+		.list-row-head {
+			background: var(--subtle-accent);
+			margin-top: 0;
+
+			.level-right {
+				background: var(--subtle-accent);
+			}
+		}
+
+		.list-row-col a.ellipsis,
+		.list-subject a {
+			color: var(--picasso-desk-accent);
+		}
+
+		.list-count,
+		.list-paging-area {
+			padding: 8px 4px 4px;
+		}
+	}
+}

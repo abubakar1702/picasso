@@ -1,0 +1,122 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:app",
+ "creation": "2026-08-21 14:45:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "app",
+  "title",
+  "app_home",
+  "sort_order",
+  "column_break_main",
+  "hidden",
+  "logo",
+  "has_permission_method",
+  "workspaces",
+  "roles"
+ ],
+ "fields": [
+  {
+   "fieldname": "app",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "App",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "title",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Title",
+   "reqd": 1
+  },
+  {
+   "description": "Desk route after opening this app, e.g. /app/thrivehr or /app.",
+   "fieldname": "app_home",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "App Home"
+  },
+  {
+   "default": "100",
+   "fieldname": "sort_order",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Sort Order"
+  },
+  {
+   "fieldname": "column_break_main",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "hidden",
+   "fieldtype": "Check",
+   "label": "Hidden"
+  },
+  {
+   "fieldname": "logo",
+   "fieldtype": "Attach Image",
+   "label": "Logo"
+  },
+  {
+   "description": "Dotted Python path returning True if the current user may see this app.",
+   "fieldname": "has_permission_method",
+   "fieldtype": "Data",
+   "label": "Has Permission Method"
+  },
+  {
+   "fieldname": "workspaces",
+   "fieldtype": "Table MultiSelect",
+   "label": "Workspaces",
+   "options": "Picasso App Screen Workspace"
+  },
+  {
+   "description": "If empty, any Desk user can see this app (subject to Has Permission Method).",
+   "fieldname": "roles",
+   "fieldtype": "Table",
+   "label": "Allowed Roles",
+   "options": "Has Role"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-08-21 14:45:00.000000",
+ "modified_by": "Administrator",
+ "module": "Picasso",
+ "name": "Picasso App Screen",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "All",
+   "share": 1
+  }
+ ],
+ "sort_field": "sort_order",
+ "sort_order": "ASC",
+ "states": [],
+ "title_field": "title",
+ "track_changes": 1
+}

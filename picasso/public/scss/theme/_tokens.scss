@@ -1,0 +1,81 @@
+/* Source tokens (--picasso-light-* / --picasso-dark-*) are set in desk_boot.js.
+   Active aliases and Frappe variables remap here from data-theme. */
+
+@mixin picasso-frappe-remap {
+	--bg-color: var(--picasso-page-bg);
+	--fg-color: var(--picasso-list-card-bg);
+	--card-bg: var(--picasso-list-card-bg);
+	--modal-bg: var(--picasso-list-card-bg);
+	--popover-bg: var(--picasso-list-card-bg);
+	--toast-bg: var(--picasso-list-card-bg);
+	--navbar-bg: var(--picasso-navbar-start);
+	--surface-menu-bar: var(--picasso-sidebar-start);
+	--surface-white: var(--picasso-list-card-bg);
+	--subtle-fg: var(--picasso-list-header-bg);
+	--subtle-accent: var(--picasso-list-header-bg);
+	--border-color: var(--picasso-list-border);
+	--dark-border-color: var(--picasso-list-border);
+	--table-border-color: var(--picasso-list-border);
+	--btn-primary: var(--picasso-desk-accent);
+	--primary: var(--picasso-desk-accent);
+	--primary-color: var(--picasso-desk-accent);
+	--brand-color: var(--picasso-desk-accent);
+	--sidebar-width: var(--picasso-sidebar-width, 240px);
+	--sidebar-select-color: var(--sidebar-hover-color);
+	--sidebar-active-color: color-mix(
+		in srgb,
+		var(--picasso-desk-accent) 18%,
+		var(--picasso-sidebar-start)
+	);
+	--sidebar-border-color: var(--picasso-list-border);
+}
+
+html.picasso-desk-theme {
+	--picasso-desk-accent: var(--picasso-light-accent, #2563eb);
+	--picasso-navbar-start: var(--picasso-light-navbar-start, #ffffff);
+	--picasso-navbar-end: var(--picasso-light-navbar-end, #ffffff);
+	--picasso-navbar-text: var(--picasso-light-navbar-text, #1f2937);
+	--picasso-sidebar-start: var(--picasso-light-sidebar-start, #f8f9fa);
+	--picasso-sidebar-end: var(--picasso-light-sidebar-end, #f8f9fa);
+	--picasso-sidebar-text: var(--picasso-light-sidebar-text, #1f2937);
+	--picasso-page-bg: var(--picasso-light-page-bg, #f4f5f8);
+	--picasso-page-head-bg: var(--picasso-light-page-head-bg, #ffffff);
+	--picasso-page-head-text: var(--picasso-light-page-head-text, #1f2937);
+	--picasso-list-card-bg: var(--picasso-light-list-card-bg, #ffffff);
+	--picasso-list-filter-bg: var(--picasso-light-list-filter-bg, #ffffff);
+	--picasso-list-header-bg: var(--picasso-light-list-header-bg, #f3f4f6);
+	--picasso-list-hover-bg: var(--picasso-light-list-hover-bg, #f3f4f6);
+	--picasso-list-border: var(--picasso-light-list-border, #e5e7eb);
+	--highlight-color: color-mix(
+		in srgb,
+		var(--picasso-list-hover-bg) 85%,
+		var(--picasso-desk-accent) 8%
+	);
+	--control-bg: color-mix(in srgb, var(--picasso-desk-accent) 6%, var(--picasso-page-bg));
+	--sidebar-hover-color: color-mix(in srgb, var(--picasso-desk-accent) 12%, transparent);
+	@include picasso-frappe-remap;
+}
+
+html.picasso-desk-theme[data-theme="dark"],
+html.picasso-desk-theme[data-bs-theme="dark"],
+html.picasso-desk-theme.picasso-dark-theme {
+	--picasso-desk-accent: var(--picasso-dark-accent, #2563eb);
+	--picasso-navbar-start: var(--picasso-dark-navbar-start, #13151c);
+	--picasso-navbar-end: var(--picasso-dark-navbar-end, #13151c);
+	--picasso-navbar-text: var(--picasso-dark-navbar-text, #e5e7eb);
+	--picasso-sidebar-start: var(--picasso-dark-sidebar-start, #13151c);
+	--picasso-sidebar-end: var(--picasso-dark-sidebar-end, #13151c);
+	--picasso-sidebar-text: var(--picasso-dark-sidebar-text, #e5e7eb);
+	--picasso-page-bg: var(--picasso-dark-page-bg, #0f1117);
+	--picasso-page-head-bg: var(--picasso-dark-page-head-bg, #1a1c24);
+	--picasso-page-head-text: var(--picasso-dark-page-head-text, #e5e7eb);
+	--picasso-list-card-bg: var(--picasso-dark-list-card-bg, #1a1c24);
+	--picasso-list-filter-bg: var(--picasso-dark-list-filter-bg, #1a1c24);
+	--picasso-list-header-bg: var(--picasso-dark-list-header-bg, #22252e);
+	--picasso-list-hover-bg: var(--picasso-dark-list-hover-bg, #2a2d38);
+	--picasso-list-border: var(--picasso-dark-list-border, #2a2d38);
+	--highlight-color: var(--picasso-list-hover-bg);
+	--control-bg: var(--picasso-list-hover-bg);
+	--sidebar-hover-color: color-mix(in srgb, var(--picasso-desk-accent) 22%, transparent);
+	@include picasso-frappe-remap;
+}

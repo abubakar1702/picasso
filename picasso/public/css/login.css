@@ -1,0 +1,520 @@
+/* Picasso custom login — full-viewport page + scoped form shell */
+
+html:has(body[data-path="login"]),
+body[data-path="login"] {
+	height: 100%;
+	min-height: 100%;
+	margin: 0 !important;
+	padding: 0 !important;
+	background: var(--picasso-page-bg, #0b0b12) !important;
+	background-color: var(--picasso-page-bg, #0b0b12) !important;
+}
+
+body[data-path="login"] .navbar,
+body[data-path="login"] .web-footer,
+body[data-path="login"] .page-footer,
+body[data-path="login"] .page-header-wrapper,
+body[data-path="login"] .page-breadcrumbs {
+	display: none !important;
+}
+
+body[data-path="login"] #page-login,
+body[data-path="login"] .page-content-wrapper,
+body[data-path="login"] .page_content,
+body[data-path="login"] main {
+	width: 100% !important;
+	max-width: none !important;
+	min-height: 100vh;
+	min-height: 100dvh;
+	margin: 0 !important;
+	padding: 0 !important;
+	background: var(--picasso-page-bg, #0b0b12) !important;
+	background-color: var(--picasso-page-bg, #0b0b12) !important;
+}
+
+.picasso-login {
+	--picasso-radius: 20px;
+	--picasso-input-radius: 12px;
+	min-height: 100vh;
+	min-height: 100dvh;
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 24px;
+	background: var(--picasso-page-bg, #0b0b12);
+	color: var(--picasso-text, #fff);
+	box-sizing: border-box;
+}
+
+.picasso-login *,
+.picasso-login *::before,
+.picasso-login *::after {
+	box-sizing: border-box;
+}
+
+.picasso-shell {
+	display: flex;
+	width: min(1040px, 100%);
+	min-height: min(640px, calc(100vh - 48px));
+	border-radius: var(--picasso-radius);
+	overflow: hidden;
+	background: var(--picasso-form-bg, #16161f);
+	box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
+}
+
+.picasso-login.form-only .picasso-shell {
+	width: min(440px, 100%);
+	min-height: auto;
+}
+
+.picasso-visual {
+	position: relative;
+	flex: 0 0 44%;
+	min-height: 520px;
+	background: #111118;
+	overflow: hidden;
+}
+
+.picasso-visual-top {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: 3;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 20px 22px;
+	gap: 12px;
+}
+
+.picasso-visual-top-actions {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin-left: auto;
+}
+
+.picasso-visual-logo {
+	height: 56px;
+	width: auto;
+	max-width: 220px;
+	object-fit: contain;
+}
+
+.picasso-visual-video {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	z-index: 0;
+}
+
+.picasso-link-chips {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.picasso-link-chips--form_footer {
+	margin-top: 20px;
+}
+
+.picasso-link-chip {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 6px 12px;
+	border-radius: 999px;
+	border: 1px solid rgba(255, 255, 255, 0.2);
+	color: var(--picasso-text, #fff) !important;
+	text-decoration: none !important;
+	font-size: 12px;
+	background: rgba(255, 255, 255, 0.08);
+}
+
+.picasso-link-chip img {
+	width: 16px;
+	height: 16px;
+	object-fit: contain;
+}
+
+.picasso-copyright {
+	margin: 16px 0 0;
+	font-size: 12px;
+	color: var(--picasso-muted, #a1a1aa);
+}
+
+.picasso-copyright a {
+	text-decoration: underline;
+	text-underline-offset: 2px;
+}
+
+.picasso-social {
+	margin-top: 12px;
+}
+
+.picasso-social-divider {
+	text-align: center;
+	color: var(--picasso-muted, #a1a1aa);
+	font-size: 13px;
+	margin: 8px 0 12px;
+}
+
+.picasso-social .btn-login-option {
+	margin-bottom: 8px;
+}
+
+.picasso-login-lang {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	gap: 6px;
+	margin-bottom: 8px;
+	font-size: 12px;
+	font-weight: 600;
+}
+
+.picasso-login-lang__opt {
+	color: var(--picasso-muted, #a1a1aa) !important;
+	text-decoration: none !important;
+}
+
+.picasso-login-lang__opt.is-active {
+	color: var(--picasso-text, #fff) !important;
+}
+
+.picasso-login-lang__sep {
+	color: var(--picasso-muted, #a1a1aa);
+	opacity: 0.5;
+}
+
+.picasso-back-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 8px 14px;
+	border: 1px solid rgba(255, 255, 255, 0.45);
+	border-radius: 999px;
+	color: #fff !important;
+	font-size: 13px;
+	text-decoration: none !important;
+	backdrop-filter: blur(6px);
+	background: rgba(0, 0, 0, 0.2);
+	white-space: nowrap;
+}
+
+.picasso-back-link:hover {
+	background: rgba(255, 255, 255, 0.12);
+	color: #fff !important;
+}
+
+.picasso-carousel,
+.picasso-visual-empty {
+	position: absolute;
+	inset: 0;
+}
+
+.picasso-slide {
+	position: absolute;
+	inset: 0;
+	opacity: 0;
+	transition: opacity 0.6s ease;
+	background-size: cover;
+	background-position: center;
+	background-color: #1a1a24;
+}
+
+.picasso-slide.is-active {
+	opacity: 1;
+	z-index: 1;
+}
+
+.picasso-slide-overlay {
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(
+		180deg,
+		rgba(0, 0, 0, 0.15) 0%,
+		rgba(0, 0, 0, 0.35) 45%,
+		rgba(0, 0, 0, 0.72) 100%
+	);
+	pointer-events: none;
+}
+
+.picasso-visual-empty .picasso-slide-overlay {
+	background: linear-gradient(
+		145deg,
+		color-mix(in srgb, var(--picasso-accent, #7c3aed) 35%, #0b0b12),
+		#0b0b12 70%
+	);
+}
+
+.picasso-slide-copy {
+	position: absolute;
+	left: 24px;
+	right: 24px;
+	bottom: 56px;
+	z-index: 2;
+	color: #fff;
+}
+
+.picasso-slide-title {
+	margin: 0 0 6px;
+	font-size: clamp(1.35rem, 2.2vw, 1.85rem);
+	font-weight: 650;
+	line-height: 1.25;
+	letter-spacing: -0.02em;
+	white-space: pre-line;
+}
+
+.picasso-slide-subtitle {
+	margin: 0;
+	font-size: 0.95rem;
+	opacity: 0.88;
+	line-height: 1.45;
+}
+
+.picasso-carousel-dots {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 22px;
+	z-index: 3;
+	display: flex;
+	justify-content: center;
+	gap: 8px;
+}
+
+.picasso-dot {
+	width: 22px;
+	height: 3px;
+	padding: 0;
+	border: 0;
+	border-radius: 2px;
+	background: rgba(255, 255, 255, 0.35);
+	cursor: pointer;
+}
+
+.picasso-dot.is-active {
+	background: #fff;
+}
+
+.picasso-form-panel {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	padding: 40px 44px;
+	background: var(--picasso-form-bg, #16161f);
+	color: var(--picasso-text, #fff);
+	min-width: 0;
+}
+
+.picasso-form-head {
+	margin-bottom: 28px;
+	text-align: center;
+}
+
+.picasso-form-logo {
+	display: block;
+	height: 96px;
+	width: auto;
+	max-width: 320px;
+	object-fit: contain;
+	margin: 0 auto 20px;
+}
+
+.picasso-heading {
+	margin: 0 0 8px;
+	font-size: clamp(1.6rem, 2.5vw, 2rem);
+	font-weight: 700;
+	letter-spacing: -0.03em;
+	color: var(--picasso-text, #fff);
+}
+
+.picasso-subheading {
+	margin: 0;
+	font-size: 0.95rem;
+	color: var(--picasso-muted, #a1a1aa);
+}
+
+.picasso-subheading a {
+	color: var(--picasso-text, #fff) !important;
+	font-weight: 600;
+	text-decoration: underline;
+	text-underline-offset: 2px;
+}
+
+.picasso-card {
+	background: transparent !important;
+	border: 0 !important;
+	box-shadow: none !important;
+	padding: 0 !important;
+	max-width: none !important;
+}
+
+.picasso-login .page-card-head,
+.picasso-login .for-login > .page-card-head {
+	display: none;
+}
+
+/* login.js toggles section visibility via hash; hide non-login until JS runs */
+.picasso-login .picasso-form-panel > section:not(.for-login) {
+	display: none;
+}
+
+.picasso-form-panel > section {
+	width: 100%;
+}
+
+.picasso-login .form-control {
+	height: 48px;
+	background: var(--picasso-input-bg, #1f1f2b) !important;
+	border: 1px solid var(--picasso-input-border, #2e2e3a) !important;
+	border-radius: var(--picasso-input-radius) !important;
+	color: var(--picasso-text, #fff) !important;
+	padding-left: 42px !important;
+	box-shadow: none !important;
+}
+
+.picasso-login .form-control::placeholder {
+	color: var(--picasso-muted, #a1a1aa);
+	opacity: 1;
+}
+
+.picasso-login .form-control:focus {
+	border-color: var(--picasso-accent, #7c3aed) !important;
+	outline: none;
+}
+
+.picasso-login .email-field,
+.picasso-login .password-field {
+	position: relative;
+}
+
+.picasso-login .field-icon {
+	position: absolute;
+	left: 14px;
+	top: 50%;
+	transform: translateY(-50%);
+	opacity: 0.55;
+	pointer-events: none;
+	z-index: 1;
+}
+
+.picasso-login .field-icon use {
+	stroke: var(--picasso-muted, #a1a1aa);
+}
+
+.picasso-login .toggle-password {
+	position: absolute;
+	right: 14px;
+	top: 50%;
+	transform: translateY(-50%);
+	cursor: pointer;
+	color: var(--picasso-muted, #a1a1aa) !important;
+	font-size: 13px;
+	z-index: 1;
+}
+
+.picasso-login .forgot-password-message {
+	text-align: right;
+	margin: -4px 0 18px;
+}
+
+.picasso-login .forgot-password-message a,
+.picasso-login .sign-up-message a {
+	color: var(--picasso-muted, #a1a1aa) !important;
+	font-size: 13px;
+}
+
+.picasso-login .sign-up-message {
+	color: var(--picasso-muted, #a1a1aa);
+}
+
+.picasso-login .btn-primary,
+.picasso-login .btn-login:not(.btn-default),
+.picasso-login .btn-forgot,
+.picasso-login .btn-login-with-email-link {
+	height: 48px;
+	border: 0 !important;
+	border-radius: var(--picasso-input-radius) !important;
+	background: var(--picasso-accent, #7c3aed) !important;
+	color: #fff !important;
+	font-weight: 600;
+	font-size: 0.95rem;
+}
+
+.picasso-login .btn-primary:hover,
+.picasso-login .btn-login:not(.btn-default):hover,
+.picasso-login .btn-forgot:hover,
+.picasso-login .btn-login-with-email-link:hover {
+	filter: brightness(1.08);
+}
+
+.picasso-login .btn-default,
+.picasso-login .btn-login-option {
+	height: 44px;
+	border-radius: var(--picasso-input-radius) !important;
+	background: var(--picasso-input-bg, #1f1f2b) !important;
+	border: 1px solid var(--picasso-input-border, #2e2e3a) !important;
+	color: var(--picasso-text, #fff) !important;
+}
+
+.picasso-login.picasso-login--enter .picasso-shell {
+	animation: picasso-login-enter 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes picasso-login-enter {
+	from {
+		opacity: 0;
+		transform: translateY(16px) scale(0.985);
+	}
+	to {
+		opacity: 1;
+		transform: none;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.picasso-login.picasso-login--enter .picasso-shell {
+		animation: none;
+	}
+}
+
+.picasso-login .form-group {
+	margin-bottom: 14px;
+}
+
+.picasso-login .page-card-body {
+	margin-bottom: 8px;
+}
+
+/* Signup form fields inside Picasso shell */
+.picasso-login .for-signup .form-control {
+	padding-left: 14px !important;
+}
+
+@media (max-width: 860px) {
+	.picasso-shell {
+		flex-direction: column;
+		min-height: auto;
+	}
+
+	.picasso-visual {
+		flex: none;
+		min-height: 220px;
+		height: 240px;
+	}
+
+	.picasso-slide-copy {
+		bottom: 40px;
+	}
+
+	.picasso-form-panel {
+		padding: 28px 22px 32px;
+	}
+}

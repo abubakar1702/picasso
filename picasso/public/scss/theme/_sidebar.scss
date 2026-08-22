@@ -1,0 +1,34 @@
+/* v16 rail is .body-sidebar. Width, hover, and active come from remapped
+   Frappe tokens (--sidebar-width, --sidebar-hover-color, --sidebar-active-color).
+   Do not pin width on the container — that kills the 50px collapsed rail. */
+
+html.picasso-desk-theme {
+	.body-sidebar {
+		background: linear-gradient(
+			180deg,
+			var(--picasso-sidebar-start) 0%,
+			var(--picasso-sidebar-end) 100%
+		);
+		border-right: 1px solid var(--sidebar-border-color);
+
+		.item-anchor {
+			color: var(--picasso-sidebar-text);
+		}
+
+		.active-sidebar .item-anchor {
+			color: var(--picasso-sidebar-text);
+			font-weight: 600;
+		}
+	}
+
+	.sidebar-header .header-logo img {
+		width: 28px;
+		height: 28px;
+		object-fit: contain;
+		border-radius: 6px;
+	}
+
+	&.picasso-hide-sidebar .body-sidebar-container {
+		display: none;
+	}
+}

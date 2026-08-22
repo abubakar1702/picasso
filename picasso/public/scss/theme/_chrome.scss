@@ -1,0 +1,80 @@
+html.picasso-desk-theme {
+	&,
+	body,
+	.main-section,
+	.container.page-body,
+	.page-container,
+	.layout-main-section-wrapper,
+	.layout-main-section,
+	.page-body,
+	#body,
+	.content.page-container {
+		background-color: var(--bg-color) !important;
+	}
+
+	header.navbar,
+	.navbar,
+	.navbar.navbar-expand {
+		background: linear-gradient(
+			135deg,
+			var(--picasso-navbar-start) 0%,
+			var(--picasso-navbar-end) 55%,
+			var(--picasso-navbar-start) 100%
+		) !important;
+		border-bottom: 1px solid var(--border-color) !important;
+
+		.nav-link,
+		.navbar-brand,
+		.btn,
+		svg,
+		.icon {
+			color: var(--picasso-navbar-text) !important;
+			fill: currentColor;
+		}
+
+		.form-control,
+		input[type="search"] {
+			background: var(--control-bg) !important;
+			border: 1px solid var(--border-color) !important;
+			color: var(--picasso-navbar-text) !important;
+		}
+
+		.form-control::placeholder,
+		input::placeholder {
+			color: color-mix(in srgb, var(--picasso-navbar-text) 60%, transparent) !important;
+		}
+	}
+
+	.page-head {
+		background: var(--picasso-page-head-bg) !important;
+		border-bottom-color: var(--border-color) !important;
+
+		.page-title,
+		.page-title *,
+		.title-text,
+		.sidebar-toggle-btn,
+		.btn,
+		.btn-default,
+		.icon-btn,
+		.menu-btn-group .btn,
+		.actions-btn-group .btn,
+		svg,
+		.icon {
+			color: var(--picasso-page-head-text) !important;
+			fill: currentColor;
+			stroke: currentColor;
+		}
+
+		.btn-primary {
+			background: var(--picasso-desk-accent) !important;
+			border-color: var(--picasso-desk-accent) !important;
+			color: #ffffff !important;
+
+			svg,
+			.icon {
+				color: #ffffff !important;
+				stroke: currentColor;
+			}
+		}
+	}
+}

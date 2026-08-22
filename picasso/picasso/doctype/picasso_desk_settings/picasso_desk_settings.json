@@ -1,0 +1,490 @@
+{
+ "actions": [],
+ "creation": "2026-08-21 12:15:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "enable_section",
+  "enabled",
+  "redirect_link_workspaces",
+  "enable_hide_form_actions",
+  "show_left_sidebar",
+  "show_full_number_in_number_card",
+  "column_break_enable",
+  "app_logo",
+  "favicon",
+  "language_section",
+  "show_language_switch",
+  "language_a",
+  "language_a_label",
+  "column_break_lang",
+  "language_b",
+  "language_b_label",
+  "theme_section",
+  "accent_color",
+  "navbar_color_start",
+  "navbar_color_end",
+  "column_break_theme",
+  "sidebar_color_start",
+  "sidebar_color_end",
+  "navbar_text_color",
+  "sidebar_text_color",
+  "surfaces_section",
+  "page_background",
+  "page_head_background",
+  "column_break_surfaces",
+  "page_head_text_color",
+  "list_section",
+  "enhance_list_ui",
+  "list_card_background",
+  "list_filter_background",
+  "column_break_list",
+  "list_header_background",
+  "list_row_hover_background",
+  "list_border_color",
+  "tokens_section",
+  "surface_radius",
+  "sidebar_width",
+  "dark_theme_section",
+  "dark_accent_color",
+  "dark_navbar_color_start",
+  "dark_navbar_color_end",
+  "column_break_dark_theme",
+  "dark_sidebar_color_start",
+  "dark_sidebar_color_end",
+  "dark_navbar_text_color",
+  "dark_sidebar_text_color",
+  "dark_surfaces_section",
+  "dark_page_background",
+  "dark_page_head_background",
+  "column_break_dark_surfaces",
+  "dark_page_head_text_color",
+  "dark_list_card_background",
+  "dark_list_filter_background",
+  "column_break_dark_list",
+  "dark_list_header_background",
+  "dark_list_row_hover_background",
+  "dark_list_border_color",
+  "custom_css"
+ ],
+ "fields": [
+  {
+   "fieldname": "enable_section",
+   "fieldtype": "Section Break",
+   "label": "Enable"
+  },
+  {
+   "default": "1",
+   "description": "Apply Picasso navbar / sidebar styling across Desk.",
+   "fieldname": "enabled",
+   "fieldtype": "Check",
+   "label": "Enable Desk Theme"
+  },
+  {
+   "default": "1",
+   "depends_on": "enabled",
+   "description": "Redirect Link-type Workspaces to their linked Page / DocType.",
+   "fieldname": "redirect_link_workspaces",
+   "fieldtype": "Check",
+   "label": "Redirect Link Workspaces"
+  },
+  {
+   "default": "1",
+   "depends_on": "enabled",
+   "description": "Honor Picasso Hide Form Action configs on forms.",
+   "fieldname": "enable_hide_form_actions",
+   "fieldtype": "Check",
+   "label": "Enable Hide Form Actions"
+  },
+  {
+   "default": "1",
+   "depends_on": "enabled",
+   "description": "When unchecked, hide the left desk sidebar.",
+   "fieldname": "show_left_sidebar",
+   "fieldtype": "Check",
+   "label": "Show Left Sidebar"
+  },
+  {
+   "default": "0",
+   "depends_on": "enabled",
+   "description": "Prevent number cards from truncating large values.",
+   "fieldname": "show_full_number_in_number_card",
+   "fieldtype": "Check",
+   "label": "Show Full Number in Number Card"
+  },
+  {
+   "fieldname": "column_break_enable",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "enabled",
+   "description": "Synced to Navbar Settings (Lego Core style) and used as the Desk sidebar brand image.",
+   "fieldname": "app_logo",
+   "fieldtype": "Attach Image",
+   "label": "Desk App Logo"
+  },
+  {
+   "depends_on": "enabled",
+   "description": "Browser tab icon. Upload a .ico, .png, or .svg file (32x32 recommended).",
+   "fieldname": "favicon",
+   "fieldtype": "Attach Image",
+   "label": "Favicon"
+  },
+  {
+   "depends_on": "enabled",
+   "fieldname": "language_section",
+   "fieldtype": "Section Break",
+   "label": "Language Switch"
+  },
+  {
+   "default": "0",
+   "depends_on": "enabled",
+   "fieldname": "show_language_switch",
+   "fieldtype": "Check",
+   "label": "Show Language Switch"
+  },
+  {
+   "default": "en",
+   "depends_on": "show_language_switch",
+   "fieldname": "language_a",
+   "fieldtype": "Link",
+   "label": "Language A",
+   "options": "Language"
+  },
+  {
+   "default": "EN",
+   "depends_on": "show_language_switch",
+   "fieldname": "language_a_label",
+   "fieldtype": "Data",
+   "label": "Language A Label"
+  },
+  {
+   "fieldname": "column_break_lang",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "bn",
+   "depends_on": "show_language_switch",
+   "fieldname": "language_b",
+   "fieldtype": "Link",
+   "label": "Language B",
+   "options": "Language"
+  },
+  {
+   "default": "বাং",
+   "depends_on": "show_language_switch",
+   "fieldname": "language_b_label",
+   "fieldtype": "Data",
+   "label": "Language B Label"
+  },
+  {
+   "depends_on": "enabled",
+   "fieldname": "theme_section",
+   "fieldtype": "Section Break",
+   "label": "Desk Colors"
+  },
+  {
+   "default": "#2563eb",
+   "fieldname": "accent_color",
+   "fieldtype": "Color",
+   "label": "Accent Color"
+  },
+  {
+   "default": "#FFFFFF",
+   "fieldname": "navbar_color_start",
+   "fieldtype": "Color",
+   "label": "Navbar Gradient Start"
+  },
+  {
+   "default": "#FFFFFF",
+   "fieldname": "navbar_color_end",
+   "fieldtype": "Color",
+   "label": "Navbar Gradient End"
+  },
+  {
+   "fieldname": "column_break_theme",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "#F8F9FA",
+   "fieldname": "sidebar_color_start",
+   "fieldtype": "Color",
+   "label": "Sidebar Gradient Start"
+  },
+  {
+   "default": "#F8F9FA",
+   "fieldname": "sidebar_color_end",
+   "fieldtype": "Color",
+   "label": "Sidebar Gradient End"
+  },
+  {
+   "default": "#1F2937",
+   "fieldname": "navbar_text_color",
+   "fieldtype": "Color",
+   "label": "Navbar Text Color"
+  },
+  {
+   "default": "#1F2937",
+   "fieldname": "sidebar_text_color",
+   "fieldtype": "Color",
+   "label": "Sidebar Active Text"
+  },
+  {
+   "depends_on": "enabled",
+   "fieldname": "surfaces_section",
+   "fieldtype": "Section Break",
+   "label": "Page Surfaces"
+  },
+  {
+   "default": "#F4F5F8",
+   "description": "Main Desk / list / form canvas background (replaces Frappe light mode pure white).",
+   "fieldname": "page_background",
+   "fieldtype": "Color",
+   "label": "Page Background"
+  },
+  {
+   "default": "#FFFFFF",
+   "description": "Sticky page head bar on DocType forms, lists, and reports (title + actions row).",
+   "fieldname": "page_head_background",
+   "fieldtype": "Color",
+   "label": "DocType Navbar Background"
+  },
+  {
+   "fieldname": "column_break_surfaces",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "#1F2937",
+   "description": "Title and action text/icons on the DocType navbar.",
+   "fieldname": "page_head_text_color",
+   "fieldtype": "Color",
+   "label": "DocType Navbar Text"
+  },
+  {
+   "depends_on": "enabled",
+   "fieldname": "list_section",
+   "fieldtype": "Section Break",
+   "label": "List View"
+  },
+  {
+   "default": "1",
+   "depends_on": "enabled",
+   "description": "Card-style DocType lists (filters separated from results), like a polished list shell.",
+   "fieldname": "enhance_list_ui",
+   "fieldtype": "Check",
+   "label": "Enhance List UI"
+  },
+  {
+   "default": "#FFFFFF",
+   "depends_on": "enhance_list_ui",
+   "description": "Background of the list results card.",
+   "fieldname": "list_card_background",
+   "fieldtype": "Color",
+   "label": "List Card Background"
+  },
+  {
+   "default": "#FFFFFF",
+   "depends_on": "enhance_list_ui",
+   "description": "Background of the filter / sort bar above the list.",
+   "fieldname": "list_filter_background",
+   "fieldtype": "Color",
+   "label": "List Filter Bar Background"
+  },
+  {
+   "fieldname": "column_break_list",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "#F3F4F6",
+   "depends_on": "enhance_list_ui",
+   "description": "Column header row background.",
+   "fieldname": "list_header_background",
+   "fieldtype": "Color",
+   "label": "List Header Background"
+  },
+  {
+   "default": "#F3F4F6",
+   "depends_on": "enhance_list_ui",
+   "description": "Row hover highlight. Defaults to a soft tint of Accent if left as-is.",
+   "fieldname": "list_row_hover_background",
+   "fieldtype": "Color",
+   "label": "List Row Hover"
+  },
+  {
+   "default": "#E5E7EB",
+   "depends_on": "enhance_list_ui",
+   "fieldname": "list_border_color",
+   "fieldtype": "Color",
+   "label": "List Border Color"
+  },
+  {
+   "depends_on": "enabled",
+   "fieldname": "tokens_section",
+   "fieldtype": "Section Break",
+   "label": "Tokens and Custom CSS"
+  },
+  {
+   "default": "8",
+   "description": "Border radius in px for selected sidebar items and cards.",
+   "fieldname": "surface_radius",
+   "fieldtype": "Int",
+   "label": "Surface Radius (px)"
+  },
+  {
+   "default": "240",
+   "description": "Preferred left sidebar width in px.",
+   "fieldname": "sidebar_width",
+   "fieldtype": "Int",
+   "label": "Sidebar Width (px)"
+  },
+  {
+   "depends_on": "enabled",
+   "fieldname": "dark_theme_section",
+   "fieldtype": "Section Break",
+   "label": "Dark Mode Colors"
+  },
+  {
+   "default": "#2563EB",
+   "fieldname": "dark_accent_color",
+   "fieldtype": "Color",
+   "label": "Dark Accent Color"
+  },
+  {
+   "default": "#13151C",
+   "fieldname": "dark_navbar_color_start",
+   "fieldtype": "Color",
+   "label": "Dark Navbar Gradient Start"
+  },
+  {
+   "default": "#13151C",
+   "fieldname": "dark_navbar_color_end",
+   "fieldtype": "Color",
+   "label": "Dark Navbar Gradient End"
+  },
+  {
+   "fieldname": "column_break_dark_theme",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "#13151C",
+   "fieldname": "dark_sidebar_color_start",
+   "fieldtype": "Color",
+   "label": "Dark Sidebar Gradient Start"
+  },
+  {
+   "default": "#13151C",
+   "fieldname": "dark_sidebar_color_end",
+   "fieldtype": "Color",
+   "label": "Dark Sidebar Gradient End"
+  },
+  {
+   "default": "#E5E7EB",
+   "fieldname": "dark_navbar_text_color",
+   "fieldtype": "Color",
+   "label": "Dark Navbar Text Color"
+  },
+  {
+   "default": "#E5E7EB",
+   "fieldname": "dark_sidebar_text_color",
+   "fieldtype": "Color",
+   "label": "Dark Sidebar Active Text"
+  },
+  {
+   "depends_on": "enabled",
+   "fieldname": "dark_surfaces_section",
+   "fieldtype": "Section Break",
+   "label": "Dark Mode Surfaces"
+  },
+  {
+   "default": "#0F1117",
+   "fieldname": "dark_page_background",
+   "fieldtype": "Color",
+   "label": "Dark Page Background"
+  },
+  {
+   "default": "#1A1C24",
+   "fieldname": "dark_page_head_background",
+   "fieldtype": "Color",
+   "label": "Dark DocType Navbar Background"
+  },
+  {
+   "fieldname": "column_break_dark_surfaces",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "#E5E7EB",
+   "fieldname": "dark_page_head_text_color",
+   "fieldtype": "Color",
+   "label": "Dark DocType Navbar Text"
+  },
+  {
+   "default": "#1A1C24",
+   "depends_on": "enhance_list_ui",
+   "fieldname": "dark_list_card_background",
+   "fieldtype": "Color",
+   "label": "Dark List Card Background"
+  },
+  {
+   "default": "#1A1C24",
+   "depends_on": "enhance_list_ui",
+   "fieldname": "dark_list_filter_background",
+   "fieldtype": "Color",
+   "label": "Dark List Filter Background"
+  },
+  {
+   "fieldname": "column_break_dark_list",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "#22252E",
+   "depends_on": "enhance_list_ui",
+   "fieldname": "dark_list_header_background",
+   "fieldtype": "Color",
+   "label": "Dark List Header Background"
+  },
+  {
+   "default": "#2A2D38",
+   "depends_on": "enhance_list_ui",
+   "fieldname": "dark_list_row_hover_background",
+   "fieldtype": "Color",
+   "label": "Dark List Row Hover"
+  },
+  {
+   "default": "#2A2D38",
+   "depends_on": "enhance_list_ui",
+   "fieldname": "dark_list_border_color",
+   "fieldtype": "Color",
+   "label": "Dark List Border Color"
+  },
+  {
+   "description": "Optional CSS injected into Desk when theme is enabled. Prefer CSS variables over !important overrides.",
+   "fieldname": "custom_css",
+   "fieldtype": "Code",
+   "label": "Custom CSS",
+   "options": "CSS"
+  }
+ ],
+ "issingle": 1,
+ "links": [],
+ "modified": "2026-08-21 15:35:00.000000",
+ "modified_by": "Administrator",
+ "module": "Picasso",
+ "name": "Picasso Desk Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

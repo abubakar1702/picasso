@@ -1,0 +1,278 @@
+{
+ "actions": [],
+ "creation": "2026-08-21 11:45:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "enable_section",
+  "enabled",
+  "show_visual_panel",
+  "show_login_with_email_link",
+  "show_social_logins",
+  "column_break_enable",
+  "carousel_interval",
+  "visual_video",
+  "brand_section",
+  "logo",
+  "visual_logo",
+  "column_break_brand",
+  "heading",
+  "subheading_html",
+  "back_to_website_url",
+  "back_to_website_label",
+  "colors_section",
+  "page_background",
+  "form_background",
+  "accent_color",
+  "column_break_colors",
+  "text_color",
+  "muted_text_color",
+  "input_background",
+  "input_border_color",
+  "copyright_section",
+  "copyright_text",
+  "copyright_url",
+  "column_break_copy",
+  "copyright_url_label",
+  "copyright_text_color",
+  "slides_section",
+  "slides",
+  "links_section",
+  "links"
+ ],
+ "fields": [
+  {
+   "fieldname": "enable_section",
+   "fieldtype": "Section Break",
+   "label": "Enable"
+  },
+  {
+   "default": "1",
+   "description": "When disabled, the stock Frappe login page is shown.",
+   "fieldname": "enabled",
+   "fieldtype": "Check",
+   "label": "Enable Custom Login"
+  },
+  {
+   "default": "1",
+   "depends_on": "enabled",
+   "description": "Show the left visual / carousel panel. Turn off for a form-only login card.",
+   "fieldname": "show_visual_panel",
+   "fieldtype": "Check",
+   "label": "Show Visual Panel"
+  },
+  {
+   "default": "0",
+   "depends_on": "enabled",
+   "fieldname": "show_login_with_email_link",
+   "fieldtype": "Check",
+   "label": "Show Login with Email Link"
+  },
+  {
+   "default": "1",
+   "depends_on": "enabled",
+   "description": "Show OAuth / social provider buttons when configured in Social Login Key.",
+   "fieldname": "show_social_logins",
+   "fieldtype": "Check",
+   "label": "Show Social Logins"
+  },
+  {
+   "fieldname": "column_break_enable",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "5",
+   "depends_on": "eval:doc.enabled && doc.show_visual_panel",
+   "description": "Seconds between carousel slides.",
+   "fieldname": "carousel_interval",
+   "fieldtype": "Int",
+   "label": "Carousel Interval (seconds)"
+  },
+  {
+   "depends_on": "eval:doc.enabled && doc.show_visual_panel",
+   "description": "Muted looping video behind the visual panel. Slides overlay the video when both are set.",
+   "fieldname": "visual_video",
+   "fieldtype": "Attach",
+   "label": "Visual Panel Video"
+  },
+  {
+   "depends_on": "enabled",
+   "fieldname": "brand_section",
+   "fieldtype": "Section Break",
+   "label": "Brand and Copy"
+  },
+  {
+   "description": "Logo shown above the form. Falls back to Website Settings / app logo.",
+   "fieldname": "logo",
+   "fieldtype": "Attach Image",
+   "label": "Form Logo"
+  },
+  {
+   "description": "Logo overlay on the visual panel (top-left).",
+   "fieldname": "visual_logo",
+   "fieldtype": "Attach Image",
+   "label": "Visual Panel Logo"
+  },
+  {
+   "fieldname": "column_break_brand",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Log in",
+   "fieldname": "heading",
+   "fieldtype": "Data",
+   "label": "Heading"
+  },
+  {
+   "description": "HTML allowed. Shown under the heading (e.g. signup hint).",
+   "fieldname": "subheading_html",
+   "fieldtype": "Small Text",
+   "label": "Subheading HTML"
+  },
+  {
+   "fieldname": "back_to_website_url",
+   "fieldtype": "Data",
+   "label": "Back to Website URL",
+   "options": "URL"
+  },
+  {
+   "default": "Back to website",
+   "fieldname": "back_to_website_label",
+   "fieldtype": "Data",
+   "label": "Back to Website Label"
+  },
+  {
+   "depends_on": "enabled",
+   "fieldname": "colors_section",
+   "fieldtype": "Section Break",
+   "label": "Colors"
+  },
+  {
+   "default": "#0B0B12",
+   "fieldname": "page_background",
+   "fieldtype": "Color",
+   "label": "Page Background"
+  },
+  {
+   "default": "#16161F",
+   "fieldname": "form_background",
+   "fieldtype": "Color",
+   "label": "Form Background"
+  },
+  {
+   "default": "#7C3AED",
+   "fieldname": "accent_color",
+   "fieldtype": "Color",
+   "label": "Accent Color"
+  },
+  {
+   "fieldname": "column_break_colors",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "#FFFFFF",
+   "fieldname": "text_color",
+   "fieldtype": "Color",
+   "label": "Text Color"
+  },
+  {
+   "default": "#A1A1AA",
+   "fieldname": "muted_text_color",
+   "fieldtype": "Color",
+   "label": "Muted Text Color"
+  },
+  {
+   "default": "#1F1F2B",
+   "fieldname": "input_background",
+   "fieldtype": "Color",
+   "label": "Input Background"
+  },
+  {
+   "default": "#2E2E3A",
+   "fieldname": "input_border_color",
+   "fieldtype": "Color",
+   "label": "Input Border Color"
+  },
+  {
+   "depends_on": "enabled",
+   "fieldname": "copyright_section",
+   "fieldtype": "Section Break",
+   "label": "Copyright"
+  },
+  {
+   "fieldname": "copyright_text",
+   "fieldtype": "Data",
+   "label": "Copyright Text"
+  },
+  {
+   "fieldname": "copyright_url",
+   "fieldtype": "Data",
+   "label": "Copyright URL",
+   "options": "URL"
+  },
+  {
+   "fieldname": "column_break_copy",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "copyright_url_label",
+   "fieldtype": "Data",
+   "label": "Copyright URL Label"
+  },
+  {
+   "default": "#A1A1AA",
+   "fieldname": "copyright_text_color",
+   "fieldtype": "Color",
+   "label": "Copyright Text Color"
+  },
+  {
+   "depends_on": "eval:doc.enabled && doc.show_visual_panel",
+   "description": "Carousel slides for the visual panel. Leave empty for a solid-color panel with logo only.",
+   "fieldname": "slides_section",
+   "fieldtype": "Section Break",
+   "label": "Visual Slides"
+  },
+  {
+   "fieldname": "slides",
+   "fieldtype": "Table",
+   "label": "Slides",
+   "options": "Picasso Login Slide"
+  },
+  {
+   "depends_on": "enabled",
+   "fieldname": "links_section",
+   "fieldtype": "Section Break",
+   "label": "Links"
+  },
+  {
+   "description": "Optional chips. visual_top sits on the visual panel; form_footer sits under the login form.",
+   "fieldname": "links",
+   "fieldtype": "Table",
+   "label": "Links",
+   "options": "Picasso Login Link"
+  }
+ ],
+ "issingle": 1,
+ "links": [],
+ "modified": "2026-08-21 14:45:00.000000",
+ "modified_by": "Administrator",
+ "module": "Picasso",
+ "name": "Picasso Login Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

@@ -1,0 +1,71 @@
+@media (max-width: 767px) {
+	html.picasso-desk-theme {
+		.body-sidebar-container.expanded .body-sidebar {
+			box-shadow: 8px 0 24px rgba(0, 0, 0, 0.25);
+		}
+
+		header.navbar .navbar-brand img,
+		header.navbar .app-logo {
+			max-height: 26px;
+		}
+
+		header.navbar .form-control,
+		header.navbar input[type="search"] {
+			max-width: 160px;
+			font-size: 13px;
+		}
+
+		.picasso-lang-switch {
+			padding: 3px 8px;
+			font-size: 11px;
+			margin-right: 4px;
+		}
+
+		.page-head {
+			padding-left: 8px !important;
+			padding-right: 8px !important;
+
+			.page-title .title-text {
+				font-size: 14px !important;
+			}
+		}
+
+		&.picasso-enhanced-list .frappe-list {
+			margin: 0 4px 8px;
+			padding: 8px 6px 6px;
+			border-radius: calc(var(--picasso-surface-radius, 8px) * 0.75);
+
+			.list-row {
+				padding-left: 8px;
+				padding-right: 8px;
+			}
+
+			.list-row-head {
+				font-size: 11px;
+			}
+		}
+	}
+}
+
+@media (max-width: 480px) {
+	html.picasso-desk-theme {
+		header.navbar {
+			padding-left: 8px !important;
+			padding-right: 8px !important;
+
+			.form-control,
+			input[type="search"] {
+				max-width: 120px;
+			}
+		}
+
+		.page-head .page-actions {
+			gap: 4px;
+		}
+
+		.page-head .btn {
+			padding: 4px 8px !important;
+			font-size: 12px !important;
+		}
+	}
+}

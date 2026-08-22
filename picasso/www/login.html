@@ -1,0 +1,487 @@
+{% extends "templates/web.html" %}
+{% block navbar %}{% endblock %}
+
+{% set pl = picasso_login or {} %}
+{% set picasso_enabled = pl.enabled %}
+
+{% macro email_login_body() -%}
+{% if not disable_user_pass_login or (ldap_settings and ldap_settings.enabled) %}
+<div class="page-card-body">
+	<div class="form-group">
+		<label class="form-label sr-only" for="login_email">{{ login_label or _("Email")}}</label>
+		<div class="email-field">
+			<input type="text" id="login_email" class="form-control"
+				placeholder="{% if login_name_placeholder %}{{ login_name_placeholder }}{% else %}{{ _('jane@example.com') }}{% endif %}"
+				required autofocus autocomplete="username">
+
+			<svg class="field-icon email-icon" width="16" height="16" viewBox="0 0 16 16" fill="none"
+				xmlns="http://www.w3.org/2000/svg">
+				<use class="es-lock" href="#es-line-email"></use>
+			</svg>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="form-label sr-only" for="login_password">{{ _("Password") }}</label>
+		<div class="password-field">
+			<input type="password" id="login_password" class="form-control" placeholder="•••••"
+				autocomplete="current-password" required>
+
+			<svg class="field-icon password-icon" width="16" height="16" viewBox="0 0 16 16" fill="none"
+				xmlns="http://www.w3.org/2000/svg">
+				<use class="es-lock" href="#es-line-lock"></use>
+			</svg>
+			<span toggle="#login_password" class="toggle-password text-muted">{{ _('Show') }}</span>
+		</div>
+	</div>
+
+	{% if not disable_user_pass_login %}
+	<p class="forgot-password-message">
+		<a href="#forgot">{{ _("Forgot Password?") }}</a>
+	</p>
+	{% endif %}
+</div>
+{% endif %}
+<div class="page-card-actions">
+	{% if not disable_user_pass_login %}
+	<button class="btn btn-sm btn-primary btn-block btn-login" type="submit">
+		{{ _("Login") }}</button>
+	{% endif %}
+	{% if ldap_settings and ldap_settings.enabled %}
+	<button class="btn btn-sm {{ "btn-primary" if disable_user_pass_login else "btn-default" }} btn-block btn-login btn-ldap-login">
+		{{ _("Login with LDAP") }}</button>
+	{% endif %}
+	{% if picasso_enabled and login_with_email_link %}
+	<a href="#login-with-email-link" class="btn btn-block btn-default btn-sm btn-login-option btn-login-with-email-link mt-2">
+		{{ _("Login with Email Link") }}</a>
+	{% endif %}
+</div>
+{% endmacro %}
+
+{% macro stock_logo_section(title=null) %}
+<div class="page-card-head">
+	<img class="app-logo" src="{{ logo }}">
+	{% if title %}
+	<h4>{{ _(title)}}</h4>
+	{% else %}
+	<h4>{{ _('Login to {0}').format(app_name or _("Frappe")) }}</h4>
+	{% endif %}
+</div>
+{% endmacro %}
+
+{% macro picasso_form_head(title=null) %}
+<div class="picasso-form-head">
+	{% if logo %}
+	<img class="picasso-form-logo" src="{{ logo }}" alt="{{ app_name or '' }}">
+	{% endif %}
+	<h1 class="picasso-heading">
+		{% if title %}
+			{{ _(title) }}
+		{% else %}
+			{{ _(pl.heading or "Log in") }}
+		{% endif %}
+	</h1>
+	{% if pl.subheading_html and not title %}
+	<div class="picasso-subheading">{{ pl.subheading_html }}</div>
+	{% elif not disable_signup and not disable_user_pass_login and not title %}
+	<p class="picasso-subheading">
+		{{ _("Don't have an account?") }}
+		<a href="#signup">{{ _("Sign up") }}</a>
+	</p>
+	{% endif %}
+</div>
+{% endmacro %}
+
+{% macro login_links(placement) %}
+{% set ns = namespace(count=0) %}
+{% for link in pl.links or [] %}
+	{% if link.placement == placement %}
+		{% set ns.count = ns.count + 1 %}
+	{% endif %}
+{% endfor %}
+{% if ns.count %}
+<div class="picasso-link-chips picasso-link-chips--{{ placement }}">
+	{% for link in pl.links or [] %}
+	{% if link.placement == placement %}
+	<a class="picasso-link-chip" href="{{ link.url }}">
+		{% if link.icon %}<img src="{{ link.icon }}" alt=""> {% endif %}
+		{{ _(link.label) }}
+	</a>
+	{% endif %}
+	{% endfor %}
+</div>
+{% endif %}
+{% endmacro %}
+
+{% macro social_logins() %}
+{% if pl.show_social_logins and (provider_logins or login_with_frappe_cloud_url) %}
+<div class="picasso-social">
+	{% if not disable_user_pass_login %}
+	<p class="picasso-social-divider">{{ _("or") }}</p>
+	{% endif %}
+	{% for provider in provider_logins %}
+	<a href="{{ provider.auth_url }}" class="btn btn-block btn-default btn-sm btn-login-option btn-{{ provider.name }}">
+		{% if provider.icon %}{{ provider.icon }}{% endif %}
+		{{ _("Login with {0}").format(provider.provider_name) }}
+	</a>
+	{% endfor %}
+	{% if login_with_frappe_cloud_url %}
+	<a href="{{ login_with_frappe_cloud_url }}" class="btn btn-block btn-default btn-sm btn-login-option">
+		{{ _("Login with Frappe Cloud") }}
+	</a>
+	{% endif %}
+</div>
+{% endif %}
+{% endmacro %}
+
+{% macro copyright_block() %}
+{% if pl.copyright_text or pl.copyright_url %}
+<p class="picasso-copyright" style="color: {{ pl.copyright_text_color or '#A1A1AA' }}">
+	{% if pl.copyright_text %}{{ pl.copyright_text | e }}{% endif %}
+	{% if pl.copyright_url %}
+	<a href="{{ pl.copyright_url | e }}" style="color: {{ pl.copyright_text_color or '#A1A1AA' }}">
+		{{ _(pl.copyright_url_label or pl.copyright_url) | e }}
+	</a>
+	{% endif %}
+</p>
+{% endif %}
+{% endmacro %}
+
+{% macro login_language_switch() %}
+{% if pl.show_language_switch %}
+{% set lang_now = current_language or "en" %}
+<div class="picasso-login-lang">
+	<a class="picasso-login-lang__opt {% if lang_now == pl.language_a %}is-active{% endif %}"
+		href="?_lang={{ pl.language_a }}">{{ pl.language_a_label }}</a>
+	<span class="picasso-login-lang__sep">/</span>
+	<a class="picasso-login-lang__opt {% if lang_now == pl.language_b %}is-active{% endif %}"
+		href="?_lang={{ pl.language_b }}">{{ pl.language_b_label }}</a>
+</div>
+{% endif %}
+{% endmacro %}
+
+{% macro visual_panel() %}
+<aside class="picasso-visual" aria-hidden="false">
+	{% if pl.visual_video %}
+	<video class="picasso-visual-video" autoplay muted loop playsinline>
+		<source src="{{ pl.visual_video }}">
+	</video>
+	{% endif %}
+	<div class="picasso-visual-top">
+		{% if pl.visual_logo %}
+		<img class="picasso-visual-logo" src="{{ pl.visual_logo }}" alt="">
+		{% endif %}
+		<div class="picasso-visual-top-actions">
+			{{ login_links("visual_top") }}
+			{% if pl.back_to_website_url %}
+			<a class="picasso-back-link" href="{{ pl.back_to_website_url }}">
+				{{ _(pl.back_to_website_label or "Back to website") }}
+				<span aria-hidden="true">→</span>
+			</a>
+			{% endif %}
+		</div>
+	</div>
+
+	{% if pl.slides and pl.slides|length %}
+	<div class="picasso-carousel" data-picasso-carousel data-interval="{{ pl.carousel_interval or 5 }}">
+		{% for slide in pl.slides %}
+		<div class="picasso-slide{% if loop.first %} is-active{% endif %}"
+			{% if slide.image %}style="background-image: url('{{ slide.image }}');"{% endif %}>
+			<div class="picasso-slide-overlay"></div>
+			<div class="picasso-slide-copy">
+				{% if slide.title %}<p class="picasso-slide-title">{{ slide.title }}</p>{% endif %}
+				{% if slide.subtitle %}<p class="picasso-slide-subtitle">{{ slide.subtitle }}</p>{% endif %}
+			</div>
+		</div>
+		{% endfor %}
+		{% if pl.slides|length > 1 %}
+		<div class="picasso-carousel-dots" role="tablist">
+			{% for slide in pl.slides %}
+			<button type="button" class="picasso-dot{% if loop.first %} is-active{% endif %}"
+				data-slide-index="{{ loop.index0 }}" aria-label="{{ _('Slide {0}').format(loop.index) }}"></button>
+			{% endfor %}
+		</div>
+		{% endif %}
+	</div>
+	{% else %}
+	<div class="picasso-visual-empty">
+		<div class="picasso-slide-overlay"></div>
+	</div>
+	{% endif %}
+</aside>
+{% endmacro %}
+{% block head_include %}
+{% if picasso_enabled %}
+<link rel="stylesheet" href="/assets/picasso/css/login.css">
+<style>
+	:root,
+	body[data-path="login"],
+	.picasso-login {
+		--picasso-page-bg: {{ pl.page_background or "#0B0B12" }};
+		--picasso-form-bg: {{ pl.form_background or "#16161F" }};
+		--picasso-accent: {{ pl.accent_color or "#7C3AED" }};
+		--picasso-text: {{ pl.text_color or "#FFFFFF" }};
+		--picasso-muted: {{ pl.muted_text_color or "#A1A1AA" }};
+		--picasso-input-bg: {{ pl.input_background or "#1F1F2B" }};
+		--picasso-input-border: {{ pl.input_border_color or "#2E2E3A" }};
+	}
+</style>
+{% else %}
+{{ include_style('login.bundle.css') }}
+{% endif %}
+{% endblock %}
+
+{% block page_content %}
+<!-- {{ for_test }} -->
+{% if picasso_enabled %}
+<div class="picasso-login {% if pl.show_visual_panel %}has-visual{% else %}form-only{% endif %}">
+	<noscript>
+		<div class="text-center my-5" style="color: var(--picasso-text);">
+			<h4>{{ _("Javascript is disabled on your browser") }}</h4>
+			<p>{{ _("You need to enable JavaScript for your app to work.") }}</p>
+		</div>
+	</noscript>
+
+	<div class="picasso-shell">
+		{% if pl.show_visual_panel %}
+		{{ visual_panel() }}
+		{% endif %}
+
+		<div class="picasso-form-panel">
+			{{ login_language_switch() }}
+			<section class="for-login">
+				{{ picasso_form_head() }}
+				<div class="login-content page-card picasso-card">
+					<form class="form-signin form-login" role="form">
+						{{ email_login_body() }}
+						{{ social_logins() }}
+					</form>
+				</div>
+				{{ login_links("form_footer") }}
+				{{ copyright_block() }}
+			</section>
+
+			<section class="for-signup {{ "signup-disabled" if disable_signup else "" }}">
+				{{ picasso_form_head(_('Create a {0} Account').format(app_name or _("Frappe"))) }}
+				<div class="login-content page-card picasso-card">
+					{%- if not disable_signup -%}
+					{{ signup_form_template }}
+					{%- else -%}
+					<div class="page-card-head mb-2">
+						<span class="indicator gray">{{ _("Signup Disabled") }}</span>
+						<p class="text-muted text-normal sign-up-message mt-1 mb-8">{{ _("Signups have been disabled for this website.") }}</p>
+						<div><a href="/" class="btn btn-primary btn-md">{{ _("Home") }}</a></div>
+					</div>
+					{%- endif -%}
+					<p class="text-center sign-up-message mt-3">
+						<a href="#login">{{ _("Back to Login") }}</a>
+					</p>
+				</div>
+			</section>
+
+			<section class="for-forgot">
+				{{ picasso_form_head(_("Forgot Password")) }}
+				<div class="login-content page-card picasso-card">
+					<form class="form-signin form-forgot hide" role="form">
+						<div class="page-card-body">
+							<div class="email-field">
+								<input type="email" id="forgot_email" class="form-control"
+									placeholder="{{ _('Email Address') }}" required autofocus autocomplete="username">
+								<svg class="field-icon email-icon" width="16" height="16" viewBox="0 0 16 16" fill="none"
+									xmlns="http://www.w3.org/2000/svg">
+									<use class="es-lock" href="#es-line-email"></use>
+								</svg>
+							</div>
+						</div>
+						<div class="page-card-actions">
+							<button class="btn btn-sm btn-primary btn-block btn-forgot" type="submit">{{ _("Reset Password") }}</button>
+							<p class="text-center sign-up-message">
+								<a href="#login">{{ _("Back to Login") }}</a>
+							</p>
+						</div>
+					</form>
+				</div>
+			</section>
+
+			<section class="for-login-with-email-link">
+				{{ picasso_form_head(_("Login with Email Link")) }}
+				<div class="login-content page-card picasso-card">
+					<form class="form-signin form-login-with-email-link hide" role="form">
+						<div class="page-card-body">
+							<div class="email-field">
+								<input type="email" id="login_with_email_link_email" class="form-control"
+									placeholder="{{ _('Email Address') }}" required autofocus autocomplete="username">
+								<svg class="field-icon email-icon" width="16" height="16" viewBox="0 0 16 16" fill="none"
+									xmlns="http://www.w3.org/2000/svg">
+									<use class="es-lock" href="#es-line-email"></use>
+								</svg>
+							</div>
+						</div>
+						<div class="page-card-actions">
+							<button class="btn btn-sm btn-primary btn-block btn-login-with-email-link" type="submit">{{ _("Send login link") }}</button>
+							<p class="text-center sign-up-message">
+								<a href="#login">{{ _("Back to Login") }}</a>
+							</p>
+						</div>
+					</form>
+				</div>
+			</section>
+		</div>
+	</div>
+</div>
+{% else %}
+{# Stock Frappe login when Picasso custom login is disabled #}
+<div>
+	<noscript>
+		<div class="text-center my-5">
+			<h4>{{ _("Javascript is disabled on your browser") }}</h4>
+			<p class="text-muted">
+				{{ _("You need to enable JavaScript for your app to work.") }}<br>{{ _("To enable it follow the instructions in the following link: {0}").format("<a href='https://enable-javascript.com/'>enable-javascript.com</a></p>") }}
+			</p>
+		</div>
+	</noscript>
+	<section class="for-login">
+		{{ stock_logo_section() }}
+		<div class="login-content page-card">
+			<form class="form-signin form-login" role="form">
+				{%- if social_login or login_with_email_link -%}
+				<div class="page-card-body">
+					{{ email_login_body() }}
+					<div class="social-logins text-center">
+						{% if not disable_user_pass_login or (ldap_settings and ldap_settings.enabled) %}
+						<p class="text-muted login-divider">{{ _("or") }}</p>
+						{% endif %}
+						<div class="social-login-buttons">
+							{% for provider in provider_logins %}
+							<div class="login-button-wrapper">
+								<a href="{{ provider.auth_url }}"
+									class="btn btn-block btn-default btn-sm btn-login-option btn-{{ provider.name }}">
+									{% if provider.icon %}{{ provider.icon }}{% endif %}
+									{{ _("Login with {0}").format(provider.provider_name) }}</a>
+							</div>
+							{% endfor %}
+						</div>
+						{% if login_with_frappe_cloud_url %}
+						<div class="social-login-buttons">
+							<div class="login-button-wrapper">
+								<a href="{{ login_with_frappe_cloud_url }}"
+									class="btn btn-block btn-default btn-sm btn-login-option btn-login-with-frappe-cloud">
+									{{ _("Login with Frappe Cloud") }}</a>
+							</div>
+						</div>
+						{% endif %}
+						{% if login_with_email_link %}
+						<div class="login-with-email-link social-login-buttons">
+							<div class="login-button-wrapper">
+								<a href="#login-with-email-link"
+									class="btn btn-block btn-default btn-sm btn-login-option btn-login-with-email-link">
+									{{ _("Login with Email Link") }}</a>
+							</div>
+						</div>
+						{% endif %}
+					</div>
+				</div>
+				{% else %}
+					{{ email_login_body() }}
+				{%- endif -%}
+			</form>
+		</div>
+		{%- if not disable_signup and not disable_user_pass_login -%}
+		<div class="text-center sign-up-message">
+			{{ _("Don't have an account?") }}
+			<a href="#signup">{{ _("Sign up") }}</a>
+		</div>
+		{%- endif -%}
+	</section>
+
+	{%- if social_login -%}
+	<section class="for-email-login">
+		{{ stock_logo_section() }}
+		<div class="login-content page-card">
+			<form class="form-signin form-login" role="form">
+				{{ email_login_body() }}
+			</form>
+		</div>
+		{%- if not disable_signup and not disable_user_pass_login -%}
+		<div class="text-center sign-up-message">
+			{{ _("Don't have an account?") }}
+			<a href="#signup">{{ _("Sign up") }}</a>
+		</div>
+		{%- endif -%}
+	</section>
+	{%- endif -%}
+
+	<section class="for-signup {{ "signup-disabled" if disable_signup else "" }}">
+		{{ stock_logo_section(_('Create a {0} Account').format(app_name or _("Frappe"))) }}
+		<div class="login-content page-card">
+			{%- if not disable_signup -%}
+			{{ signup_form_template }}
+			{%- else -%}
+			<div class="page-card-head mb-2">
+				<span class="indicator gray">{{_("Signup Disabled")}}</span>
+				<p class="text-muted text-normal sign-up-message mt-1 mb-8">{{_("Signups have been disabled for this website.")}}</p>
+				<div><a href="/" class="btn btn-primary btn-md">{{ _("Home") }}</a></div>
+			</div>
+			{%- endif -%}
+		</div>
+	</section>
+
+	<section class="for-forgot">
+		{{ stock_logo_section('Forgot Password') }}
+		<div class="login-content page-card">
+			<form class="form-signin form-forgot hide" role="form">
+				<div class="page-card-body">
+					<div class="email-field">
+						<input type="email" id="forgot_email" class="form-control"
+							placeholder="{{ _('Email Address') }}" required autofocus autocomplete="username">
+						<svg class="field-icon email-icon" width="16" height="16" viewBox="0 0 16 16" fill="none"
+							xmlns="http://www.w3.org/2000/svg">
+							<use class="es-lock" href="#es-line-email"></use>
+						</svg>
+					</div>
+				</div>
+				<div class="page-card-actions">
+					<button class="btn btn-sm btn-primary btn-block btn-forgot" type="submit">{{ _("Reset Password") }}</button>
+					<p class="text-center sign-up-message">
+						<a href="#login">{{ _("Back to Login") }}</a>
+					</p>
+				</div>
+			</form>
+		</div>
+	</section>
+
+	<section class="for-login-with-email-link">
+		{{ stock_logo_section(_('Login with Email Link')) }}
+		<div class="login-content page-card">
+			<form class="form-signin form-login-with-email-link hide" role="form">
+				<div class="page-card-body">
+					<div class="email-field">
+						<input type="email" id="login_with_email_link_email" class="form-control"
+							placeholder="{{ _('Email Address') }}" required autofocus autocomplete="username">
+						<svg class="field-icon email-icon" width="16" height="16" viewBox="0 0 16 16" fill="none"
+							xmlns="http://www.w3.org/2000/svg">
+							<use class="es-lock" href="#es-line-email"></use>
+						</svg>
+					</div>
+				</div>
+				<div class="page-card-actions">
+					<button class="btn btn-sm btn-primary btn-block btn-login-with-email-link" type="submit">{{ _("Send login link") }}</button>
+					<p class="text-center sign-up-message">
+						<a href="#login">{{ _("Back to Login") }}</a>
+					</p>
+				</div>
+			</form>
+		</div>
+	</section>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block script %}
+<script>{% include "templates/includes/login/login.js" %}</script>
+{% if picasso_enabled %}
+<script src="/assets/picasso/js/login_carousel.js"></script>
+{% endif %}
+{% endblock %}
+
+{% block sidebar %}{% endblock %}
