@@ -107,3 +107,27 @@ html.picasso-desk-theme.picasso-enhanced-list {
 		}
 	}
 }
+
+html.picasso-desk-theme .checkbox-actions {
+	.list-header-meta {
+		margin-right: 8px;
+	}
+
+	.picasso-clear-selected {
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
+		flex-shrink: 0;
+		margin-left: 4px;
+
+		.icon {
+			margin: 0;
+		}
+	}
+}
+
+html.picasso-desk-theme .inner-toolbar .picasso-clear-selected,
+html.picasso-desk-theme .custom-actions button .icon {
+	margin-right: 4px;
+	vertical-align: -2px;
+}

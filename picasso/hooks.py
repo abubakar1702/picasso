@@ -14,6 +14,7 @@ app_include_js = [
 	"/assets/picasso/js/link_workspaces.js",
 	"/assets/picasso/js/language_switch.js",
 	"/assets/picasso/js/form_actions.js",
+	"/assets/picasso/js/list_select.js",
 ]
 
 # Installation
