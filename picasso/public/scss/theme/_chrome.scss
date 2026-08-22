@@ -65,6 +65,12 @@ html.picasso-desk-theme {
 			stroke: currentColor;
 		}
 
+		.navbar-breadcrumbs a,
+		.navbar-breadcrumbs a:hover,
+		.navbar-breadcrumbs li:last-child > a {
+			color: var(--picasso-page-head-text) !important;
+		}
+
 		.btn-primary {
 			background: var(--picasso-desk-accent) !important;
 			border-color: var(--picasso-desk-accent) !important;
@@ -76,5 +82,9 @@ html.picasso-desk-theme {
 				stroke: currentColor;
 			}
 		}
+	}
+
+	.navbar-breadcrumbs a::before {
+		color: var(--picasso-page-head-sep) !important;
 	}
 }

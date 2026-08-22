@@ -34,6 +34,7 @@
   "page_head_background",
   "column_break_surfaces",
   "page_head_text_color",
+  "page_head_separator_color",
   "list_section",
   "enhance_list_ui",
   "list_card_background",
@@ -59,6 +60,7 @@
   "dark_page_head_background",
   "column_break_dark_surfaces",
   "dark_page_head_text_color",
+  "dark_page_head_separator_color",
   "dark_list_card_background",
   "dark_list_filter_background",
   "column_break_dark_list",
@@ -261,6 +263,13 @@
    "label": "DocType Navbar Text"
   },
   {
+   "default": "#C4B5A0",
+   "description": "The / between breadcrumb items (Home / Employee / Name).",
+   "fieldname": "page_head_separator_color",
+   "fieldtype": "Color",
+   "label": "Breadcrumb Separator"
+  },
+  {
    "depends_on": "enabled",
    "fieldname": "list_section",
    "fieldtype": "Section Break",
@@ -418,6 +427,13 @@
    "label": "Dark DocType Navbar Text"
   },
   {
+   "default": "#9CA3AF",
+   "description": "The / between breadcrumb items in dark mode.",
+   "fieldname": "dark_page_head_separator_color",
+   "fieldtype": "Color",
+   "label": "Dark Breadcrumb Separator"
+  },
+  {
    "default": "#1A1C24",
    "depends_on": "enhance_list_ui",
    "fieldname": "dark_list_card_background",
@@ -466,7 +482,7 @@
  ],
  "issingle": 1,
  "links": [],
- "modified": "2026-08-21 15:35:00.000000",
+ "modified": "2026-08-22 12:20:00.000000",
  "modified_by": "Administrator",
  "module": "Picasso",
  "name": "Picasso Desk Settings",

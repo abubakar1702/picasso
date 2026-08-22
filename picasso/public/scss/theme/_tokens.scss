@@ -41,6 +41,7 @@ html.picasso-desk-theme {
 	--picasso-page-bg: var(--picasso-light-page-bg, #f4f5f8);
 	--picasso-page-head-bg: var(--picasso-light-page-head-bg, #ffffff);
 	--picasso-page-head-text: var(--picasso-light-page-head-text, #1f2937);
+	--picasso-page-head-sep: var(--picasso-light-page-head-sep, #c4b5a0);
 	--picasso-list-card-bg: var(--picasso-light-list-card-bg, #ffffff);
 	--picasso-list-filter-bg: var(--picasso-light-list-filter-bg, #ffffff);
 	--picasso-list-header-bg: var(--picasso-light-list-header-bg, #f3f4f6);
@@ -69,6 +70,7 @@ html.picasso-desk-theme.picasso-dark-theme {
 	--picasso-page-bg: var(--picasso-dark-page-bg, #0f1117);
 	--picasso-page-head-bg: var(--picasso-dark-page-head-bg, #1a1c24);
 	--picasso-page-head-text: var(--picasso-dark-page-head-text, #e5e7eb);
+	--picasso-page-head-sep: var(--picasso-dark-page-head-sep, #9ca3af);
 	--picasso-list-card-bg: var(--picasso-dark-list-card-bg, #1a1c24);
 	--picasso-list-filter-bg: var(--picasso-dark-list-filter-bg, #1a1c24);
 	--picasso-list-header-bg: var(--picasso-dark-list-header-bg, #22252e);
