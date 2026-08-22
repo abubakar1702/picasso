@@ -44,18 +44,21 @@
 	}
 
 	function action_slot(page) {
-		if (page.standard_actions && page.standard_actions.length) return page.standard_actions;
-		if (page.page_actions && page.page_actions.length) {
-			const $std = page.page_actions.find(".standard-actions");
-			if ($std.length) return $std;
-			return page.page_actions;
-		}
+		// Target the page header instead of the filter section
 		if (page.page_head && page.page_head.length) {
 			const $std = page.page_head.find(".standard-actions");
 			if ($std.length) return $std;
-			return page.page_head.find(".page-actions");
+			const $pa = page.page_head.find(".page-actions");
+			if ($pa.length) return $pa;
 		}
-		return $(document).find(".page-head .standard-actions").first();
+		const $head = $(document).find(".page-head .standard-actions").first();
+		if ($head.length) return $head;
+		const $headActions = $(document).find(".page-head .page-actions").first();
+		if ($headActions.length) return $headActions;
+		// Fallback to page-level actions
+		if (page.page_actions && page.page_actions.length) return page.page_actions;
+		if (page.standard_actions && page.standard_actions.length) return page.standard_actions;
+		return null;
 	}
 
 	function add_button(report) {
