@@ -50,16 +50,34 @@ function inject(opts) {
 }
 
 export function init() {
-	if (!window.frappe || !frappe.Chart) return;
-	const Orig = frappe.Chart;
-	function PicassoChart(element, options) {
-		const chart = new Orig(element, inject(options));
-		registry.push(new WeakRef(chart));
-		return chart;
+	function wrap() {
+		if (!window.frappe || !frappe.Chart || frappe.Chart._picasso_wrapped) return;
+		const Orig = frappe.Chart;
+		function PicassoChart(element, options) {
+			const chart = new Orig(element, inject(options));
+			registry.push(new WeakRef(chart));
+			return chart;
+		}
+		PicassoChart.prototype = Orig.prototype;
+		Object.assign(PicassoChart, Orig);
+		PicassoChart._picasso_wrapped = true;
+		frappe.Chart = PicassoChart;
 	}
-	PicassoChart.prototype = Orig.prototype;
-	Object.assign(PicassoChart, Orig);
-	frappe.Chart = PicassoChart;
+
+	wrap();
+	// Frappe Charts is often loaded dynamically on demand when viewing dashboards
+	if (window.jQuery) {
+		$(document).on("page-change app_ready", wrap);
+	}
+	let checks = 0;
+	const timer = setInterval(() => {
+		wrap();
+		checks++;
+		if (checks > 20 || (window.frappe && frappe.Chart && frappe.Chart._picasso_wrapped)) {
+			clearInterval(timer);
+		}
+	}, 500);
+
 	document.addEventListener(store.EVENT_NAME, () => {
 		if (!store.feature("charts")) return;
 		const alive = [];

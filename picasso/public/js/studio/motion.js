@@ -104,7 +104,8 @@ function parse_number(text) {
 function init_counters() {
 	const run = () => {
 		if (!can("counters")) return;
-		document.querySelectorAll(".widget .number, .number-card-widget .number").forEach((node) => {
+		const selectors = ".widget .number, .number-card-widget .number, .number-card-number, .number-card .number, .widget-content .number, .number-widget-box .number";
+		document.querySelectorAll(selectors).forEach((node) => {
 			if (node.dataset.picassoCounted) return;
 			const raw = node.textContent;
 			const n = parse_number(raw);
@@ -122,7 +123,9 @@ function init_counters() {
 			requestAnimationFrame(step);
 		});
 	};
-	$(document).on("page-change", () => setTimeout(run, 80));
+	if (window.jQuery) {
+		$(document).on("page-change app_ready ajaxComplete", () => setTimeout(run, 150));
+	}
 	run();
 }
 
@@ -169,30 +172,38 @@ function init_top() {
 }
 
 function init_toasts() {
-	if (!frappe.show_alert) return;
+	if (!window.frappe || !frappe.show_alert) return;
+	if (frappe.show_alert._picasso_wrapped) return;
 	const orig = frappe.show_alert;
-	frappe.show_alert = frappe.toast = function (message, seconds = 7, actions = {}) {
-		const $el = orig.call(this, message, seconds, actions);
-		if (!store.feature("toast_timers") || !$el) return $el;
-		const bar = document.createElement("div");
-		bar.className = "picasso-toast-bar";
-		bar.style.animationDuration = (seconds || 7) + "s";
-		$el.addClass("picasso-toast");
-		$el.append(bar);
-		return $el;
+	const wrapped = function (message, seconds = 7, actions = {}) {
+		const res = orig.call(this, message, seconds, actions);
+		if (!store.feature("toast_timers") || !res) return res;
+		const el = res.jquery ? res[0] : res;
+		if (el && el instanceof Element && !el.querySelector(".picasso-toast-bar")) {
+			el.classList.add("picasso-toast");
+			const bar = document.createElement("div");
+			bar.className = "picasso-toast-bar";
+			bar.style.animationDuration = (seconds || 7) + "s";
+			el.appendChild(bar);
+		}
+		return res;
 	};
+	wrapped._picasso_wrapped = true;
+	frappe.show_alert = frappe.toast = wrapped;
 }
 
 function init_save() {
 	const pulse = () => {
 		if (!store.feature("save_pulse")) return;
-		document.querySelectorAll(".form-status, .indicator-pill, .page-head .indicator").forEach((n) => {
+		document.querySelectorAll(".form-status, .indicator-pill, .page-head .indicator, .page-actions .primary-action").forEach((n) => {
 			n.classList.remove("picasso-save-pulse");
 			void n.offsetWidth;
 			n.classList.add("picasso-save-pulse");
 		});
 	};
-	$(document).on("form-saved after_save", pulse);
+	if (window.jQuery) {
+		$(document).on("form-saved after_save frappe:form-saved", pulse);
+	}
 }
 
 export function init() {
@@ -205,5 +216,5 @@ export function init() {
 	init_header();
 	init_top();
 	init_toasts();
-	$(document).on("app_ready", init_save);
+	init_save();
 }

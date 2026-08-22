@@ -82,12 +82,6 @@ function collect(query) {
 			hint: "Site brand colours",
 			run: () => frappe.set_route("Form", "Picasso Desk Settings"),
 		});
-		out.push({
-			id: "quick-look",
-			title: "Picasso Quick Look",
-			hint: "Which DocTypes and fields to peek",
-			run: () => frappe.set_route("List", "Picasso Quick Look"),
-		});
 	}
 
 	return out
