@@ -26,18 +26,23 @@ function collect(query) {
 		hint: "Appearance and motion",
 		run: () => document.dispatchEvent(new CustomEvent("picasso:open-panel")),
 	});
+	const dark = (document.documentElement.getAttribute("data-theme") || "").toLowerCase() === "dark";
 	out.push({
 		id: "theme",
-		title: "Switch light / dark",
-		hint: "Frappe theme",
+		title: "Dark mode",
+		hint: "Frappe theme · Ctrl+Shift+G",
+		kind: "toggle",
+		on: dark,
 		run: () => {
-			if (frappe.ui && frappe.ui.toolbar && frappe.ui.toolbar.setup_theme) {
-				document.querySelector('[data-element="toggle-theme"]')?.click();
-			} else if (frappe.utils && frappe.utils.toggle_theme) {
-				frappe.utils.toggle_theme();
+			const next = dark ? "Light" : "Dark";
+			document.documentElement.setAttribute("data-theme-mode", next.toLowerCase());
+			if (frappe.ui && frappe.ui.set_theme) {
+				frappe.ui.set_theme(next.toLowerCase());
 			} else {
-				const next = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
-				document.documentElement.setAttribute("data-theme", next);
+				document.documentElement.setAttribute("data-theme", next.toLowerCase());
+			}
+			if (frappe.xcall) {
+				frappe.xcall("frappe.core.doctype.user.user.switch_theme", { theme: next });
 			}
 		},
 	});
@@ -45,8 +50,10 @@ function collect(query) {
 		const on = store.feature(f.key);
 		out.push({
 			id: "feat-" + f.key,
-			title: (on ? "Turn off " : "Turn on ") + f.label,
+			title: f.label,
 			hint: f.hint,
+			kind: "toggle",
+			on,
 			run: () => store.set_feature(f.key, !on),
 		});
 	});
@@ -91,22 +98,38 @@ function paint() {
 	items.forEach((item, i) => {
 		const row = document.createElement("button");
 		row.type = "button";
-		row.className = "picasso-palette__item" + (i === active ? " is-active" : "");
-		row.innerHTML = `<strong></strong><small></small>`;
+		row.className =
+			"picasso-palette__item" +
+			(i === active ? " is-active" : "") +
+			(item.kind === "toggle" ? " is-toggle" : "") +
+			(item.on ? " is-on" : "");
+		row.innerHTML = `<span class="picasso-palette__copy"><strong></strong><small></small></span>`;
 		row.querySelector("strong").textContent = item.title;
 		row.querySelector("small").textContent = item.hint || "";
+		if (item.kind === "toggle") {
+			const mark = document.createElement("span");
+			mark.className = "picasso-palette__mark";
+			mark.setAttribute("aria-hidden", "true");
+			row.appendChild(mark);
+		}
 		row.addEventListener("click", () => run(item));
 		list.appendChild(row);
 	});
 }
 
 function run(item) {
-	close();
 	try {
 		item.run();
 	} catch (e) {
 		console.error(e);
 	}
+	if (item.kind === "toggle" && overlay) {
+		const q = overlay.querySelector("input")?.value || "";
+		items = collect(q);
+		paint();
+		return;
+	}
+	close();
 }
 
 export function open() {
