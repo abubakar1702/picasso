@@ -1,0 +1,358 @@
+{
+ "actions": [],
+ "autoname": "field:title",
+ "creation": "2026-08-22 17:30:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "title",
+  "is_system",
+  "description",
+  "preview_html",
+  "light_section",
+  "accent_color",
+  "navbar_color_start",
+  "navbar_color_end",
+  "navbar_text_color",
+  "sidebar_color_start",
+  "sidebar_color_end",
+  "sidebar_text_color",
+  "sidebar_hover_background",
+  "sidebar_selected_background",
+  "page_background",
+  "column_break_light",
+  "page_head_background",
+  "page_head_text_color",
+  "page_head_separator_color",
+  "list_card_background",
+  "list_filter_background",
+  "list_header_background",
+  "list_row_hover_background",
+  "list_border_color",
+  "shadow_color",
+  "dark_section",
+  "dark_accent_color",
+  "dark_navbar_color_start",
+  "dark_navbar_color_end",
+  "dark_navbar_text_color",
+  "dark_sidebar_color_start",
+  "dark_sidebar_color_end",
+  "dark_sidebar_text_color",
+  "dark_sidebar_hover_background",
+  "dark_sidebar_selected_background",
+  "dark_page_background",
+  "column_break_dark",
+  "dark_page_head_background",
+  "dark_page_head_text_color",
+  "dark_page_head_separator_color",
+  "dark_list_card_background",
+  "dark_list_filter_background",
+  "dark_list_header_background",
+  "dark_list_row_hover_background",
+  "dark_list_border_color",
+  "dark_shadow_color"
+ ],
+ "fields": [
+  {
+   "fieldname": "title",
+   "fieldtype": "Data",
+   "label": "Name",
+   "reqd": 1,
+   "unique": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "is_system",
+   "fieldtype": "Check",
+   "label": "System Palette",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description"
+  },
+  {
+   "fieldname": "preview_html",
+   "fieldtype": "HTML",
+   "label": "Preview"
+  },
+  {
+   "fieldname": "light_section",
+   "fieldtype": "Section Break",
+   "label": "Light"
+  },
+  {
+   "fieldname": "accent_color",
+   "fieldtype": "Color",
+   "label": "Accent",
+   "reqd": 1
+  },
+  {
+   "fieldname": "navbar_color_start",
+   "fieldtype": "Color",
+   "label": "Navbar Start",
+   "reqd": 1
+  },
+  {
+   "fieldname": "navbar_color_end",
+   "fieldtype": "Color",
+   "label": "Navbar End",
+   "reqd": 1
+  },
+  {
+   "fieldname": "navbar_text_color",
+   "fieldtype": "Color",
+   "label": "Navbar Text",
+   "reqd": 1
+  },
+  {
+   "fieldname": "sidebar_color_start",
+   "fieldtype": "Color",
+   "label": "Sidebar Start",
+   "reqd": 1
+  },
+  {
+   "fieldname": "sidebar_color_end",
+   "fieldtype": "Color",
+   "label": "Sidebar End",
+   "reqd": 1
+  },
+  {
+   "fieldname": "sidebar_text_color",
+   "fieldtype": "Color",
+   "label": "Sidebar Text",
+   "reqd": 1
+  },
+  {
+   "fieldname": "sidebar_hover_background",
+   "fieldtype": "Color",
+   "label": "Sidebar Hover",
+   "reqd": 1
+  },
+  {
+   "fieldname": "sidebar_selected_background",
+   "fieldtype": "Color",
+   "label": "Sidebar Selected",
+   "reqd": 1
+  },
+  {
+   "fieldname": "page_background",
+   "fieldtype": "Color",
+   "label": "Page Background",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_light",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "page_head_background",
+   "fieldtype": "Color",
+   "label": "Page Head Background",
+   "reqd": 1
+  },
+  {
+   "fieldname": "page_head_text_color",
+   "fieldtype": "Color",
+   "label": "Page Head Text",
+   "reqd": 1
+  },
+  {
+   "fieldname": "page_head_separator_color",
+   "fieldtype": "Color",
+   "label": "Breadcrumb Separator",
+   "reqd": 1
+  },
+  {
+   "fieldname": "list_card_background",
+   "fieldtype": "Color",
+   "label": "List Card",
+   "reqd": 1
+  },
+  {
+   "fieldname": "list_filter_background",
+   "fieldtype": "Color",
+   "label": "List Filter Bar",
+   "reqd": 1
+  },
+  {
+   "fieldname": "list_header_background",
+   "fieldtype": "Color",
+   "label": "List Header",
+   "reqd": 1
+  },
+  {
+   "fieldname": "list_row_hover_background",
+   "fieldtype": "Color",
+   "label": "List Row Hover",
+   "reqd": 1
+  },
+  {
+   "fieldname": "list_border_color",
+   "fieldtype": "Color",
+   "label": "Border",
+   "reqd": 1
+  },
+  {
+   "fieldname": "shadow_color",
+   "fieldtype": "Color",
+   "label": "Shadow",
+   "reqd": 1
+  },
+  {
+   "fieldname": "dark_section",
+   "fieldtype": "Section Break",
+   "label": "Dark",
+   "collapsible": 1
+  },
+  {
+   "fieldname": "dark_accent_color",
+   "fieldtype": "Color",
+   "label": "Dark Accent",
+   "reqd": 1
+  },
+  {
+   "fieldname": "dark_navbar_color_start",
+   "fieldtype": "Color",
+   "label": "Dark Navbar Start",
+   "reqd": 1
+  },
+  {
+   "fieldname": "dark_navbar_color_end",
+   "fieldtype": "Color",
+   "label": "Dark Navbar End",
+   "reqd": 1
+  },
+  {
+   "fieldname": "dark_navbar_text_color",
+   "fieldtype": "Color",
+   "label": "Dark Navbar Text",
+   "reqd": 1
+  },
+  {
+   "fieldname": "dark_sidebar_color_start",
+   "fieldtype": "Color",
+   "label": "Dark Sidebar Start",
+   "reqd": 1
+  },
+  {
+   "fieldname": "dark_sidebar_color_end",
+   "fieldtype": "Color",
+   "label": "Dark Sidebar End",
+   "reqd": 1
+  },
+  {
+   "fieldname": "dark_sidebar_text_color",
+   "fieldtype": "Color",
+   "label": "Dark Sidebar Text",
+   "reqd": 1
+  },
+  {
+   "fieldname": "dark_sidebar_hover_background",
+   "fieldtype": "Color",
+   "label": "Dark Sidebar Hover",
+   "reqd": 1
+  },
+  {
+   "fieldname": "dark_sidebar_selected_background",
+   "fieldtype": "Color",
+   "label": "Dark Sidebar Selected",
+   "reqd": 1
+  },
+  {
+   "fieldname": "dark_page_background",
+   "fieldtype": "Color",
+   "label": "Dark Page Background",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_dark",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "dark_page_head_background",
+   "fieldtype": "Color",
+   "label": "Dark Page Head Background",
+   "reqd": 1
+  },
+  {
+   "fieldname": "dark_page_head_text_color",
+   "fieldtype": "Color",
+   "label": "Dark Page Head Text",
+   "reqd": 1
+  },
+  {
+   "fieldname": "dark_page_head_separator_color",
+   "fieldtype": "Color",
+   "label": "Dark Breadcrumb Separator",
+   "reqd": 1
+  },
+  {
+   "fieldname": "dark_list_card_background",
+   "fieldtype": "Color",
+   "label": "Dark List Card",
+   "reqd": 1
+  },
+  {
+   "fieldname": "dark_list_filter_background",
+   "fieldtype": "Color",
+   "label": "Dark List Filter Bar",
+   "reqd": 1
+  },
+  {
+   "fieldname": "dark_list_header_background",
+   "fieldtype": "Color",
+   "label": "Dark List Header",
+   "reqd": 1
+  },
+  {
+   "fieldname": "dark_list_row_hover_background",
+   "fieldtype": "Color",
+   "label": "Dark List Row Hover",
+   "reqd": 1
+  },
+  {
+   "fieldname": "dark_list_border_color",
+   "fieldtype": "Color",
+   "label": "Dark Border",
+   "reqd": 1
+  },
+  {
+   "fieldname": "dark_shadow_color",
+   "fieldtype": "Color",
+   "label": "Dark Shadow",
+   "reqd": 1
+  }
+ ],
+ "links": [],
+ "modified": "2026-08-22 17:30:00.000000",
+ "modified_by": "Administrator",
+ "module": "Picasso",
+ "name": "Picasso Palette",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1,
+ "title_field": "title",
+ "search_fields": "title,description"
+}

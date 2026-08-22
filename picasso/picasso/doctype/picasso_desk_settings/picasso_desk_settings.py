@@ -10,9 +10,13 @@ class PicassoDeskSettings(Document):
 		self.set_default_colors()
 
 	def validate(self):
+		if not self.palette:
+			self.palette = "Paper"
 		self.set_default_colors()
 
 	def set_default_colors(self):
+		if self.palette:
+			return
 		defaults = {
 			"accent_color": "#2563EB",
 			"navbar_color_start": "#FFFFFF",
@@ -52,33 +56,7 @@ class PicassoDeskSettings(Document):
 				self.set(field, default_val)
 
 	def on_update(self):
-		self.sync_navbar_logo()
-		self.sync_favicon()
 		frappe.cache.delete_value("picasso_desk_settings")
 		frappe.cache.delete_value("picasso_login_settings")
 		# Invalidate boot session cache so all users pick up the new theme on next load.
 		frappe.cache.delete_keys("bootinfo")
-
-	def sync_navbar_logo(self):
-		"""Lego Core pattern: persist logo on Navbar Settings so Frappe boot picks it up."""
-		if not self.enabled or not self.app_logo:
-			return
-
-		navbar = frappe.get_single("Navbar Settings")
-		if navbar.app_logo != self.app_logo:
-			navbar.db_set("app_logo", self.app_logo, update_modified=False)
-
-		if frappe.db.exists("DocType", "Website Settings"):
-			current = frappe.db.get_single_value("Website Settings", "app_logo")
-			if current != self.app_logo:
-				frappe.db.set_single_value("Website Settings", "app_logo", self.app_logo)
-
-	def sync_favicon(self):
-		"""Sync favicon to Website Settings so it's used across the site."""
-		if not self.enabled or not self.favicon:
-			return
-
-		if frappe.db.exists("DocType", "Website Settings"):
-			current = frappe.db.get_single_value("Website Settings", "favicon")
-			if current != self.favicon:
-				frappe.db.set_single_value("Website Settings", "favicon", self.favicon)

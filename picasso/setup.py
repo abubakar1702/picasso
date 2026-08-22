@@ -72,7 +72,13 @@ def seed_app_screens():
 
 def after_install():
 	seed_app_screens()
+	from picasso.palette import seed_palettes
+
+	seed_palettes()
 
 
 def after_migrate():
 	seed_app_screens()
+	from picasso.palette import seed_palettes
+
+	seed_palettes()

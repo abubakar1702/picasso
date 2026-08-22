@@ -16,8 +16,8 @@ class TestPicassoDeskSettings(IntegrationTestCase):
 		self.assertIsInstance(settings, dict)
 		self.assertIn("enabled", settings)
 		self.assertIn("accent_color", settings)
-		self.assertIn("favicon", settings)
 		self.assertIn("dark_accent_color", settings)
+		self.assertIn("palette", settings)
 
 	def test_get_desk_settings_is_cached(self):
 		"""Second call returns the same cached dict without hitting the DB again."""

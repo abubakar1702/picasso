@@ -21,12 +21,8 @@
 	--primary-color: var(--picasso-desk-accent);
 	--brand-color: var(--picasso-desk-accent);
 	--sidebar-width: var(--picasso-sidebar-width, 240px);
-	--sidebar-select-color: var(--sidebar-hover-color);
-	--sidebar-active-color: color-mix(
-		in srgb,
-		var(--picasso-desk-accent) 18%,
-		var(--picasso-sidebar-start)
-	);
+	--sidebar-select-color: var(--picasso-sidebar-hover);
+	--sidebar-active-color: var(--picasso-sidebar-selected);
 	--sidebar-border-color: var(--picasso-list-border);
 }
 
@@ -47,13 +43,17 @@ html.picasso-desk-theme {
 	--picasso-list-header-bg: var(--picasso-light-list-header-bg, #f3f4f6);
 	--picasso-list-hover-bg: var(--picasso-light-list-hover-bg, #f3f4f6);
 	--picasso-list-border: var(--picasso-light-list-border, #e5e7eb);
+	--picasso-sidebar-hover: var(--picasso-light-sidebar-hover, #eef2ff);
+	--picasso-sidebar-selected: var(--picasso-light-sidebar-selected, #dbeafe);
+	--picasso-shadow: var(--picasso-light-shadow, #0f172a);
 	--highlight-color: color-mix(
 		in srgb,
 		var(--picasso-list-hover-bg) 85%,
 		var(--picasso-desk-accent) 8%
 	);
 	--control-bg: color-mix(in srgb, var(--picasso-desk-accent) 6%, var(--picasso-page-bg));
-	--sidebar-hover-color: color-mix(in srgb, var(--picasso-desk-accent) 12%, transparent);
+	--sidebar-hover-color: var(--picasso-sidebar-hover);
+	--sidebar-active-color: var(--picasso-sidebar-selected);
 	@include picasso-frappe-remap;
 }
 
@@ -76,8 +76,12 @@ html.picasso-desk-theme.picasso-dark-theme {
 	--picasso-list-header-bg: var(--picasso-dark-list-header-bg, #22252e);
 	--picasso-list-hover-bg: var(--picasso-dark-list-hover-bg, #2a2d38);
 	--picasso-list-border: var(--picasso-dark-list-border, #2a2d38);
+	--picasso-sidebar-hover: var(--picasso-dark-sidebar-hover, #1e293b);
+	--picasso-sidebar-selected: var(--picasso-dark-sidebar-selected, #1e3a5f);
+	--picasso-shadow: var(--picasso-dark-shadow, #000000);
 	--highlight-color: var(--picasso-list-hover-bg);
 	--control-bg: var(--picasso-list-hover-bg);
-	--sidebar-hover-color: color-mix(in srgb, var(--picasso-desk-accent) 22%, transparent);
+	--sidebar-hover-color: var(--picasso-sidebar-hover);
+	--sidebar-active-color: var(--picasso-sidebar-selected);
 	@include picasso-frappe-remap;
 }

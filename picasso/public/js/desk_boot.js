@@ -1,63 +1,4 @@
 (() => {
-	function encode_logo_url(url) {
-		if (!url) return url;
-		if (url.includes("://")) return url;
-		try {
-			const parts = url.split("/");
-			const file = parts.pop();
-			return parts.join("/") + "/" + encodeURIComponent(file);
-		} catch (e) {
-			return url;
-		}
-	}
-
-	function apply_app_logo(desk) {
-		if (!desk.app_logo) return;
-
-		const src = encode_logo_url(desk.app_logo);
-
-		// Keep boot defaults in sync for later sidebar re-renders.
-		if (frappe.boot && Array.isArray(frappe.boot.app_data)) {
-			frappe.boot.app_data.forEach((app) => {
-				app.app_logo_url = src;
-			});
-		}
-		if (frappe.boot && frappe.boot.navbar_settings) {
-			frappe.boot.navbar_settings.app_logo = src;
-		}
-
-		const selectors = [
-			".sidebar-header .header-logo img",
-			"header.navbar .navbar-brand img",
-			"header.navbar .app-logo",
-			"img.app-logo",
-			"#brand-logo",
-		];
-
-		document.querySelectorAll(selectors.join(",")).forEach((img) => {
-			if (img && img.getAttribute("src") !== src) {
-				img.setAttribute("src", src);
-			}
-		});
-
-		// v16 often puts an SVG/icon in .header-logo — replace with the configured image.
-		document.querySelectorAll(".sidebar-header .header-logo").forEach((wrap) => {
-			const existing = wrap.querySelector("img.picasso-desk-logo");
-			if (existing) {
-				if (existing.getAttribute("src") !== src) {
-					existing.setAttribute("src", src);
-				}
-				return;
-			}
-			wrap.innerHTML = "";
-			const img = document.createElement("img");
-			img.className = "picasso-desk-logo";
-			img.src = src;
-			img.alt = "";
-			wrap.appendChild(img);
-		});
-	}
-
 	// Track the last-applied settings hash to skip redundant re-applies.
 	let _lastAppliedHash = null;
 
@@ -127,7 +68,6 @@
 
 		const hash = _settingsHash(desk);
 		if (hash && hash === _lastAppliedHash) {
-			apply_app_logo(desk);
 			return;
 		}
 		_lastAppliedHash = hash;
@@ -154,6 +94,9 @@
 			"--picasso-light-list-header-bg": desk.list_header_background || "#F3F4F6",
 			"--picasso-light-list-hover-bg": desk.list_row_hover_background || "#F3F4F6",
 			"--picasso-light-list-border": desk.list_border_color || "#E5E7EB",
+			"--picasso-light-sidebar-hover": desk.sidebar_hover_background || "#EEF2FF",
+			"--picasso-light-sidebar-selected": desk.sidebar_selected_background || "#DBEAFE",
+			"--picasso-light-shadow": desk.shadow_color || "#0F172A",
 			"--picasso-dark-accent": desk.dark_accent_color || "#2563EB",
 			"--picasso-dark-navbar-start": desk.dark_navbar_color_start || "#13151C",
 			"--picasso-dark-navbar-end": desk.dark_navbar_color_end || "#13151C",
@@ -170,6 +113,9 @@
 			"--picasso-dark-list-header-bg": desk.dark_list_header_background || "#22252E",
 			"--picasso-dark-list-hover-bg": desk.dark_list_row_hover_background || "#2A2D38",
 			"--picasso-dark-list-border": desk.dark_list_border_color || "#2A2D38",
+			"--picasso-dark-sidebar-hover": desk.dark_sidebar_hover_background || "#1E293B",
+			"--picasso-dark-sidebar-selected": desk.dark_sidebar_selected_background || "#1E3A5F",
+			"--picasso-dark-shadow": desk.dark_shadow_color || "#000000",
 			"--picasso-surface-radius": `${desk.surface_radius || 8}px`,
 			"--picasso-sidebar-width": `${desk.sidebar_width || 240}px`,
 		};
@@ -195,9 +141,6 @@
 		);
 		root.classList.toggle("picasso-enhanced-list", !!desk.enhance_list_ui);
 
-		apply_app_logo(desk);
-		apply_favicon(desk);
-
 		// NOTE: custom_css is admin-only content injected via textContent (not innerHTML),
 		// so script injection is not possible. CSS-based data exfiltration is a theoretical
 		// risk in multi-tenant setups but is mitigated by admin-only access.
@@ -211,28 +154,6 @@
 			style.textContent = desk.custom_css;
 		} else if (style) {
 			style.remove();
-		}
-	}
-
-	function apply_favicon(desk) {
-		if (!desk.favicon) return;
-
-		const href = encode_logo_url(desk.favicon);
-
-		// Update existing favicon links.
-		const icons = document.querySelectorAll('link[rel="icon"], link[rel="shortcut icon"]');
-		if (icons.length) {
-			icons.forEach((link) => {
-				if (link.getAttribute("href") !== href) {
-					link.setAttribute("href", href);
-				}
-			});
-		} else {
-			// No favicon link exists — create one.
-			const link = document.createElement("link");
-			link.rel = "icon";
-			link.href = href;
-			document.head.appendChild(link);
 		}
 	}
 
@@ -262,32 +183,4 @@
 	if (window.matchMedia) {
 		window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", schedule_apply);
 	}
-
-	// Sidebar header is rebuilt when switching workspaces/apps.
-	// Use a properly managed MutationObserver that disconnects when the sidebar is removed.
-	let _observer = null;
-
-	function connect_sidebar_observer() {
-		// Disconnect any previous observer first.
-		if (_observer) {
-			_observer.disconnect();
-			_observer = null;
-		}
-
-		const sidebar = document.querySelector(".body-sidebar, .desk-sidebar, aside.desk-sidebar");
-		if (!sidebar) return;
-
-		_observer = new MutationObserver(() => {
-			const desk = (frappe.boot && frappe.boot.picasso_desk) || {};
-			if (desk.enabled && desk.app_logo) {
-				apply_app_logo(desk);
-			}
-		});
-
-		_observer.observe(sidebar, { childList: true, subtree: true });
-	}
-
-	$(document).on("app_ready", connect_sidebar_observer);
-	// Reconnect observer on page change since sidebar may be re-rendered.
-	$(document).on("page-change", () => window.setTimeout(connect_sidebar_observer, 100));
 })();

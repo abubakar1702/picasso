@@ -31,6 +31,7 @@ html.picasso-desk-theme.picasso-enhanced-list {
 		background: var(--card-bg);
 		border: 1px solid var(--border-color);
 		border-radius: var(--picasso-surface-radius, 10px);
+		box-shadow: 0 8px 24px color-mix(in srgb, var(--picasso-shadow, #0f172a) 10%, transparent);
 		margin: 0 12px 12px;
 		padding: 12px 10px 10px;
 

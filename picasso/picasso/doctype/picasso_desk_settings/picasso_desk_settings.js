@@ -1,53 +1,58 @@
 // Copyright (c) 2026, Akash and contributors
 // License: MIT. See LICENSE
 
+function palette_preview_html(p) {
+	if (!p) return "";
+	const n = p.navbar_color_start || "#fff";
+	const nt = p.navbar_text_color || "#111";
+	const s = p.sidebar_color_start || "#f8f9fa";
+	const st = p.sidebar_text_color || "#111";
+	const sel = p.sidebar_selected_background || "#dbeafe";
+	const page = p.page_background || "#f4f5f8";
+	const accent = p.accent_color || "#2563eb";
+	const title = frappe.utils.escape_html(p.title || p.name || "");
+	return `
+		<div style="border:1px solid var(--border-color);border-radius:10px;overflow:hidden;max-width:440px;font-size:12px;margin:8px 0 20px;">
+			<div style="background:${n};color:${nt};padding:8px 12px;font-weight:600;">${title}</div>
+			<div style="display:flex;min-height:84px;">
+				<div style="width:34%;background:${s};color:${st};padding:8px;">
+					<div style="background:${sel};border-radius:6px;padding:4px 8px;">Selected</div>
+				</div>
+				<div style="flex:1;background:${page};padding:8px;">
+					<span style="display:inline-block;width:10px;height:10px;border-radius:99px;background:${accent};"></span>
+				</div>
+			</div>
+		</div>`;
+}
+
+function paint_desk_preview(frm) {
+	const wrap = frm.get_field("palette_preview");
+	if (!wrap) return;
+	wrap.$wrapper.css({ paddingBottom: "8px" });
+	if (!frm.doc.palette) {
+		wrap.$wrapper.html("");
+		return;
+	}
+	frappe.model.with_doc("Picasso Palette", frm.doc.palette, () => {
+		const doc = frappe.get_doc("Picasso Palette", frm.doc.palette);
+		wrap.$wrapper.html(palette_preview_html(doc));
+	});
+}
+
 frappe.ui.form.on("Picasso Desk Settings", {
 	refresh(frm) {
-		const defaults = {
-			accent_color: "#2563EB",
-			navbar_color_start: "#FFFFFF",
-			navbar_color_end: "#FFFFFF",
-			sidebar_color_start: "#F8F9FA",
-			sidebar_color_end: "#F8F9FA",
-			navbar_text_color: "#1F2937",
-			sidebar_text_color: "#1F2937",
-			page_background: "#F4F5F8",
-			page_head_background: "#FFFFFF",
-			page_head_text_color: "#1F2937",
-			page_head_separator_color: "#C4B5A0",
-			list_card_background: "#FFFFFF",
-			list_filter_background: "#FFFFFF",
-			list_header_background: "#F3F4F6",
-			list_row_hover_background: "#F3F4F6",
-			list_border_color: "#E5E7EB",
-			dark_accent_color: "#2563EB",
-			dark_navbar_color_start: "#13151C",
-			dark_navbar_color_end: "#13151C",
-			dark_sidebar_color_start: "#13151C",
-			dark_sidebar_color_end: "#13151C",
-			dark_navbar_text_color: "#E5E7EB",
-			dark_sidebar_text_color: "#E5E7EB",
-			dark_page_background: "#0F1117",
-			dark_page_head_background: "#1A1C24",
-			dark_page_head_text_color: "#E5E7EB",
-			dark_page_head_separator_color: "#9CA3AF",
-			dark_list_card_background: "#1A1C24",
-			dark_list_filter_background: "#1A1C24",
-			dark_list_header_background: "#22252E",
-			dark_list_row_hover_background: "#2A2D38",
-			dark_list_border_color: "#2A2D38",
-		};
-
-		let updated = false;
-		for (const [field, val] of Object.entries(defaults)) {
-			if (!frm.doc[field]) {
-				frm.set_value(field, val);
-				updated = true;
-			}
+		frm.add_custom_button(__("Website Settings"), () => frappe.set_route("Form", "Website Settings"), __("Brand"));
+		frm.add_custom_button(__("Navbar Settings"), () => frappe.set_route("Form", "Navbar Settings"), __("Brand"));
+		frm.add_custom_button(__("Palettes"), () => frappe.set_route("List", "Picasso Palette"), __("Brand"));
+		if (frm.doc.palette) {
+			frm.add_custom_button(__("Edit palette"), () => frappe.set_route("Form", "Picasso Palette", frm.doc.palette));
+			frm.add_custom_button(__("Duplicate palette"), () => {
+				frappe.set_route("Form", "Picasso Palette", frm.doc.palette);
+			});
 		}
-
-		if (updated && frm.is_dirty()) {
-			frm.refresh_fields();
-		}
+		paint_desk_preview(frm);
+	},
+	palette(frm) {
+		paint_desk_preview(frm);
 	},
 });
