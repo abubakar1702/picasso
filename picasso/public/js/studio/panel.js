@@ -76,33 +76,17 @@ function build() {
 	const search = el(`<input class="picasso-panel__search" type="search" placeholder="Search settings…" />`);
 	const body = el(`<div class="picasso-panel__body"></div>`);
 
-	const look = el(`<div class="picasso-panel__card" data-filter="density compact cozy roomy motion accent toast">
+	const look = el(`<div class="picasso-panel__card" data-filter="motion toast">
 		<div class="picasso-panel__label">Appearance</div>
-		<div class="picasso-panel__field">
-			<span>Density</span>
-			<div class="picasso-panel__seg" data-field="density"></div>
-		</div>
 		<div class="picasso-panel__field">
 			<span>Motion ${reduced ? "· reduced" : ""}</span>
 			<div class="picasso-panel__seg" data-field="motion"></div>
-		</div>
-		<div class="picasso-panel__field">
-			<span>Your accent</span>
-			<div class="picasso-panel__row">
-				<input type="color" class="picasso-panel__color" value="${s.accent || "#2563eb"}" />
-				<button type="button" class="picasso-panel__textbtn" data-reset-accent>Site brand</button>
-			</div>
 		</div>
 		<div class="picasso-panel__field">
 			<span>Toasts</span>
 			<select class="picasso-panel__select" data-field="toast_position"></select>
 		</div>
 	</div>`);
-	["compact", "cozy", "roomy"].forEach((d) => {
-		const b = el(`<button type="button" data-val="${d}">${d}</button>`);
-		if (s.density === d) b.classList.add("is-on");
-		look.querySelector("[data-field='density']").appendChild(b);
-	});
 	["on", "off"].forEach((d) => {
 		const b = el(`<button type="button" data-val="${d}">${d}</button>`);
 		if (s.motion === d) b.classList.add("is-on");
@@ -157,22 +141,10 @@ function bind(box) {
 		document.dispatchEvent(new CustomEvent("picasso:open-palette"));
 	});
 
-	box.querySelector("[data-field='density']").addEventListener("click", (e) => {
-		const val = e.target.getAttribute("data-val");
-		if (val) store.set({ density: val });
-		refresh_seg(box, "density", val);
-	});
 	box.querySelector("[data-field='motion']").addEventListener("click", (e) => {
 		const val = e.target.getAttribute("data-val");
 		if (val) store.set({ motion: val });
 		refresh_seg(box, "motion", val);
-	});
-	box.querySelector(".picasso-panel__color").addEventListener("input", (e) => {
-		store.set({ accent: e.target.value });
-	});
-	box.querySelector("[data-reset-accent]").addEventListener("click", () => {
-		store.set({ accent: "" });
-		location.reload();
 	});
 	box.querySelector("[data-field='toast_position']").addEventListener("change", (e) => {
 		store.set({ toast_position: e.target.value });
