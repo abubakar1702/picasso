@@ -64,14 +64,25 @@ function init_reveal() {
 				if (en.isIntersecting) en.target.classList.add("picasso-revealed");
 			});
 		},
-		{ rootMargin: "40px", threshold: 0.05 }
+		{ rootMargin: "80px", threshold: 0.01 }
 	);
 	const watch = () => {
 		if (!store.feature("reveal")) return;
 		document.querySelectorAll(".list-row-container, .widget").forEach((n) => io.observe(n));
 	};
-	$(document).on("page-change list_render", () => setTimeout(watch, 50));
-	watch();
+	$(document).on("page-change", () => setTimeout(watch, 200));
+	let mo_timer = null;
+	const mo = new MutationObserver(() => {
+		clearTimeout(mo_timer);
+		mo_timer = setTimeout(watch, 80);
+	});
+	const start = () => {
+		watch();
+		const host = document.querySelector(".main-section") || document.body;
+		if (host) mo.observe(host, { childList: true, subtree: true });
+	};
+	if (document.body) start();
+	else document.addEventListener("DOMContentLoaded", start);
 }
 
 function init_tilt() {

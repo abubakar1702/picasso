@@ -59,14 +59,23 @@ html.picasso-desk-theme.picasso-enhanced-list {
 
 		.list-row {
 			border-bottom: none;
+			border-radius: var(--picasso-surface-radius, 8px);
+			overflow: hidden;
 
 			.level-right {
 				background-color: var(--card-bg);
 			}
 
-			&:hover:not(.list-row-head) .level-right {
-				box-shadow: none;
-				background-color: var(--highlight-color);
+			&:hover:not(.list-row-head) {
+				border-radius: var(--picasso-surface-radius, 8px);
+				background: var(--highlight-color);
+
+				.level-right {
+					box-shadow: none;
+					background-color: var(--highlight-color);
+					border-radius: 0 var(--picasso-surface-radius, 8px)
+						var(--picasso-surface-radius, 8px) 0;
+				}
 			}
 		}
 
