@@ -49,6 +49,10 @@ html.picasso-desk-theme.picasso-enhanced-list {
 		.list-row-container {
 			border-bottom-color: var(--border-color);
 
+			&:not(:has(.list-row-head)) {
+				padding: 2px 0;
+			}
+
 			&:last-child {
 				border-bottom: none;
 			}
