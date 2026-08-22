@@ -1,3 +1,15 @@
+html.picasso-desk-theme .picasso-reset-filters {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	margin-left: auto;
+	white-space: nowrap;
+
+	.icon {
+		margin: 0;
+	}
+}
+
 html.picasso-desk-theme.picasso-full-number-card {
 	.widget.number-widget-box .number,
 	.number-card-widget .widget-body .number {
