@@ -26,51 +26,24 @@ html.picasso-desk-theme {
 
 		.nav-link,
 		.navbar-brand,
-		.btn,
-		svg,
-		.icon {
+		.btn:not(.desktop-navbar-modal-search) {
 			color: var(--picasso-navbar-text) !important;
-			fill: currentColor;
 		}
 
-		.form-control,
-		input[type="search"],
-		#navbar-search,
 		.search-bar input,
 		.desktop-navbar-modal-search {
-			background: color-mix(
-				in srgb,
-				var(--picasso-navbar-text) 12%,
-				var(--picasso-list-card-bg)
-			) !important;
-			background-color: color-mix(
-				in srgb,
-				var(--picasso-navbar-text) 12%,
-				var(--picasso-list-card-bg)
-			) !important;
-			border: 1px solid color-mix(in srgb, var(--picasso-navbar-text) 28%, transparent) !important;
-			box-shadow:
-				inset 0 1px 0 color-mix(in srgb, #ffffff 35%, transparent),
-				0 1px 2px color-mix(in srgb, var(--picasso-shadow) 12%, transparent);
-			color: var(--picasso-page-head-text) !important;
+			color: var(--picasso-navbar-text);
 		}
 
-		.form-control::placeholder,
-		input::placeholder,
-		.desktop-navbar-modal-search span {
-			color: color-mix(in srgb, var(--picasso-page-head-text) 62%, transparent) !important;
-		}
-
-		.desktop-navbar-modal-search svg,
-		.desktop-navbar-modal-search .icon,
 		.search-bar svg,
-		.search-bar .icon {
-			color: color-mix(in srgb, var(--picasso-page-head-text) 72%, transparent) !important;
-			stroke: currentColor;
-		}
-
-		.search-bar .search-icon {
-			background: transparent !important;
+		.search-bar .icon,
+		.desktop-search-icon svg,
+		.desktop-search-icon .icon,
+		.desktop-navbar-modal-search svg,
+		.desktop-navbar-modal-search .icon {
+			fill: none !important;
+			color: var(--picasso-navbar-text) !important;
+			stroke: var(--picasso-navbar-text) !important;
 		}
 	}
 
