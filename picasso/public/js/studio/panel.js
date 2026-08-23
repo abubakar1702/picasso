@@ -49,6 +49,10 @@ function build() {
 	const s = store.get();
 	const reduced = store.prefers_reduced_motion();
 	const feats = feat_map();
+	const isManager = window.frappe && frappe.user && frappe.user.has_role && frappe.user.has_role("System Manager");
+	const desk = (window.frappe && frappe.boot && frappe.boot.picasso_desk) || {};
+	const currentTheme = (document.documentElement.getAttribute("data-theme-mode") || document.documentElement.getAttribute("data-theme") || "light").toLowerCase();
+
 	const box = el(`<div class="picasso-panel" role="dialog" aria-label="Picasso settings"></div>`);
 
 	box.appendChild(
@@ -56,8 +60,8 @@ function build() {
 			<div class="picasso-panel__brand">
 				<span class="picasso-panel__gear" aria-hidden="true"></span>
 				<div>
-					<div class="picasso-panel__title">Settings</div>
-					<div class="picasso-panel__sub">Your desk · site brand stays in Desk Settings</div>
+					<div class="picasso-panel__title">Picasso Settings</div>
+					<div class="picasso-panel__sub">Personal preferences & site branding</div>
 				</div>
 			</div>
 			<button type="button" class="picasso-panel__close" aria-label="Close">✕</button>
@@ -76,32 +80,119 @@ function build() {
 	const search = el(`<input class="picasso-panel__search" type="search" placeholder="Search settings…" />`);
 	const body = el(`<div class="picasso-panel__body"></div>`);
 
-	const look = el(`<div class="picasso-panel__card" data-filter="motion toast">
-		<div class="picasso-panel__label">Appearance</div>
+	// ── Appearance & Theme Card ───────────────────────────────────────
+	const appearance = el(`<div class="picasso-panel__card" data-filter="appearance theme dark light palette accent motion toast">
+		<div class="picasso-panel__label">Appearance & Theme</div>
+		<div class="picasso-panel__field">
+			<span>Theme mode</span>
+			<div class="picasso-panel__seg" data-field="theme_mode">
+				<button type="button" data-val="light" class="${currentTheme === "light" ? "is-on" : ""}">Light</button>
+				<button type="button" data-val="dark" class="${currentTheme === "dark" ? "is-on" : ""}">Dark</button>
+				<button type="button" data-val="automatic" class="${currentTheme === "automatic" ? "is-on" : ""}">Auto</button>
+			</div>
+		</div>
+		<div class="picasso-panel__field">
+			<span>My Personal Palette</span>
+			<select class="picasso-panel__select" data-field="personal_palette">
+				<option value="">Site Brand Default (${desk.palette || "Paper"})</option>
+				<option value="Paper">Paper (Classic Light/Dark)</option>
+				<option value="Sky">Sky (Ocean Blue)</option>
+				<option value="Ink">Ink (Indigo Navy)</option>
+				<option value="Sand">Sand (Warm Terracotta)</option>
+				<option value="Forest">Forest (Emerald Leaf)</option>
+				<option value="Slate">Slate (Graphite Gray)</option>
+			</select>
+		</div>
 		<div class="picasso-panel__field">
 			<span>Motion ${reduced ? "· reduced" : ""}</span>
-			<div class="picasso-panel__seg" data-field="motion"></div>
+			<div class="picasso-panel__seg" data-field="motion">
+				<button type="button" data-val="on" class="${s.motion === "on" ? "is-on" : ""}">On</button>
+				<button type="button" data-val="off" class="${s.motion === "off" ? "is-on" : ""}">Off</button>
+			</div>
 		</div>
 		<div class="picasso-panel__field">
 			<span>Toasts</span>
 			<select class="picasso-panel__select" data-field="toast_position"></select>
 		</div>
 	</div>`);
-	["on", "off"].forEach((d) => {
-		const b = el(`<button type="button" data-val="${d}">${d}</button>`);
-		if (s.motion === d) b.classList.add("is-on");
-		look.querySelector("[data-field='motion']").appendChild(b);
-	});
+
+	const palSelect = appearance.querySelector("[data-field='personal_palette']");
+	if (s.palette) palSelect.value = s.palette;
+
 	["top-left", "top-center", "top-right", "bottom-left", "bottom-center", "bottom-right"].forEach((p) => {
 		const opt = document.createElement("option");
 		opt.value = p;
 		opt.textContent = p.replace("-", " ");
 		if (s.toast_position === p) opt.selected = true;
-		look.querySelector("select").appendChild(opt);
+		appearance.querySelector("[data-field='toast_position']").appendChild(opt);
 	});
 
-	body.appendChild(look);
+	body.appendChild(appearance);
 
+	// ── Site Branding Card (System Managers) ─────────────────────────
+	if (isManager) {
+		const siteBrand = el(`<div class="picasso-panel__card" data-filter="site brand desk settings admin manager">
+			<div class="picasso-panel__label">Site Brand & Layout Defaults</div>
+			<div class="picasso-panel__field">
+				<span>Site Brand Palette</span>
+				<select class="picasso-panel__select" data-field="site_brand_palette">
+					<option value="Paper">Paper (Classic Light/Dark)</option>
+					<option value="Sky">Sky (Ocean Blue)</option>
+					<option value="Ink">Ink (Indigo Navy)</option>
+					<option value="Sand">Sand (Warm Terracotta)</option>
+					<option value="Forest">Forest (Emerald Leaf)</option>
+					<option value="Slate">Slate (Graphite Gray)</option>
+				</select>
+			</div>
+			<label class="picasso-panel__feat" data-filter="link workspaces redirect">
+				<span>
+					<strong>Redirect Link Workspaces</strong>
+					<small>Open workspace items as full pages</small>
+				</span>
+				<span class="picasso-switch">
+					<input type="checkbox" data-desk-field="redirect_link_workspaces" ${desk.redirect_link_workspaces ? "checked" : ""} />
+					<span class="picasso-switch__track"></span>
+				</span>
+			</label>
+			<label class="picasso-panel__feat" data-filter="hide form actions sticky action bar">
+				<span>
+					<strong>Auto-Hide Form Actions</strong>
+					<small>Hide form toolbar when scrolling down</small>
+				</span>
+				<span class="picasso-switch">
+					<input type="checkbox" data-desk-field="enable_hide_form_actions" ${desk.enable_hide_form_actions ? "checked" : ""} />
+					<span class="picasso-switch__track"></span>
+				</span>
+			</label>
+			<label class="picasso-panel__feat" data-filter="left sidebar toggle">
+				<span>
+					<strong>Show Left Sidebar</strong>
+					<small>Display the main Desk navigation sidebar</small>
+				</span>
+				<span class="picasso-switch">
+					<input type="checkbox" data-desk-field="show_left_sidebar" ${desk.show_left_sidebar !== 0 ? "checked" : ""} />
+					<span class="picasso-switch__track"></span>
+				</span>
+			</label>
+			<label class="picasso-panel__feat" data-filter="enhance list ui listview styling">
+				<span>
+					<strong>Enhanced List UI</strong>
+					<small>Modern list view borders and filter headers</small>
+				</span>
+				<span class="picasso-switch">
+					<input type="checkbox" data-desk-field="enhance_list_ui" ${desk.enhance_list_ui !== 0 ? "checked" : ""} />
+					<span class="picasso-switch__track"></span>
+				</span>
+			</label>
+		</div>`);
+
+		const sitePalSelect = siteBrand.querySelector("[data-field='site_brand_palette']");
+		if (desk.palette) sitePalSelect.value = desk.palette;
+
+		body.appendChild(siteBrand);
+	}
+
+	// ── Feature Toggle Groups ─────────────────────────────────────────
 	GROUPS.forEach((group) => {
 		const card = el(`<div class="picasso-panel__card"></div>`);
 		const title = el(`<div class="picasso-panel__label"></div>`);
@@ -141,17 +232,71 @@ function bind(box) {
 		document.dispatchEvent(new CustomEvent("picasso:open-palette"));
 	});
 
+	// Theme mode toggle
+	box.querySelector("[data-field='theme_mode']").addEventListener("click", (e) => {
+		const mode = e.target.getAttribute("data-val");
+		if (!mode) return;
+		refresh_seg(box, "theme_mode", mode);
+		if (frappe.ui && frappe.ui.set_theme) {
+			frappe.ui.set_theme(mode);
+		} else {
+			document.documentElement.setAttribute("data-theme-mode", mode);
+			document.documentElement.setAttribute("data-theme", mode);
+		}
+		if (frappe.xcall) {
+			frappe.xcall("frappe.core.doctype.user.user.switch_theme", { theme: mode.charAt(0).toUpperCase() + mode.slice(1) });
+		}
+	});
+
+	// Personal Palette change (for all users)
+	box.querySelector("[data-field='personal_palette']")?.addEventListener("change", (e) => {
+		const pal = e.target.value;
+		store.set({ palette: pal });
+		location.reload();
+	});
+
+	// Site Brand Palette change (System Managers only)
+	box.querySelector("[data-field='site_brand_palette']")?.addEventListener("change", (e) => {
+		const pal = e.target.value;
+		if (frappe.xcall) {
+			frappe.xcall("picasso.palette.set_desk_palette", { palette: pal }).then(() => {
+				frappe.show_alert({ message: "Site Brand palette updated to " + pal, indicator: "green" });
+				setTimeout(() => location.reload(), 300);
+			}).catch(() => location.reload());
+		}
+	});
+
+	// Motion toggle
 	box.querySelector("[data-field='motion']").addEventListener("click", (e) => {
 		const val = e.target.getAttribute("data-val");
 		if (val) store.set({ motion: val });
 		refresh_seg(box, "motion", val);
 	});
+
+	// Toast Position
 	box.querySelector("[data-field='toast_position']").addEventListener("change", (e) => {
 		store.set({ toast_position: e.target.value });
 	});
+
+	// Site Brand toggles (System Managers)
+	box.querySelectorAll("[data-desk-field]").forEach((input) => {
+		input.addEventListener("change", () => {
+			const key = input.dataset.deskField;
+			const val = input.checked ? 1 : 0;
+			if (frappe.xcall) {
+				frappe.xcall("picasso.palette.update_desk_settings", { key, value: val }).then(() => {
+					frappe.show_alert({ message: "Updated " + key.replace(/_/g, " "), indicator: "green" });
+				});
+			}
+		});
+	});
+
+	// Feature switches
 	box.querySelectorAll("[data-feat]").forEach((input) => {
 		input.addEventListener("change", () => store.set_feature(input.dataset.feat, input.checked));
 	});
+
+	// Search filter
 	box.querySelector(".picasso-panel__search").addEventListener("input", (e) => {
 		const q = e.target.value.toLowerCase().trim();
 		box.querySelectorAll("[data-filter]").forEach((node) => {
@@ -166,6 +311,7 @@ function bind(box) {
 		});
 	});
 }
+
 
 function refresh_seg(box, field, val) {
 	box.querySelectorAll(`[data-field="${field}"] button`).forEach((b) => {

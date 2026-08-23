@@ -386,6 +386,35 @@ def duplicate_palette(source_name: str, title: str | None = None):
 	return doc.as_dict()
 
 
+@frappe.whitelist()
+def set_desk_palette(palette: str):
+	if "System Manager" not in frappe.get_roles():
+		frappe.throw(_("Only System Managers can change the site palette"), frappe.PermissionError)
+	if not frappe.db.exists("Picasso Palette", palette):
+		frappe.throw(_("Invalid palette {0}").format(palette))
+	desk = frappe.get_single("Picasso Desk Settings")
+	desk.palette = palette
+	desk.save(ignore_permissions=True)
+	frappe.cache.delete_value("picasso_desk_settings")
+	frappe.cache.delete_value("picasso_login_settings")
+	from picasso.picasso.desk_settings import get_picasso_desk_settings
+	return get_picasso_desk_settings()
+
+
+@frappe.whitelist()
+def update_desk_settings(key: str, value: Any = None):
+	if "System Manager" not in frappe.get_roles():
+		frappe.throw(_("Only System Managers can modify Desk Settings"), frappe.PermissionError)
+	desk = frappe.get_single("Picasso Desk Settings")
+	if hasattr(desk, key):
+		setattr(desk, key, value)
+		desk.save(ignore_permissions=True)
+		frappe.cache.delete_value("picasso_desk_settings")
+		frappe.cache.delete_value("picasso_login_settings")
+	from picasso.picasso.desk_settings import get_picasso_desk_settings
+	return get_picasso_desk_settings()
+
+
 def _ensure_desk_palette():
 	if not frappe.db.exists("DocType", "Picasso Desk Settings"):
 		return

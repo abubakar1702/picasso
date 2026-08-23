@@ -118,28 +118,58 @@ html.picasso-desk-theme {
 
 html.picasso-desk-theme {
 	.ce-header,
-	.widget.header {
+	.widget.header,
+	.widget-section-header,
+	.workspace-section-header {
 		background: transparent !important;
 		background-image: none !important;
 		box-shadow: none !important;
 		border: none !important;
 		border-radius: 0 !important;
 		min-height: 0 !important;
-		padding: 0 2px !important;
+		padding: 12px 2px 8px 2px !important;
+		margin-bottom: 12px !important;
+		border-bottom: 1px solid color-mix(in srgb, var(--border-color, #e5e7eb) 75%, var(--picasso-desk-accent, #2563eb) 25%) !important;
 
-		.h4,
-		.h5,
-		b {
-			color: var(--text-muted);
-			font-weight: 600;
-			font-size: var(--text-base);
-			letter-spacing: 0.01em;
+		.h1, .h2, .h3, .h4, .h5, .h6,
+		.widget-title,
+		b, strong {
+			color: var(--heading-color, var(--text-color, #1f2937)) !important;
+			font-weight: 700 !important;
+			font-size: 15px !important;
+			letter-spacing: -0.01em;
 		}
+	}
+
+	.ce-delimiter,
+	.ce-block:has(.ce-delimiter) {
+		border: none !important;
+		margin: 16px 0 !important;
+
+		&::before,
+		&::after {
+			content: "" !important;
+			display: block !important;
+			width: 100% !important;
+			height: 1px !important;
+			background: var(--border-color, #e5e7eb) !important;
+			opacity: 0.8 !important;
+		}
+	}
+
+	hr,
+	.section-break hr,
+	.workspace-divider {
+		border: 0 !important;
+		height: 1px !important;
+		background: color-mix(in srgb, var(--border-color, #e5e7eb) 85%, var(--picasso-desk-accent, #2563eb) 15%) !important;
+		margin: 16px 0 !important;
 	}
 
 	.codex-editor .ce-block:has(.ce-header) .ce-block__content,
 	.codex-editor .ce-block:has(.widget.header) .ce-block__content {
-		padding-top: 2px;
-		padding-bottom: 2px;
+		padding-top: 4px;
+		padding-bottom: 4px;
 	}
 }
+
