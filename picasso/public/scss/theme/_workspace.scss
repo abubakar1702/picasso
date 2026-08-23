@@ -20,8 +20,55 @@ html.picasso-desk-theme {
 		}
 	}
 
+	.widget.spacer,
+	.widget.space,
+	.widget.spacer-widget,
+	.widget.space-widget,
+	.widget[data-widget-type="spacer"],
+	.widget[data-widget-type="space"],
+	.spacer,
+	.space,
+	.workspace-spacer,
+	.ce-block:has(.spacer),
+	.ce-block:has(.space),
+	.ce-block:has(.widget.spacer),
+	.ce-block:has(.widget.space),
+	.codex-editor .ce-block:has(.spacer),
+	.codex-editor .ce-block:has(.widget.spacer) {
+		background: transparent !important;
+		background-color: transparent !important;
+		background-image: none !important;
+		box-shadow: none !important;
+		border: none !important;
+
+		&:hover {
+			transform: none !important;
+			box-shadow: none !important;
+			background: transparent !important;
+			background-color: transparent !important;
+		}
+
+		&:not(.edit-mode) {
+			background: transparent !important;
+			background-color: transparent !important;
+			box-shadow: none !important;
+			border: none !important;
+			height: 0 !important;
+			min-height: 0 !important;
+			padding: 0 !important;
+		}
+	}
+
+	.codex-editor .ce-block:has(.spacer) .ce-block__content,
+	.codex-editor .ce-block:has(.widget.spacer) .ce-block__content {
+		background: transparent !important;
+		background-color: transparent !important;
+		padding-top: 0 !important;
+		padding-bottom: 0 !important;
+	}
+
 	&.picasso-feat-cards {
-		.widget,
+		.widget:not(.spacer):not(.space),
 		.frappe-card,
 		.shortcut-widget-box,
 		.number-card-widget,
@@ -32,7 +79,7 @@ html.picasso-desk-theme {
 				box-shadow var(--picasso-dur-2, 200ms) var(--picasso-ease, ease) !important;
 		}
 
-		.widget:hover,
+		.widget:not(.spacer):not(.space):hover,
 		.frappe-card:hover,
 		.shortcut-widget-box:hover,
 		.number-card-widget:hover,

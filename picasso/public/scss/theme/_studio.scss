@@ -45,7 +45,7 @@ html.picasso-flat {
 	}
 }
 
-html.picasso-feat-cards .widget,
+html.picasso-feat-cards .widget:not(.spacer):not(.space),
 html.picasso-feat-cards .frappe-card,
 html.picasso-feat-cards .shortcut-widget-box,
 html.picasso-feat-cards .number-card-widget,
@@ -54,7 +54,7 @@ html.picasso-feat-cards .workspace-widget-box {
 		box-shadow var(--picasso-dur-2) var(--picasso-ease);
 }
 
-html.picasso-feat-cards .widget:hover,
+html.picasso-feat-cards .widget:not(.spacer):not(.space):hover,
 html.picasso-feat-cards .frappe-card:hover,
 html.picasso-feat-cards .shortcut-widget-box:hover,
 html.picasso-feat-cards .number-card-widget:hover,
