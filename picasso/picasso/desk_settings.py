@@ -14,16 +14,18 @@ def get_picasso_desk_settings() -> dict:
 		return cached
 
 	if not frappe.db.exists("DocType", "Picasso Desk Settings"):
-		return _defaults(enabled=False)
+		return _defaults(enabled=True)
 
 	try:
 		doc = frappe.get_doc("Picasso Desk Settings")
 	except frappe.DoesNotExistError:
-		return _defaults(enabled=False)
+		return _defaults(enabled=True)
 
 	palette_name = doc.get("palette") or "Paper"
+	raw_enabled = doc.get("enabled")
+	enabled = 1 if raw_enabled in (None, "") else cint(raw_enabled)
 	settings = {
-		"enabled": cint(doc.enabled),
+		"enabled": enabled,
 		"redirect_link_workspaces": cint(doc.redirect_link_workspaces),
 		"enable_hide_form_actions": 1
 		if doc.enable_hide_form_actions is None or doc.enable_hide_form_actions == ""

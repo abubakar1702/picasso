@@ -27,12 +27,12 @@ def get_picasso_login_settings() -> dict:
 		return cached
 
 	if not frappe.db.exists("DocType", "Picasso Login Settings"):
-		return _default_settings(enabled=False)
+		return _default_settings(enabled=True)
 
 	try:
 		doc = frappe.get_doc("Picasso Login Settings")
 	except frappe.DoesNotExistError:
-		return _default_settings(enabled=False)
+		return _default_settings(enabled=True)
 
 	slides = _photo_slides(doc.get("slides"))
 
@@ -54,8 +54,10 @@ def get_picasso_login_settings() -> dict:
 
 	show_visual_panel = cint(doc.show_visual_panel)
 	visual_video = doc.visual_video or ""
+	raw_enabled = doc.get("enabled")
+	enabled = 1 if raw_enabled in (None, "") else cint(raw_enabled)
 	settings = {
-		"enabled": cint(doc.enabled),
+		"enabled": enabled,
 		"show_visual_panel": show_visual_panel,
 		"has_visual": _should_show_visual(show_visual_panel, slides, visual_video),
 		"show_login_with_email_link": cint(doc.show_login_with_email_link),

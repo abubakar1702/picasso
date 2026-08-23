@@ -221,6 +221,7 @@
 <link rel="stylesheet" href="/assets/picasso/css/login.css">
 <style>
 	:root,
+	html,
 	body[data-path="login"],
 	.picasso-login {
 		color-scheme: light;
@@ -229,11 +230,20 @@
 	{% if pl.use_theme_palette and pl.dark %}
 	@media (prefers-color-scheme: dark) {
 		:root,
+		html,
 		body[data-path="login"],
 		.picasso-login {
 			color-scheme: dark;
 			{{ login_color_vars(pl.dark) }}
 		}
+	}
+	html[data-theme="dark"],
+	html[data-theme="dark"] body[data-path="login"],
+	html[data-theme="dark"] .picasso-login,
+	[data-theme="dark"] :root,
+	body[data-theme="dark"] {
+		color-scheme: dark;
+		{{ login_color_vars(pl.dark) }}
 	}
 	{% endif %}
 </style>
