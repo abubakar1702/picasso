@@ -62,4 +62,17 @@ frappe.ui.form.on("Picasso Palette", {
 		}
 		frm.get_field("preview_html").$wrapper.html(preview_markup(frm.doc));
 	},
+	after_save() {
+		frappe.call({
+			method: "picasso.picasso.desk_settings.get_picasso_desk_settings",
+			callback(r) {
+				if (!r.message) return;
+				if (window.picasso && typeof window.picasso.applyDeskTheme === "function") {
+					window.picasso.applyDeskTheme(r.message, { force: true });
+				} else if (window.frappe && frappe.boot) {
+					frappe.boot.picasso_desk = r.message;
+				}
+			},
+		});
+	},
 });

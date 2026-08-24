@@ -28,3 +28,6 @@ class PicassoDeskSettings(Document):
 		frappe.cache.delete_value("picasso_login_settings")
 		# Invalidate boot session cache so all users pick up the new theme on next load.
 		frappe.cache.delete_keys("bootinfo")
+		from picasso.picasso.desk_settings import broadcast_desk_settings
+
+		broadcast_desk_settings()

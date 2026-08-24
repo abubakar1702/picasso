@@ -7,6 +7,7 @@ from frappe.utils import cint
 from picasso.palette import DEFAULT_COLORS, get_palette_colors
 
 
+@frappe.whitelist()
 def get_picasso_desk_settings() -> dict:
 	cache_key = "picasso_desk_settings"
 	cached = frappe.cache.get_value(cache_key)
@@ -49,6 +50,13 @@ def get_picasso_desk_settings() -> dict:
 	}
 	settings.update(get_palette_colors(palette_name))
 	frappe.cache.set_value(cache_key, settings)
+	return settings
+
+
+def broadcast_desk_settings() -> dict:
+	"""Rebuild cached tokens and push them to open Desk sessions."""
+	settings = get_picasso_desk_settings()
+	frappe.publish_realtime("picasso_desk_settings", settings, after_commit=True)
 	return settings
 
 

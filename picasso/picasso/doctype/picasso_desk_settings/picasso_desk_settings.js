@@ -25,6 +25,20 @@ function palette_preview_html(p) {
 		</div>`;
 }
 
+function apply_saved_desk_settings() {
+	frappe.call({
+		method: "picasso.picasso.desk_settings.get_picasso_desk_settings",
+		callback(r) {
+			if (!r.message) return;
+			if (window.picasso && typeof window.picasso.applyDeskTheme === "function") {
+				window.picasso.applyDeskTheme(r.message, { force: true });
+			} else if (window.frappe && frappe.boot) {
+				frappe.boot.picasso_desk = r.message;
+			}
+		},
+	});
+}
+
 function paint_desk_preview(frm) {
 	const wrap = frm.get_field("palette_preview");
 	if (!wrap) return;
@@ -54,5 +68,8 @@ frappe.ui.form.on("Picasso Desk Settings", {
 	},
 	palette(frm) {
 		paint_desk_preview(frm);
+	},
+	after_save() {
+		apply_saved_desk_settings();
 	},
 });

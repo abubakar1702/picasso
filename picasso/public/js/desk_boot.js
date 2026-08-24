@@ -44,7 +44,14 @@
 		);
 	}
 
-	function apply_desk_theme() {
+	function apply_desk_theme(deskOverride, force) {
+		if (deskOverride && window.frappe && frappe.boot) {
+			frappe.boot.picasso_desk = deskOverride;
+		}
+		if (force) {
+			_lastAppliedHash = null;
+		}
+
 		const desk = (frappe.boot && frappe.boot.picasso_desk) || {};
 		const root = document.documentElement;
 
@@ -119,6 +126,9 @@
 			"--picasso-surface-radius": `${desk.surface_radius || 8}px`,
 			"--picasso-sidebar-width": `${desk.sidebar_width || 240}px`,
 		};
+		if (desk.accent_color) {
+			tokens["--picasso-accent"] = desk.accent_color;
+		}
 		const studio = (frappe.boot && frappe.boot.picasso_studio) || {};
 
 		Object.entries(tokens).forEach(([name, value]) => {
@@ -163,8 +173,28 @@
 		});
 	}
 
+	function apply_from_server(desk) {
+		if (!desk || typeof desk !== "object") return;
+		apply_desk_theme(desk, true);
+	}
+
+	window.picasso = window.picasso || {};
+	window.picasso.applyDeskTheme = function (desk, opts) {
+		apply_desk_theme(desk, !!(opts && opts.force));
+	};
+
+	function bind_realtime() {
+		if (!window.frappe || !frappe.realtime || typeof frappe.realtime.on !== "function") return;
+		if (bind_realtime.done) return;
+		bind_realtime.done = true;
+		frappe.realtime.on("picasso_desk_settings", apply_from_server);
+	}
+
 	$(schedule_apply);
-	$(document).on("app_ready", schedule_apply);
+	$(document).on("app_ready", () => {
+		bind_realtime();
+		schedule_apply();
+	});
 	$(document).on("toolbar_setup", schedule_apply);
 	$(document).on("page-change", schedule_apply);
 

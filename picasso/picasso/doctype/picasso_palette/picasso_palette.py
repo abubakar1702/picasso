@@ -24,3 +24,8 @@ class PicassoPalette(Document):
 		frappe.cache.delete_value("picasso_desk_settings")
 		frappe.cache.delete_value("picasso_login_settings")
 		frappe.cache.delete_keys("bootinfo")
+		if frappe.flags.picasso_seeding_palettes:
+			return
+		from picasso.picasso.desk_settings import broadcast_desk_settings
+
+		broadcast_desk_settings()

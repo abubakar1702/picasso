@@ -109,17 +109,6 @@ function build() {
 	if (isManager) {
 		const siteBrand = el(`<div class="picasso-panel__card" data-filter="site brand desk settings admin manager">
 			<div class="picasso-panel__label">Site Brand & Layout Defaults</div>
-			<div class="picasso-panel__field">
-				<span>Site Brand Palette</span>
-				<select class="picasso-panel__select" data-field="site_brand_palette">
-					<option value="Paper">Paper (Classic Light/Dark)</option>
-					<option value="Sky">Sky (Ocean Blue)</option>
-					<option value="Ink">Ink (Indigo Navy)</option>
-					<option value="Sand">Sand (Warm Terracotta)</option>
-					<option value="Forest">Forest (Emerald Leaf)</option>
-					<option value="Slate">Slate (Graphite Gray)</option>
-				</select>
-			</div>
 			<label class="picasso-panel__feat" data-filter="link workspaces redirect">
 				<span>
 					<strong>Redirect Link Workspaces</strong>
@@ -161,9 +150,6 @@ function build() {
 				</span>
 			</label>
 		</div>`);
-
-		const sitePalSelect = siteBrand.querySelector("[data-field='site_brand_palette']");
-		if (desk.palette) sitePalSelect.value = desk.palette;
 
 		body.appendChild(siteBrand);
 	}
@@ -208,17 +194,6 @@ function bind(box) {
 		document.dispatchEvent(new CustomEvent("picasso:open-palette"));
 	});
 
-	// Site Brand Palette change (System Managers only)
-	box.querySelector("[data-field='site_brand_palette']")?.addEventListener("change", (e) => {
-		const pal = e.target.value;
-		if (frappe.xcall) {
-			frappe.xcall("picasso.palette.set_desk_palette", { palette: pal }).then(() => {
-				frappe.show_alert({ message: "Site Brand palette updated to " + pal, indicator: "green" });
-				setTimeout(() => location.reload(), 300);
-			}).catch(() => location.reload());
-		}
-	});
-
 	// Motion toggle
 	box.querySelector("[data-field='motion']").addEventListener("click", (e) => {
 		const val = e.target.getAttribute("data-val");
@@ -237,7 +212,12 @@ function bind(box) {
 			const key = input.dataset.deskField;
 			const val = input.checked ? 1 : 0;
 			if (frappe.xcall) {
-				frappe.xcall("picasso.palette.update_desk_settings", { key, value: val }).then(() => {
+				frappe.xcall("picasso.palette.update_desk_settings", { key, value: val }).then((desk) => {
+					if (desk && window.picasso && typeof window.picasso.applyDeskTheme === "function") {
+						window.picasso.applyDeskTheme(desk, { force: true });
+					} else if (desk && window.frappe && frappe.boot) {
+						frappe.boot.picasso_desk = desk;
+					}
 					frappe.show_alert({ message: "Updated " + key.replace(/_/g, " "), indicator: "green" });
 				});
 			}
