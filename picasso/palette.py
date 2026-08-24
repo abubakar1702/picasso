@@ -3,6 +3,8 @@
 
 """Named desk palettes: one token set for light + dark chrome."""
 
+from typing import Any
+
 import frappe
 from frappe import _
 from frappe.utils import cint

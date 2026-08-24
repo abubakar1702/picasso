@@ -7,7 +7,6 @@
   "enable_section",
   "enabled",
   "redirect_link_workspaces",
-  "enable_hide_form_actions",
   "show_left_sidebar",
   "show_full_number_in_number_card",
   "column_break_enable",
@@ -90,14 +89,6 @@
    "fieldname": "redirect_link_workspaces",
    "fieldtype": "Check",
    "label": "Redirect Link Workspaces"
-  },
-  {
-   "default": "1",
-   "depends_on": "enabled",
-   "description": "Honor Picasso Hide Form Action configs on forms.",
-   "fieldname": "enable_hide_form_actions",
-   "fieldtype": "Check",
-   "label": "Enable Hide Form Actions"
   },
   {
    "default": "1",
@@ -526,7 +517,7 @@
  ],
  "issingle": 1,
  "links": [],
- "modified": "2026-08-22 17:35:00.000000",
+ "modified": "2026-08-24 20:23:00.000000",
  "modified_by": "Administrator",
  "module": "Picasso",
  "name": "Picasso Desk Settings",

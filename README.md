@@ -37,11 +37,6 @@ Configure from **Picasso Login Settings** (single doctype):
 - Configurable sort order, logos, and home routes
 - Auto-seeds common apps (Frappe, ERPNext, HRMS, ThriveHR) on install
 
-### 🔧 Form Action Hiding
-**Picasso Hide Form Action** doctype:
-- Hide specific form buttons by label and button group
-- Configured per DocType
-
 ### 📊 Report Print Formats
 **Picasso Report Print Format** doctype:
 - Inject custom HTML print formats into Query Reports
@@ -75,7 +70,6 @@ bench --site your-site install-app picasso
 1. Go to **Picasso Desk Settings** to enable and customize the desk theme
 2. Go to **Picasso Login Settings** to enable and customize the login page
 3. Create **Picasso App Screen** entries to customize the apps page
-4. Create **Picasso Hide Form Action** entries to hide form buttons
 
 ## License
 

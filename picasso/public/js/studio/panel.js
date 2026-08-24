@@ -119,16 +119,6 @@ function build() {
 					<span class="picasso-switch__track"></span>
 				</span>
 			</label>
-			<label class="picasso-panel__feat" data-filter="hide form actions sticky action bar">
-				<span>
-					<strong>Auto-Hide Form Actions</strong>
-					<small>Hide form toolbar when scrolling down</small>
-				</span>
-				<span class="picasso-switch">
-					<input type="checkbox" data-desk-field="enable_hide_form_actions" ${desk.enable_hide_form_actions ? "checked" : ""} />
-					<span class="picasso-switch__track"></span>
-				</span>
-			</label>
 			<label class="picasso-panel__feat" data-filter="left sidebar toggle">
 				<span>
 					<strong>Show Left Sidebar</strong>

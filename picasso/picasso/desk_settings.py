@@ -28,9 +28,6 @@ def get_picasso_desk_settings() -> dict:
 	settings = {
 		"enabled": enabled,
 		"redirect_link_workspaces": cint(doc.redirect_link_workspaces),
-		"enable_hide_form_actions": 1
-		if doc.enable_hide_form_actions is None or doc.enable_hide_form_actions == ""
-		else cint(doc.enable_hide_form_actions),
 		"show_left_sidebar": 1
 		if doc.show_left_sidebar is None or doc.show_left_sidebar == ""
 		else cint(doc.show_left_sidebar),
@@ -64,7 +61,6 @@ def _defaults(enabled: bool = True) -> dict:
 	return {
 		"enabled": int(enabled),
 		"redirect_link_workspaces": 1,
-		"enable_hide_form_actions": 1,
 		"show_left_sidebar": 1,
 		"show_full_number_in_number_card": 0,
 		"show_language_switch": 0,

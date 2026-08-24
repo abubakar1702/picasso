@@ -5,25 +5,6 @@ import frappe
 from frappe.tests import IntegrationTestCase
 
 
-class TestFormActions(IntegrationTestCase):
-	"""Tests for picasso.form — get_hidden_actions."""
-
-	def test_get_hidden_actions_returns_empty_when_missing(self):
-		"""Should return empty list when no Picasso Hide Form Action exists."""
-		from picasso.form import get_hidden_actions
-
-		result = get_hidden_actions(doctype="Nonexistent DocType XYZ")
-		self.assertEqual(result, [])
-
-	def test_get_hidden_actions_returns_empty_when_doctype_missing(self):
-		"""Should return empty list when the doctype system is not installed."""
-		from picasso.form import get_hidden_actions
-
-		# Even for a valid doctype, if no config exists, should be empty.
-		result = get_hidden_actions(doctype="User")
-		self.assertIsInstance(result, list)
-
-
 class TestQueryReport(IntegrationTestCase):
 	"""Tests for picasso.query_report — get_script."""
 
