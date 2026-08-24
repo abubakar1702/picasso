@@ -2,9 +2,8 @@ const STORAGE_KEY = "picasso:studio";
 const EVENT = "picasso:studio";
 
 export const FEATURES = [
-	{ key: "page_transitions", label: "Route fade", hint: "Soft fade when changing pages" },
 	{ key: "progress_bar", label: "Loading bar", hint: "Accent bar while Desk is busy" },
-	{ key: "ripple", label: "Button ripples", hint: "Press feedback on buttons" },
+	{ key: "ripple", label: "Button ripples", hint: "Ink splash when you press Save, Add, or other buttons" },
 	{ key: "reveal", label: "List fade-in", hint: "Rows appear as they enter view" },
 	{ key: "tilt", label: "Card sheen", hint: "Light follows the cursor on cards" },
 	{ key: "counters", label: "Number count-up", hint: "Dashboard figures tick into place" },

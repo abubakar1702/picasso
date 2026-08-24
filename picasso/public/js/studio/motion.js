@@ -32,28 +32,43 @@ function init_progress() {
 	});
 }
 
-function init_transitions() {
-	$(document).on("page-change", () => {
-		if (!can("page_transitions")) return;
-		document.documentElement.classList.add("picasso-route-in");
-		setTimeout(() => document.documentElement.classList.remove("picasso-route-in"), 360);
-	});
-}
-
 function init_ripple() {
-	document.addEventListener("pointerdown", (e) => {
-		if (!can("ripple")) return;
-		const btn = e.target.closest(".btn, .primary-action, .btn-primary, .btn-default, .picasso-dock__btn, .picasso-palette__item");
-		if (!btn) return;
-		const ink = document.createElement("span");
-		ink.className = "picasso-ink";
-		const rect = btn.getBoundingClientRect();
-		ink.style.left = e.clientX - rect.left + "px";
-		ink.style.top = e.clientY - rect.top + "px";
-		btn.classList.add("picasso-ripple-host");
-		btn.appendChild(ink);
-		setTimeout(() => ink.remove(), 500);
-	});
+	document.addEventListener(
+		"pointerdown",
+		(e) => {
+			if (!can("ripple")) return;
+			if (e.pointerType === "mouse" && e.button !== 0) return;
+			const btn = e.target.closest(
+				".btn, .primary-action, .icon-btn, .picasso-dock__gear, .picasso-panel__close, .picasso-panel__action, .picasso-palette__item"
+			);
+			if (!btn || btn.disabled || btn.classList.contains("disabled") || btn.getAttribute("aria-disabled") === "true") {
+				return;
+			}
+
+			const rect = btn.getBoundingClientRect();
+			if (!rect.width || !rect.height) return;
+			const x = e.clientX - rect.left;
+			const y = e.clientY - rect.top;
+			const radius = Math.hypot(Math.max(x, rect.width - x), Math.max(y, rect.height - y));
+			const diameter = Math.max(24, radius * 2);
+
+			const ink = document.createElement("span");
+			ink.className = "picasso-ink";
+			ink.style.left = `${x}px`;
+			ink.style.top = `${y}px`;
+			ink.style.width = `${diameter}px`;
+			ink.style.height = `${diameter}px`;
+			ink.style.marginLeft = `${-diameter / 2}px`;
+			ink.style.marginTop = `${-diameter / 2}px`;
+
+			btn.classList.add("picasso-ripple-host");
+			btn.appendChild(ink);
+			const cleanup = () => ink.remove();
+			ink.addEventListener("animationend", cleanup, { once: true });
+			setTimeout(cleanup, 700);
+		},
+		{ passive: true }
+	);
 }
 
 function init_reveal() {
@@ -247,7 +262,6 @@ function init_save() {
 
 export function init() {
 	init_progress();
-	init_transitions();
 	init_ripple();
 	init_reveal();
 	init_tilt();

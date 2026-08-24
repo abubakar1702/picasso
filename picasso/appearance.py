@@ -12,7 +12,6 @@ from frappe.utils import cstr
 
 STUDIO_KEY = "picasso_studio"
 FEATURE_KEYS = (
-	"page_transitions",
 	"progress_bar",
 	"ripple",
 	"reveal",

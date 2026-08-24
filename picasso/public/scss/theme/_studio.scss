@@ -98,24 +98,6 @@ html.picasso-feat-reveal .number-card-widget.picasso-revealed {
 	}
 }
 
-html.picasso-route-in .layout-main-section,
-html.picasso-route-in .main-section,
-html.picasso-route-in .page-container,
-html.picasso-route-in .layout-main {
-	animation: picasso-route var(--picasso-dur-3) var(--picasso-ease);
-}
-
-@keyframes picasso-route {
-	from {
-		opacity: 0.62;
-		transform: translateY(6px);
-	}
-	to {
-		opacity: 1;
-		transform: none;
-	}
-}
-
 .page-head {
 	transition: padding 200ms var(--picasso-ease);
 }
@@ -168,22 +150,23 @@ html.picasso-head-condensed .page-head .title-text {
 .picasso-ripple-host {
 	position: relative;
 	overflow: hidden;
+	isolation: isolate;
 }
 
 .picasso-ink {
 	position: absolute;
-	width: 8px;
-	height: 8px;
-	margin: -4px 0 0 -4px;
+	z-index: 0;
+	display: block;
 	border-radius: 999px;
-	background: color-mix(in srgb, var(--picasso-desk-accent) 40%, #fff);
 	pointer-events: none;
-	animation: picasso-ink var(--picasso-dur-3) ease-out forwards;
+	background: color-mix(in srgb, currentColor 28%, transparent);
+	transform: scale(0);
+	animation: picasso-ink 520ms var(--picasso-ease, ease-out) forwards;
 }
 
 @keyframes picasso-ink {
 	to {
-		transform: scale(22);
+		transform: scale(1);
 		opacity: 0;
 	}
 }

@@ -40,7 +40,7 @@ class TestAppearance(IntegrationTestCase):
 		self.assertEqual(result["toast_position"], "top-center")
 		self.assertFalse(result["features"]["ripple"])
 		# Other features should default to True.
-		self.assertTrue(result["features"]["page_transitions"])
+		self.assertTrue(result["features"]["progress_bar"])
 
 	def test_save_studio_rejects_invalid_values(self):
 		"""Invalid enum values should be replaced with defaults."""

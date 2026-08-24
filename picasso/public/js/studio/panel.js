@@ -7,7 +7,6 @@ const GROUPS = [
 	{
 		title: "Motion & chrome",
 		keys: [
-			"page_transitions",
 			"progress_bar",
 			"ripple",
 			"reveal",
