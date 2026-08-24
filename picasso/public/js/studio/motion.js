@@ -129,13 +129,44 @@ function init_counters() {
 	run();
 }
 
+function desk_scroller() {
+	const main = document.querySelector(".main-section");
+	if (main) return main;
+	return document.scrollingElement || document.documentElement;
+}
+
+function is_window_scroller(el) {
+	return !el || el === document.documentElement || el === document.body || el === document.scrollingElement;
+}
+
+function scroll_y(el) {
+	if (is_window_scroller(el)) return window.scrollY || document.documentElement.scrollTop || 0;
+	return el.scrollTop || 0;
+}
+
+function scroll_max(el) {
+	if (is_window_scroller(el)) {
+		return Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+	}
+	return Math.max(0, el.scrollHeight - el.clientHeight);
+}
+
+function scroll_to_top(el) {
+	const behavior = store.motion_on() ? "smooth" : "auto";
+	if (is_window_scroller(el) || typeof el.scrollTo !== "function") {
+		window.scrollTo({ top: 0, behavior });
+		return;
+	}
+	el.scrollTo({ top: 0, behavior });
+}
+
 function init_header() {
 	const on_scroll = () => {
 		if (!store.feature("condensed_header")) {
 			document.documentElement.classList.remove("picasso-head-condensed");
 			return;
 		}
-		const y = window.scrollY || document.querySelector(".layout-main-section")?.scrollTop || 0;
+		const y = scroll_y(desk_scroller());
 		document.documentElement.classList.toggle("picasso-head-condensed", y > 36);
 	};
 	window.addEventListener("scroll", on_scroll, { passive: true });
@@ -149,8 +180,9 @@ function init_top() {
 		btn.type = "button";
 		btn.className = "picasso-top";
 		btn.title = "Back to top";
-		btn.innerHTML = `<svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="15" /><circle class="picasso-top__ring" cx="18" cy="18" r="15" /></svg><span>↑</span>`;
-		btn.addEventListener("click", () => window.scrollTo({ top: 0, behavior: store.motion_on() ? "smooth" : "auto" }));
+		btn.setAttribute("aria-label", "Back to top");
+		btn.innerHTML = `<svg viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="15" /><circle class="picasso-top__ring" cx="18" cy="18" r="15" /></svg><span>↑</span>`;
+		btn.addEventListener("click", () => scroll_to_top(desk_scroller()));
 		document.body.appendChild(btn);
 	}
 	const ring = btn.querySelector(".picasso-top__ring");
@@ -160,14 +192,21 @@ function init_top() {
 		ring.style.strokeDashoffset = String(circ);
 	}
 	const update = () => {
-		const show = store.feature("back_to_top") && (window.scrollY || 0) > 320;
+		const scroller = desk_scroller();
+		const y = scroll_y(scroller);
+		const show = store.feature("back_to_top") && y > 240;
 		btn.classList.toggle("is-on", show);
-		const max = document.documentElement.scrollHeight - window.innerHeight;
-		const p = max > 0 ? window.scrollY / max : 0;
+		btn.setAttribute("aria-hidden", show ? "false" : "true");
+		const max = scroll_max(scroller);
+		const p = max > 0 ? Math.min(1, y / max) : 0;
 		if (ring) ring.style.strokeDashoffset = String(circ * (1 - p));
 	};
 	window.addEventListener("scroll", update, { passive: true });
+	document.addEventListener("scroll", update, { passive: true, capture: true });
 	document.addEventListener(store.EVENT_NAME, update);
+	if (window.jQuery) {
+		$(document).on("page-change", () => setTimeout(update, 120));
+	}
 	update();
 }
 
