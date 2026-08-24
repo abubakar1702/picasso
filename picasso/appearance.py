@@ -16,7 +16,6 @@ FEATURE_KEYS = (
 	"ripple",
 	"reveal",
 	"counters",
-	"condensed_header",
 	"back_to_top",
 	"toast_timers",
 	"save_pulse",

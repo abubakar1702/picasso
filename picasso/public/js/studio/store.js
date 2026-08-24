@@ -6,7 +6,6 @@ export const FEATURES = [
 	{ key: "ripple", label: "Button ripples", hint: "Ink splash when you press Save, Add, or other buttons" },
 	{ key: "reveal", label: "List fade-in", hint: "Rows appear as they enter view" },
 	{ key: "counters", label: "Number count-up", hint: "Dashboard figures tick into place" },
-	{ key: "condensed_header", label: "Compact header", hint: "Page head shrinks while scrolling" },
 	{ key: "back_to_top", label: "Back to top", hint: "Jump button with scroll progress" },
 	{ key: "toast_timers", label: "Toast countdown", hint: "See how long an alert will stay" },
 	{ key: "save_pulse", label: "Save pulse", hint: "Status pill flashes after save" },
@@ -85,7 +84,7 @@ export function apply_dom() {
 	root.dataset.picassoDock = state.dock_corner;
 	root.classList.toggle("picasso-motion-off", !motion_on());
 	root.classList.toggle("picasso-flat", !feature("gradients"));
-	["reveal", "cards", "app_icons", "condensed_header"].forEach((key) => {
+	["reveal", "cards", "app_icons"].forEach((key) => {
 		root.classList.toggle("picasso-feat-" + key, feature(key));
 	});
 	document.dispatchEvent(new CustomEvent(EVENT, { detail: get() }));

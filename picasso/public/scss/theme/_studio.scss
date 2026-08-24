@@ -90,23 +90,6 @@ html.picasso-feat-reveal .number-card-widget.picasso-revealed {
 	}
 }
 
-.page-head {
-	transition: padding 200ms var(--picasso-ease);
-}
-
-.page-head .title-text {
-	transition: font-size 200ms var(--picasso-ease);
-}
-
-html.picasso-head-condensed .page-head {
-	padding-top: 4px !important;
-	padding-bottom: 4px !important;
-}
-
-html.picasso-head-condensed .page-head .title-text {
-	font-size: 15px !important;
-}
-
 .picasso-progress {
 	position: fixed;
 	top: 0;

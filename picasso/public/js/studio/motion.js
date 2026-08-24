@@ -164,19 +164,6 @@ function scroll_to_top(el) {
 	el.scrollTo({ top: 0, behavior });
 }
 
-function init_header() {
-	const on_scroll = () => {
-		if (!store.feature("condensed_header")) {
-			document.documentElement.classList.remove("picasso-head-condensed");
-			return;
-		}
-		const y = scroll_y(desk_scroller());
-		document.documentElement.classList.toggle("picasso-head-condensed", y > 36);
-	};
-	window.addEventListener("scroll", on_scroll, { passive: true });
-	document.addEventListener("scroll", on_scroll, { passive: true, capture: true });
-}
-
 function init_top() {
 	let btn = document.querySelector(".picasso-top");
 	if (!btn) {
@@ -254,7 +241,6 @@ export function init() {
 	init_ripple();
 	init_reveal();
 	init_counters();
-	init_header();
 	init_top();
 	init_toasts();
 	init_save();
