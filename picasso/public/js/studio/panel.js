@@ -10,7 +10,6 @@ const GROUPS = [
 			"progress_bar",
 			"ripple",
 			"reveal",
-			"tilt",
 			"condensed_header",
 			"back_to_top",
 			"signin_entrance",

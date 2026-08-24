@@ -100,17 +100,6 @@ function init_reveal() {
 	else document.addEventListener("DOMContentLoaded", start);
 }
 
-function init_tilt() {
-	document.addEventListener("pointermove", (e) => {
-		if (!can("tilt") || !store.feature("cards")) return;
-		const card = e.target.closest(".widget, .frappe-card, .number-widget-box");
-		if (!card) return;
-		const r = card.getBoundingClientRect();
-		card.style.setProperty("--picasso-mx", ((e.clientX - r.left) / r.width) * 100 + "%");
-		card.style.setProperty("--picasso-my", ((e.clientY - r.top) / r.height) * 100 + "%");
-	});
-}
-
 function parse_number(text) {
 	const n = Number(String(text).replace(/,/g, "").replace(/[^\d.-]/g, ""));
 	return Number.isFinite(n) ? n : null;
@@ -264,7 +253,6 @@ export function init() {
 	init_progress();
 	init_ripple();
 	init_reveal();
-	init_tilt();
 	init_counters();
 	init_header();
 	init_top();

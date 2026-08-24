@@ -41,7 +41,7 @@
 		root.classList.toggle("picasso-motion-off", studio.motion === "off");
 		root.classList.toggle("picasso-flat", studio.features && studio.features.gradients === false);
 		const features = studio.features || {};
-		["reveal", "tilt", "cards", "app_icons", "condensed_header"].forEach((key) => {
+		["reveal", "cards", "app_icons", "condensed_header"].forEach((key) => {
 			root.classList.toggle("picasso-feat-" + key, features[key] !== false);
 		});
 	}

@@ -15,7 +15,6 @@ FEATURE_KEYS = (
 	"progress_bar",
 	"ripple",
 	"reveal",
-	"tilt",
 	"counters",
 	"condensed_header",
 	"back_to_top",

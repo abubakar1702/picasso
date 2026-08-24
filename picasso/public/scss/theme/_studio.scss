@@ -63,14 +63,6 @@ html.picasso-feat-cards .workspace-widget-box:hover {
 	box-shadow: 0 10px 28px color-mix(in srgb, var(--picasso-desk-accent) 16%, transparent);
 }
 
-html.picasso-feat-tilt .frappe-card:not(.widget) {
-	background-image: radial-gradient(
-		420px circle at var(--picasso-mx, 50%) var(--picasso-my, 0%),
-		color-mix(in srgb, var(--picasso-desk-accent) 14%, transparent),
-		transparent 46%
-	);
-}
-
 html.picasso-feat-app_icons .standard-sidebar-item .sidebar-item-icon,
 html.picasso-feat-app_icons .sidebar-item-icon,
 html.picasso-feat-app_icons .desk-sidebar .sidebar-item-icon,
