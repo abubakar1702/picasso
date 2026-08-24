@@ -72,22 +72,26 @@ html.picasso-feat-app_icons .widget-head .widget-title .icon {
 }
 
 html.picasso-feat-reveal .list-row-container.picasso-revealed,
-html.picasso-feat-reveal .list-row.picasso-revealed,
-html.picasso-feat-reveal .widget.picasso-revealed,
-html.picasso-feat-reveal .shortcut-widget-box.picasso-revealed,
-html.picasso-feat-reveal .number-card-widget.picasso-revealed {
-	animation: picasso-reveal var(--picasso-dur-3) var(--picasso-ease);
+html.picasso-feat-reveal .frappe-list .list-row.picasso-revealed {
+	animation: picasso-reveal 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
+	animation-delay: calc(min(20, var(--picasso-reveal-i, 0)) * 12ms);
 }
 
 @keyframes picasso-reveal {
-	from {
-		opacity: 0.01;
-		transform: translateY(8px);
+	0% {
+		transform: translateX(0);
 	}
-	to {
-		opacity: 1;
-		transform: none;
+	40% {
+		transform: translateX(8px);
 	}
+	100% {
+		transform: translateX(0);
+	}
+}
+
+html.picasso-motion-off .list-row-container.picasso-revealed,
+html.picasso-motion-off .frappe-list .list-row.picasso-revealed {
+	animation: none;
 }
 
 .picasso-progress {

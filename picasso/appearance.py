@@ -15,7 +15,6 @@ FEATURE_KEYS = (
 	"progress_bar",
 	"ripple",
 	"reveal",
-	"counters",
 	"back_to_top",
 	"toast_timers",
 	"save_pulse",

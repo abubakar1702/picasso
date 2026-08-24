@@ -4,8 +4,7 @@ const EVENT = "picasso:studio";
 export const FEATURES = [
 	{ key: "progress_bar", label: "Loading bar", hint: "Accent bar while Desk is busy" },
 	{ key: "ripple", label: "Button ripples", hint: "Ink splash when you press Save, Add, or other buttons" },
-	{ key: "reveal", label: "List fade-in", hint: "Rows appear as they enter view" },
-	{ key: "counters", label: "Number count-up", hint: "Dashboard figures tick into place" },
+	{ key: "reveal", label: "Row bounce", hint: "Each row nudges right, from top to bottom, when a list loads" },
 	{ key: "back_to_top", label: "Back to top", hint: "Jump button with scroll progress" },
 	{ key: "toast_timers", label: "Toast countdown", hint: "See how long an alert will stay" },
 	{ key: "save_pulse", label: "Save pulse", hint: "Status pill flashes after save" },

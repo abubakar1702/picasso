@@ -72,65 +72,51 @@ function init_ripple() {
 }
 
 function init_reveal() {
-	if (!("IntersectionObserver" in window)) return;
-	const io = new IntersectionObserver(
-		(entries) => {
-			entries.forEach((en) => {
-				if (en.isIntersecting) en.target.classList.add("picasso-revealed");
-			});
-		},
-		{ rootMargin: "80px", threshold: 0.01 }
-	);
-	const watch = () => {
-		if (!store.feature("reveal")) return;
-		document.querySelectorAll(".list-row-container, .list-row, .widget, .shortcut-widget-box, .number-card-widget").forEach((n) => io.observe(n));
+	const ROW_SEL =
+		".frappe-list .list-row-container, .result .list-row-container, .list-view-container .list-row-container";
+
+	const collect_rows = () => {
+		const rows = [...document.querySelectorAll(ROW_SEL)];
+		if (rows.length) return rows;
+		return [...document.querySelectorAll(".frappe-list .list-row")].filter(
+			(n) => !n.closest(".list-row-container")
+		);
 	};
-	$(document).on("page-change", () => setTimeout(watch, 200));
-	let mo_timer = null;
-	const mo = new MutationObserver(() => {
-		clearTimeout(mo_timer);
-		mo_timer = setTimeout(watch, 80);
-	});
+
+	const watch = () => {
+		if (!can("reveal")) return;
+		let batch = 0;
+		collect_rows().forEach((row) => {
+			if (row.dataset.picassoReveal === "1") return;
+			row.dataset.picassoReveal = "1";
+			row.style.setProperty("--picasso-reveal-i", String(batch));
+			batch += 1;
+			row.classList.add("picasso-revealed");
+		});
+	};
+
+	let scheduled = false;
+	const schedule = () => {
+		if (scheduled) return;
+		scheduled = true;
+		requestAnimationFrame(() => {
+			scheduled = false;
+			watch();
+		});
+	};
+
+	if (window.jQuery) {
+		$(document).on("page-change app_ready", schedule);
+	}
+	const mo = new MutationObserver(schedule);
 	const start = () => {
 		watch();
-		const host = document.querySelector(".main-section, .page-container, .layout-main-section") || document.body;
+		const host =
+			document.querySelector(".main-section, .page-container, .layout-main-section") || document.body;
 		if (host) mo.observe(host, { childList: true, subtree: true });
 	};
 	if (document.body) start();
 	else document.addEventListener("DOMContentLoaded", start);
-}
-
-function parse_number(text) {
-	const n = Number(String(text).replace(/,/g, "").replace(/[^\d.-]/g, ""));
-	return Number.isFinite(n) ? n : null;
-}
-
-function init_counters() {
-	const run = () => {
-		if (!can("counters")) return;
-		const selectors = ".widget .number, .number-card-widget .number, .number-card-number, .number-card .number, .widget-content .number, .number-widget-box .number";
-		document.querySelectorAll(selectors).forEach((node) => {
-			if (node.dataset.picassoCounted) return;
-			const raw = node.textContent;
-			const n = parse_number(raw);
-			if (n === null) return;
-			node.dataset.picassoCounted = "1";
-			const suffix = raw.replace(/[\d,.\s-]/g, "");
-			const start = performance.now();
-			const dur = 520;
-			const step = (t) => {
-				const p = Math.min(1, (t - start) / dur);
-				const eased = 1 - Math.pow(1 - p, 3);
-				node.textContent = Math.round(n * eased).toLocaleString() + suffix;
-				if (p < 1) requestAnimationFrame(step);
-			};
-			requestAnimationFrame(step);
-		});
-	};
-	if (window.jQuery) {
-		$(document).on("page-change app_ready ajaxComplete", () => setTimeout(run, 150));
-	}
-	run();
 }
 
 function desk_scroller() {
@@ -240,7 +226,6 @@ export function init() {
 	init_progress();
 	init_ripple();
 	init_reveal();
-	init_counters();
 	init_top();
 	init_toasts();
 	init_save();

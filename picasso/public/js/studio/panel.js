@@ -16,7 +16,7 @@ const GROUPS = [
 	},
 	{
 		title: "Feedback",
-		keys: ["counters", "toast_timers", "save_pulse"],
+		keys: ["toast_timers", "save_pulse"],
 	},
 	{
 		title: "Tools",
