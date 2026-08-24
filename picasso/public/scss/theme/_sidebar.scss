@@ -87,6 +87,9 @@ html.picasso-desk-theme {
 				border-radius: 10px;
 				gap: 8px;
 				color: var(--picasso-sidebar-text);
+				display: flex;
+				align-items: center;
+				overflow: hidden;
 
 				.text-secondary {
 					color: color-mix(in srgb, var(--picasso-sidebar-text) 62%, transparent);
@@ -97,6 +100,98 @@ html.picasso-desk-theme {
 			.nav-link:hover,
 			&.show .nav-link {
 				background-color: var(--sidebar-hover-color);
+			}
+		}
+	}
+
+	.body-sidebar-container:not(.expanded) {
+		.sidebar-header {
+			padding: 4px 0 !important;
+			margin: 0 !important;
+			width: 100% !important;
+			justify-content: center !important;
+			display: flex !important;
+
+			.title-container,
+			.drop-icon,
+			.header-subtitle {
+				display: none !important;
+			}
+
+			.sidebar-item-icon,
+			.header-logo,
+			.header-logo-container {
+				margin: 0 auto !important;
+				flex-shrink: 0 !important;
+			}
+		}
+
+		.body-sidebar-bottom {
+			padding: 7px 0 !important;
+			display: flex !important;
+			flex-direction: column !important;
+			align-items: center !important;
+		}
+
+		.collapse-sidebar-link {
+			justify-content: center !important;
+			width: 100% !important;
+			padding: 0 !important;
+
+			span {
+				display: none !important;
+			}
+		}
+
+		.dropdown-navbar-user {
+			width: 100% !important;
+			margin-left: 0 !important;
+			margin-right: 0 !important;
+			display: flex !important;
+			justify-content: center !important;
+
+			.nav-link {
+				padding: 6px 0 !important;
+				justify-content: center !important;
+				gap: 0 !important;
+				width: 100% !important;
+
+				.avatar-name-email {
+					display: none !important;
+				}
+
+				.avatar,
+				.avatar-frame {
+					margin: 0 auto !important;
+				}
+			}
+		}
+	}
+
+	.body-sidebar-container.expanded {
+		.sidebar-header {
+			padding: 8px !important;
+			width: 100% !important;
+			justify-content: flex-start !important;
+
+			.title-container {
+				display: flex !important;
+			}
+
+			.drop-icon {
+				display: inline-flex !important;
+			}
+		}
+
+		.dropdown-navbar-user {
+			.nav-link {
+				padding: 8px 10px !important;
+				justify-content: flex-start !important;
+				gap: 8px !important;
+
+				.avatar-name-email {
+					display: block !important;
+				}
 			}
 		}
 	}

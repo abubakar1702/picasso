@@ -26,26 +26,6 @@ function collect(query) {
 		hint: "Appearance and motion",
 		run: () => document.dispatchEvent(new CustomEvent("picasso:open-panel")),
 	});
-	const dark = (document.documentElement.getAttribute("data-theme") || "").toLowerCase() === "dark";
-	out.push({
-		id: "theme",
-		title: "Dark mode",
-		hint: "Frappe theme · Ctrl+Shift+G",
-		kind: "toggle",
-		on: dark,
-		run: () => {
-			const next = dark ? "Light" : "Dark";
-			document.documentElement.setAttribute("data-theme-mode", next.toLowerCase());
-			if (frappe.ui && frappe.ui.set_theme) {
-				frappe.ui.set_theme(next.toLowerCase());
-			} else {
-				document.documentElement.setAttribute("data-theme", next.toLowerCase());
-			}
-			if (frappe.xcall) {
-				frappe.xcall("frappe.core.doctype.user.user.switch_theme", { theme: next });
-			}
-		},
-	});
 	store.FEATURES.forEach((f) => {
 		const on = store.feature(f.key);
 		out.push({

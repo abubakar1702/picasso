@@ -47,7 +47,6 @@ def default_studio() -> dict:
 		"density": "cozy",
 		"motion": "on",
 		"accent": "",
-		"palette": "",
 		"toast_position": "bottom-right",
 		"dock_corner": "br",
 		"features": {key: True for key in FEATURE_KEYS},
@@ -64,8 +63,6 @@ def _clean_studio(raw: Any) -> dict:
 	accent = cstr(data.get("accent") or "").strip()
 	if accent.startswith("#") and len(accent) in (4, 7):
 		out["accent"] = accent
-	if isinstance(data.get("palette"), str):
-		out["palette"] = cstr(data["palette"]).strip()
 	if data.get("toast_position") in TOAST_POS:
 		out["toast_position"] = data["toast_position"]
 	if data.get("dock_corner") in DOCK_CORNERS:

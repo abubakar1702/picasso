@@ -51,7 +51,6 @@ function build() {
 	const feats = feat_map();
 	const isManager = window.frappe && frappe.user && frappe.user.has_role && frappe.user.has_role("System Manager");
 	const desk = (window.frappe && frappe.boot && frappe.boot.picasso_desk) || {};
-	const currentTheme = (document.documentElement.getAttribute("data-theme-mode") || document.documentElement.getAttribute("data-theme") || "light").toLowerCase();
 
 	const box = el(`<div class="picasso-panel" role="dialog" aria-label="Picasso settings"></div>`);
 
@@ -80,29 +79,9 @@ function build() {
 	const search = el(`<input class="picasso-panel__search" type="search" placeholder="Search settings…" />`);
 	const body = el(`<div class="picasso-panel__body"></div>`);
 
-	// ── Appearance & Theme Card ───────────────────────────────────────
-	const appearance = el(`<div class="picasso-panel__card" data-filter="appearance theme dark light palette accent motion toast">
-		<div class="picasso-panel__label">Appearance & Theme</div>
-		<div class="picasso-panel__field">
-			<span>Theme mode</span>
-			<div class="picasso-panel__seg" data-field="theme_mode">
-				<button type="button" data-val="light" class="${currentTheme === "light" ? "is-on" : ""}">Light</button>
-				<button type="button" data-val="dark" class="${currentTheme === "dark" ? "is-on" : ""}">Dark</button>
-				<button type="button" data-val="automatic" class="${currentTheme === "automatic" ? "is-on" : ""}">Auto</button>
-			</div>
-		</div>
-		<div class="picasso-panel__field">
-			<span>My Personal Palette</span>
-			<select class="picasso-panel__select" data-field="personal_palette">
-				<option value="">Site Brand Default (${desk.palette || "Paper"})</option>
-				<option value="Paper">Paper (Classic Light/Dark)</option>
-				<option value="Sky">Sky (Ocean Blue)</option>
-				<option value="Ink">Ink (Indigo Navy)</option>
-				<option value="Sand">Sand (Warm Terracotta)</option>
-				<option value="Forest">Forest (Emerald Leaf)</option>
-				<option value="Slate">Slate (Graphite Gray)</option>
-			</select>
-		</div>
+	// ── Appearance Card ───────────────────────────────────────────────
+	const appearance = el(`<div class="picasso-panel__card" data-filter="appearance motion toast">
+		<div class="picasso-panel__label">Appearance</div>
 		<div class="picasso-panel__field">
 			<span>Motion ${reduced ? "· reduced" : ""}</span>
 			<div class="picasso-panel__seg" data-field="motion">
@@ -115,9 +94,6 @@ function build() {
 			<select class="picasso-panel__select" data-field="toast_position"></select>
 		</div>
 	</div>`);
-
-	const palSelect = appearance.querySelector("[data-field='personal_palette']");
-	if (s.palette) palSelect.value = s.palette;
 
 	["top-left", "top-center", "top-right", "bottom-left", "bottom-center", "bottom-right"].forEach((p) => {
 		const opt = document.createElement("option");
@@ -230,29 +206,6 @@ function bind(box) {
 	box.querySelector("[data-open-palette]").addEventListener("click", () => {
 		close();
 		document.dispatchEvent(new CustomEvent("picasso:open-palette"));
-	});
-
-	// Theme mode toggle
-	box.querySelector("[data-field='theme_mode']").addEventListener("click", (e) => {
-		const mode = e.target.getAttribute("data-val");
-		if (!mode) return;
-		refresh_seg(box, "theme_mode", mode);
-		if (frappe.ui && frappe.ui.set_theme) {
-			frappe.ui.set_theme(mode);
-		} else {
-			document.documentElement.setAttribute("data-theme-mode", mode);
-			document.documentElement.setAttribute("data-theme", mode);
-		}
-		if (frappe.xcall) {
-			frappe.xcall("frappe.core.doctype.user.user.switch_theme", { theme: mode.charAt(0).toUpperCase() + mode.slice(1) });
-		}
-	});
-
-	// Personal Palette change (for all users)
-	box.querySelector("[data-field='personal_palette']")?.addEventListener("change", (e) => {
-		const pal = e.target.value;
-		store.set({ palette: pal });
-		location.reload();
 	});
 
 	// Site Brand Palette change (System Managers only)

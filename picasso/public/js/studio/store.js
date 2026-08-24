@@ -25,7 +25,6 @@ const DEFAULTS = {
 	density: "cozy",
 	motion: "on",
 	accent: "",
-	palette: "",
 	toast_position: "bottom-right",
 	dock_corner: "br",
 	features: FEATURES.reduce((acc, f) => {
@@ -47,7 +46,6 @@ function merge(raw) {
 	if (["compact", "cozy", "roomy"].includes(raw.density)) next.density = raw.density;
 	if (raw.motion === "on" || raw.motion === "off") next.motion = raw.motion;
 	if (typeof raw.accent === "string" && raw.accent.startsWith("#")) next.accent = raw.accent;
-	if (typeof raw.palette === "string") next.palette = raw.palette;
 	if (typeof raw.toast_position === "string") next.toast_position = raw.toast_position;
 	if (typeof raw.dock_corner === "string") next.dock_corner = raw.dock_corner;
 	if (raw.features && typeof raw.features === "object") {
@@ -92,10 +90,6 @@ export function apply_dom() {
 	["reveal", "tilt", "cards", "app_icons", "condensed_header"].forEach((key) => {
 		root.classList.toggle("picasso-feat-" + key, feature(key));
 	});
-	if (state.accent) {
-		root.style.setProperty("--picasso-light-accent", state.accent);
-		root.style.setProperty("--picasso-dark-accent", state.accent);
-	}
 	document.dispatchEvent(new CustomEvent(EVENT, { detail: get() }));
 }
 

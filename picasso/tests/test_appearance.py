@@ -86,6 +86,13 @@ class TestAppearance(IntegrationTestCase):
 		self.assertEqual(result["density"], "cozy")
 		self.assertTrue(all(result["features"].values()))
 
+	def test_clean_studio_drops_user_palette(self):
+		"""Per-user palette is not a studio setting."""
+		from picasso.appearance import _clean_studio
+
+		result = _clean_studio({"palette": "Ink"})
+		self.assertNotIn("palette", result)
+
 	def test_clean_studio_validates_accent_format(self):
 		"""Only #RGB and #RRGGBB accents should be accepted."""
 		from picasso.appearance import _clean_studio
