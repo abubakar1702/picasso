@@ -31,13 +31,18 @@
 		}
 
 		&.picasso-enhanced-list .frappe-list {
-			margin: 0 4px 8px;
-			padding: 8px 6px 6px;
-			border-radius: calc(var(--picasso-surface-radius, 8px) * 0.75);
+			margin: 0;
+			padding: 0;
+			border-radius: 0;
 
-			.list-row {
-				padding-left: 8px;
-				padding-right: 8px;
+			.list-row,
+			.list-row-head {
+				padding-left: 12px;
+				padding-right: 0;
+
+				.level-right {
+					padding-right: 12px;
+				}
 			}
 
 			.list-row-head {

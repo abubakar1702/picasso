@@ -1,14 +1,19 @@
-/* ERPExtra card shell. Hover / header / borders use remapped Frappe tokens
-   (--highlight-color, --subtle-accent, --card-bg, --border-color).
+/* Full-bleed list: no card inset. Hover / header / borders use remapped
+   Frappe tokens (--highlight-color, --subtle-accent, --card-bg, --border-color).
    Only result-container height needs !important — Frappe sets it inline. */
 
 html.picasso-desk-theme.picasso-enhanced-list {
+	.layout-main-section.layout-main-list {
+		padding: 0;
+	}
+
 	.layout-main-list {
 		display: flex;
 		flex-direction: column;
-		gap: 12px;
+		gap: 0;
 		overflow: visible;
 		height: auto;
+		min-height: calc(100vh - var(--navbar-height, 48px) - var(--page-head-height, 50px));
 
 		> .page-form {
 			background: var(--picasso-list-filter-bg);
@@ -27,23 +32,26 @@ html.picasso-desk-theme.picasso-enhanced-list {
 	}
 
 	.frappe-list {
-		--border-radius: var(--picasso-surface-radius, 8px);
+		--border-radius: 0;
+		flex: 1;
 		background: var(--card-bg);
-		border: 1px solid var(--border-color);
-		border-radius: var(--picasso-surface-radius, 10px);
-		box-shadow: 0 8px 24px color-mix(in srgb, var(--picasso-shadow, #0f172a) 10%, transparent);
-		margin: 0 12px 12px;
-		padding: 12px 10px 10px;
+		border: none;
+		border-radius: 0;
+		box-shadow: none;
+		margin: 0;
+		padding: 0;
 
-		.result-container,
-		.result {
+		.result-container {
 			height: auto !important;
 			min-height: 0 !important;
-			overflow: visible;
+			overflow-x: auto;
+			overflow-y: clip;
 		}
 
 		.result {
-			padding-top: 4px;
+			height: auto !important;
+			min-height: 0 !important;
+			padding-top: 0;
 		}
 
 		.list-row-container {
@@ -63,30 +71,38 @@ html.picasso-desk-theme.picasso-enhanced-list {
 				.level-right {
 					box-shadow: none;
 					background-color: var(--highlight-color);
-					border-radius: 0 var(--picasso-surface-radius, 8px)
-						var(--picasso-surface-radius, 8px) 0;
+					border-radius: 0;
 				}
 			}
 		}
 
-		.list-row {
+		.list-row,
+		.list-row-head {
 			border-bottom: none;
-			border-radius: var(--picasso-surface-radius, 8px);
-			overflow: hidden;
+			border-radius: 0;
+			overflow: visible;
+			padding-left: 16px;
+			padding-right: 0;
 
+			.level-right {
+				padding-left: 10px;
+				padding-right: 16px;
+			}
+		}
+
+		.list-row {
 			.level-right {
 				background-color: var(--card-bg);
 			}
 
-			&:hover:not(.list-row-head) {
-				border-radius: var(--picasso-surface-radius, 8px);
+			&:hover {
+				border-radius: 0;
 				background: var(--highlight-color);
 
 				.level-right {
 					box-shadow: none;
 					background-color: var(--highlight-color);
-					border-radius: 0 var(--picasso-surface-radius, 8px)
-						var(--picasso-surface-radius, 8px) 0;
+					border-radius: 0;
 				}
 			}
 		}
@@ -97,6 +113,7 @@ html.picasso-desk-theme.picasso-enhanced-list {
 
 			.level-right {
 				background: var(--subtle-accent);
+				border-radius: 0;
 			}
 		}
 
@@ -105,9 +122,14 @@ html.picasso-desk-theme.picasso-enhanced-list {
 			color: var(--picasso-desk-accent);
 		}
 
-		.list-count,
 		.list-paging-area {
-			padding: 8px 4px 4px;
+			padding: 8px 16px;
+		}
+
+		.result.no-assign-to .list-row .level-right,
+		.result.no-assign-to .list-row-head .level-right {
+			flex: 0 0 156px;
+			width: 156px;
 		}
 	}
 }
