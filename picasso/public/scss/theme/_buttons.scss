@@ -1,0 +1,36 @@
+/* Shared primary accent for legacy Bootstrap .btn-primary and v16 espresso solids.
+   Scope callers carefully — Frappe uses solid gray for Actions menus by design. */
+
+@mixin picasso-solid-accent {
+	--bt-solid-bg: var(--picasso-desk-accent);
+	--bt-solid-bg-hover: color-mix(in srgb, var(--picasso-desk-accent) 88%, #000 12%);
+	--bt-solid-bg-active: color-mix(in srgb, var(--picasso-desk-accent) 78%, #000 22%);
+	--bt-solid-fg: var(--picasso-on-accent, #ffffff);
+	--icon-stroke: currentColor;
+}
+
+@mixin picasso-legacy-primary-btn {
+	background: var(--picasso-desk-accent) !important;
+	border-color: var(--picasso-desk-accent) !important;
+	color: var(--picasso-on-accent, #ffffff) !important;
+
+	svg,
+	.icon,
+	span {
+		color: var(--picasso-on-accent, #ffffff) !important;
+		stroke: currentColor;
+	}
+}
+
+html.picasso-desk-theme {
+	/* Modal primary — legacy Bootstrap + v16 espresso */
+	.modal-footer .btn-primary,
+	.modal-footer .btn-modal-primary:not(.es-button) {
+		@include picasso-legacy-primary-btn;
+	}
+
+	.modal-footer .btn-modal-primary.es-button[data-variant="solid"],
+	.modal-footer .es-button.btn-modal-primary[data-variant="solid"] {
+		@include picasso-solid-accent;
+	}
+}

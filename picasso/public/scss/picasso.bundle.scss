@@ -2,8 +2,10 @@
    Tokens first, then chrome, list layout, extras, mobile. */
 
 @import "./theme/tokens";
+@import "./theme/buttons";
 @import "./theme/chrome";
 @import "./theme/sidebar";
+@import "./theme/dock";
 @import "./theme/list";
 @import "./theme/extras";
 @import "./theme/studio";

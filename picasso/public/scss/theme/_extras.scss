@@ -15,12 +15,24 @@ html.picasso-desk-theme .picasso-lang-switch {
 	margin-right: 8px;
 	padding: 4px 10px;
 	border-radius: 999px;
-	border: 1px solid color-mix(in srgb, var(--picasso-navbar-text) 25%, transparent);
-	background: color-mix(in srgb, var(--picasso-navbar-text) 10%, transparent);
-	color: var(--picasso-navbar-text) !important;
 	font-size: 12px;
 	font-weight: 600;
 	line-height: 1.2;
+
+	/* Default / navbar surface */
+	border: 1px solid color-mix(in srgb, var(--picasso-navbar-text) 25%, transparent);
+	background: color-mix(in srgb, var(--picasso-navbar-text) 10%, transparent);
+	color: var(--picasso-navbar-text) !important;
+
+	&[data-surface="sidebar"],
+	&[data-surface="dock"] {
+		border-color: color-mix(in srgb, var(--picasso-sidebar-text) 25%, transparent);
+		background: color-mix(in srgb, var(--picasso-sidebar-text) 10%, transparent);
+		color: var(--picasso-sidebar-text) !important;
+		margin: 4px 0;
+		width: 100%;
+		justify-content: center;
+	}
 
 	&__a,
 	&__b {

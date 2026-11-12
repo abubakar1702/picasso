@@ -25,6 +25,12 @@
 	--sidebar-hover-color: var(--picasso-sidebar-hover);
 	--sidebar-active-color: var(--picasso-sidebar-selected);
 	--sidebar-border-color: var(--picasso-list-border);
+	/* Frappe v16 Dock shares the sidebar shell */
+	--desk-sidebar-bg: var(--picasso-sidebar-start);
+	--dock-bg: var(--picasso-sidebar-start);
+	--dock-ink: color-mix(in srgb, var(--picasso-sidebar-text) 62%, transparent);
+	--dock-ink-hover: var(--picasso-sidebar-text);
+	--dock-ink-active: var(--picasso-sidebar-text);
 }
 
 html.picasso-desk-theme {
@@ -41,8 +47,8 @@ html.picasso-desk-theme {
 	--picasso-page-head-text: var(--picasso-light-page-head-text, #1f2937);
 	--picasso-page-head-sep: var(--picasso-light-page-head-sep, #c4b5a0);
 	--picasso-list-card-bg: var(--picasso-light-list-card-bg, #ffffff);
-	--picasso-list-filter-bg: var(--picasso-light-list-filter-bg, #ffffff);
 	--picasso-list-header-bg: var(--picasso-light-list-header-bg, #f3f4f6);
+	--picasso-list-filter-bg: var(--picasso-light-list-filter-bg, var(--picasso-list-header-bg));
 	--picasso-list-hover-bg: var(--picasso-light-list-hover-bg, #f3f4f6);
 	--picasso-list-border: var(--picasso-light-list-border, #e5e7eb);
 	--picasso-sidebar-hover: var(--picasso-light-sidebar-hover, #eef2ff);
@@ -75,8 +81,8 @@ html.picasso-desk-theme.picasso-dark-theme {
 	--picasso-page-head-text: var(--picasso-dark-page-head-text, #e5e7eb);
 	--picasso-page-head-sep: var(--picasso-dark-page-head-sep, #9ca3af);
 	--picasso-list-card-bg: var(--picasso-dark-list-card-bg, #1a1c24);
-	--picasso-list-filter-bg: var(--picasso-dark-list-filter-bg, #1a1c24);
 	--picasso-list-header-bg: var(--picasso-dark-list-header-bg, #22252e);
+	--picasso-list-filter-bg: var(--picasso-dark-list-filter-bg, var(--picasso-list-header-bg));
 	--picasso-list-hover-bg: var(--picasso-dark-list-hover-bg, #2a2d38);
 	--picasso-list-border: var(--picasso-dark-list-border, #2a2d38);
 	--picasso-sidebar-hover: var(--picasso-dark-sidebar-hover, #1e293b);

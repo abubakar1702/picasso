@@ -35,12 +35,12 @@ html.picasso-desk-theme.picasso-motion-off {
 
 html.picasso-flat {
 	header.navbar,
-	.navbar,
-	.body-sidebar {
+	.navbar {
 		background: var(--picasso-navbar-start) !important;
 	}
 
-	.body-sidebar {
+	.body-sidebar,
+	.dock {
 		background: var(--picasso-sidebar-start) !important;
 	}
 }
@@ -66,9 +66,13 @@ html.picasso-feat-cards .workspace-widget-box:hover {
 html.picasso-feat-app_icons .standard-sidebar-item .sidebar-item-icon,
 html.picasso-feat-app_icons .sidebar-item-icon,
 html.picasso-feat-app_icons .desk-sidebar .sidebar-item-icon,
+html.picasso-feat-app_icons .body-sidebar .sidebar-item-icon,
+html.picasso-feat-app_icons .dock .dock-item,
+html.picasso-feat-app_icons .dock .dock-item-icon,
 html.picasso-feat-app_icons .widget .widget-icon,
 html.picasso-feat-app_icons .widget-head .widget-title .icon {
 	color: var(--picasso-desk-accent);
+	--icon-stroke: var(--picasso-desk-accent);
 }
 
 html.picasso-feat-reveal .list-row-container.picasso-revealed,

@@ -39,7 +39,7 @@ function init_ripple() {
 			if (!can("ripple")) return;
 			if (e.pointerType === "mouse" && e.button !== 0) return;
 			const btn = e.target.closest(
-				".btn, .primary-action, .icon-btn, .picasso-dock__gear, .picasso-panel__close, .picasso-panel__action, .picasso-palette__item"
+				".btn, .es-button, .primary-action, .icon-btn, .picasso-dock__gear, .picasso-panel__close, .picasso-panel__action, .picasso-palette__item"
 			);
 			if (!btn || btn.disabled || btn.classList.contains("disabled") || btn.getAttribute("aria-disabled") === "true") {
 				return;
@@ -211,7 +211,11 @@ function init_toasts() {
 function init_save() {
 	const pulse = () => {
 		if (!store.feature("save_pulse")) return;
-		document.querySelectorAll(".form-status, .indicator-pill, .page-head .indicator, .page-actions .primary-action").forEach((n) => {
+		document
+			.querySelectorAll(
+				".form-status, .page-indicator-pill, .indicator-pill, .page-head .indicator, .page-head .es-badge, .page-actions .primary-action"
+			)
+			.forEach((n) => {
 			n.classList.remove("picasso-save-pulse");
 			void n.offsetWidth;
 			n.classList.add("picasso-save-pulse");

@@ -402,8 +402,12 @@ body[data-path="login"] main {
 }
 
 .picasso-login .page-card-body.invalid ~ .page-card-actions .btn-primary,
-.picasso-login .page-card-body.invalid ~ .page-card-actions .btn-login:not(.btn-default) {
+.picasso-login .page-card-body.invalid ~ .page-card-actions .btn-login:not(.btn-default),
+.picasso-login .page-card-body.invalid ~ .page-card-actions .es-button[data-variant="solid"]:not([data-theme="red"]) {
 	background: var(--red-500, #e24c4c) !important;
+	--bt-solid-bg: var(--red-500, #e24c4c);
+	--bt-solid-bg-hover: var(--red-500, #e24c4c);
+	--bt-solid-bg-active: var(--red-600, #c53030);
 }
 
 .picasso-login .login-content.invalid-login {
@@ -479,7 +483,9 @@ body[data-path="login"] main {
 .picasso-login .btn-primary,
 .picasso-login .btn-login:not(.btn-default),
 .picasso-login .btn-forgot,
-.picasso-login .btn-login-with-email-link {
+.picasso-login .btn-login-with-email-link,
+.picasso-login .es-button[data-variant="solid"]:not([data-theme="red"]),
+.picasso-login button.es-button[data-variant="solid"]:not([data-theme="red"]) {
 	height: 48px;
 	border: 0 !important;
 	border-radius: var(--picasso-input-radius) !important;
@@ -487,12 +493,18 @@ body[data-path="login"] main {
 	color: #fff !important;
 	font-weight: 600;
 	font-size: 0.95rem;
+	--bt-solid-bg: var(--picasso-accent, #2563eb);
+	--bt-solid-bg-hover: var(--picasso-accent, #2563eb);
+	--bt-solid-bg-active: var(--picasso-accent, #2563eb);
+	--bt-solid-fg: #ffffff;
+	--icon-stroke: currentColor;
 }
 
 .picasso-login .btn-primary:hover,
 .picasso-login .btn-login:not(.btn-default):hover,
 .picasso-login .btn-forgot:hover,
-.picasso-login .btn-login-with-email-link:hover {
+.picasso-login .btn-login-with-email-link:hover,
+.picasso-login .es-button[data-variant="solid"]:not([data-theme="red"]):hover {
 	filter: brightness(1.08);
 }
 

@@ -1,0 +1,71 @@
+/* Frappe v16 Desk Dock (.dock) — share the Picasso sidebar shell.
+   Studio's floating gear uses .picasso-dock and is styled separately. */
+
+html.picasso-desk-theme {
+	.dock {
+		/* Match .body-sidebar local hover/active so Dock and rail stay in sync */
+		--sidebar-hover-color: color-mix(
+			in srgb,
+			var(--picasso-sidebar-text) 14%,
+			var(--picasso-sidebar-start)
+		);
+		--sidebar-active-color: color-mix(
+			in srgb,
+			var(--picasso-desk-accent) 40%,
+			var(--picasso-sidebar-start)
+		);
+		--icon-stroke: currentColor;
+		color: var(--dock-ink-active);
+		background: linear-gradient(
+			180deg,
+			var(--picasso-sidebar-start) 0%,
+			var(--picasso-sidebar-end) 100%
+		);
+		border-color: var(--sidebar-border-color);
+
+		.dock-logo {
+			border-bottom-color: var(--sidebar-border-color);
+			color: var(--dock-ink-active);
+			--icon-stroke: currentColor;
+		}
+
+		.dock-utilities:not(:empty) {
+			border-bottom-color: var(--sidebar-border-color);
+		}
+
+		.dock-item {
+			color: var(--dock-ink);
+			--icon-stroke: currentColor;
+
+			&:hover {
+				background: var(--sidebar-hover-color);
+				color: var(--dock-ink-hover);
+			}
+
+			&.active {
+				background: var(--sidebar-active-color);
+				color: var(--dock-ink-active);
+				box-shadow: none;
+			}
+		}
+
+		.dock-utilities .dock-item {
+			color: var(--dock-ink-active);
+
+			&:hover,
+			&[aria-expanded="true"] {
+				background: var(--sidebar-hover-color);
+				color: var(--dock-ink-hover);
+				box-shadow: none;
+			}
+		}
+
+		.dock-user-button.user-menu-active {
+			background: var(--sidebar-hover-color);
+		}
+	}
+
+	body.dock-pinned .dock {
+		border-right-color: var(--sidebar-border-color);
+	}
+}

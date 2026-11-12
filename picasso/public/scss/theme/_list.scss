@@ -13,16 +13,32 @@ html.picasso-desk-theme.picasso-enhanced-list {
 		gap: 0;
 		overflow: visible;
 		height: auto;
+		/* Legacy desks still have a top navbar; v16 dock desks often don't */
 		min-height: calc(100vh - var(--navbar-height, 48px) - var(--page-head-height, 50px));
 
 		> .page-form {
-			background: var(--picasso-list-filter-bg);
+			background: var(--picasso-list-filter-bg) !important;
 			margin: 0;
 			padding: 12px 16px;
 			border: none;
-			border-bottom: 1px solid var(--border-color);
+			border-bottom: none;
 			flex-shrink: 0;
+
+			.standard-filter-section,
+			.filter-section,
+			.sort-selector-group {
+				background: transparent;
+			}
 		}
+
+		/* Space between filter bar and table header (margin on sticky head collapses) */
+		> .frappe-list {
+			padding-top: 8px;
+		}
+	}
+
+	body.dock-active .layout-main-list {
+		min-height: calc(100dvh - var(--page-head-height, 50px));
 	}
 
 	.layout-main-list,
@@ -51,7 +67,7 @@ html.picasso-desk-theme.picasso-enhanced-list {
 		.result {
 			height: auto !important;
 			min-height: 0 !important;
-			padding-top: 0;
+			padding-top: 0 !important;
 		}
 
 		.list-row-container {
@@ -131,6 +147,14 @@ html.picasso-desk-theme.picasso-enhanced-list {
 			flex: 0 0 156px;
 			width: 156px;
 		}
+	}
+}
+
+/* Theme filter bars even when enhanced-list is off (beats Frappe --card-bg white) */
+html.picasso-desk-theme {
+	.layout-main-list > .page-form,
+	.page-form.list-page-form {
+		background: var(--picasso-list-filter-bg) !important;
 	}
 }
 

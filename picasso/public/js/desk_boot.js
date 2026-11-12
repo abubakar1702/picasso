@@ -10,6 +10,16 @@
 		}
 	}
 
+	/** Hidden list-filter color historically defaulted to white; treat that as unset. */
+	function resolve_list_filter_bg(filter, header, page, fallback) {
+		const value = (filter || "").trim();
+		const upper = value.toUpperCase();
+		if (!value || upper === "#FFFFFF" || upper === "#FFF") {
+			return header || page || fallback;
+		}
+		return value;
+	}
+
 	function is_dark_mode() {
 		const root = document.documentElement;
 		const body = document.body;
@@ -97,7 +107,12 @@
 			"--picasso-light-page-head-text": desk.page_head_text_color || "#1F2937",
 			"--picasso-light-page-head-sep": desk.page_head_separator_color || "#C4B5A0",
 			"--picasso-light-list-card-bg": desk.list_card_background || "#FFFFFF",
-			"--picasso-light-list-filter-bg": desk.list_filter_background || "#FFFFFF",
+			"--picasso-light-list-filter-bg": resolve_list_filter_bg(
+				desk.list_filter_background,
+				desk.list_header_background,
+				desk.page_background,
+				"#F3F4F6"
+			),
 			"--picasso-light-list-header-bg": desk.list_header_background || "#F3F4F6",
 			"--picasso-light-list-hover-bg": desk.list_row_hover_background || "#F3F4F6",
 			"--picasso-light-list-border": desk.list_border_color || "#E5E7EB",
@@ -116,7 +131,12 @@
 			"--picasso-dark-page-head-text": desk.dark_page_head_text_color || "#E5E7EB",
 			"--picasso-dark-page-head-sep": desk.dark_page_head_separator_color || "#9CA3AF",
 			"--picasso-dark-list-card-bg": desk.dark_list_card_background || "#1A1C24",
-			"--picasso-dark-list-filter-bg": desk.dark_list_filter_background || "#1A1C24",
+			"--picasso-dark-list-filter-bg": resolve_list_filter_bg(
+				desk.dark_list_filter_background,
+				desk.dark_list_header_background,
+				desk.dark_page_background,
+				"#22252E"
+			),
 			"--picasso-dark-list-header-bg": desk.dark_list_header_background || "#22252E",
 			"--picasso-dark-list-hover-bg": desk.dark_list_row_hover_background || "#2A2D38",
 			"--picasso-dark-list-border": desk.dark_list_border_color || "#2A2D38",

@@ -25,7 +25,8 @@
 			padding-left: 8px !important;
 			padding-right: 8px !important;
 
-			.page-title .title-text {
+			.page-title .title-text,
+			.es-breadcrumbs .es-breadcrumbs__label {
 				font-size: 14px !important;
 			}
 		}
@@ -68,7 +69,8 @@
 			gap: 4px;
 		}
 
-		.page-head .btn {
+		.page-head .btn,
+		.page-head .es-button {
 			padding: 4px 8px !important;
 			font-size: 12px !important;
 		}

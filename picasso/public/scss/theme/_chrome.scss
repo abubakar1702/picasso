@@ -12,6 +12,7 @@ html.picasso-desk-theme {
 		background-color: var(--bg-color) !important;
 	}
 
+	/* Legacy top navbar (still used for announcements / older desks) */
 	header.navbar,
 	.navbar,
 	.navbar.navbar-expand {
@@ -28,7 +29,7 @@ html.picasso-desk-theme {
 
 		.nav-link,
 		.navbar-brand,
-		.btn:not(.desktop-navbar-modal-search),
+		.btn:not(.desktop-navbar-modal-search):not(.btn-primary),
 		.text-muted,
 		.text-light {
 			color: var(--picasso-navbar-text) !important;
@@ -53,6 +54,10 @@ html.picasso-desk-theme {
 			stroke: var(--picasso-navbar-text) !important;
 			--icon-stroke: var(--picasso-navbar-text);
 		}
+
+		.btn-primary {
+			@include picasso-legacy-primary-btn;
+		}
 	}
 
 	.page-head {
@@ -60,6 +65,7 @@ html.picasso-desk-theme {
 		border-bottom-color: var(--border-color) !important;
 		box-shadow: 0 1px 0 color-mix(in srgb, var(--picasso-shadow, #0f172a) 8%, transparent);
 
+		/* Legacy Bootstrap page actions + titles */
 		.page-title,
 		.page-title *,
 		.title-text,
@@ -72,6 +78,15 @@ html.picasso-desk-theme {
 			color: var(--picasso-page-head-text) !important;
 		}
 
+		/* v16 espresso non-primary page actions (Menu, Secondary, back) */
+		.es-button:not(.primary-action):not(.primary-action-menu),
+		.page-back-button {
+			--bt-fg: var(--picasso-page-head-text);
+			--icon-stroke: currentColor;
+			color: var(--picasso-page-head-text);
+		}
+
+		/* Legacy breadcrumbs */
 		.navbar-breadcrumbs {
 			--icon-fill: transparent;
 			--icon-stroke: var(--picasso-page-head-text);
@@ -89,27 +104,52 @@ html.picasso-desk-theme {
 			}
 		}
 
+		/* v16 espresso breadcrumbs */
+		.es-breadcrumbs {
+			--icon-fill: transparent;
+			--icon-stroke: var(--picasso-page-head-text);
+
+			.es-breadcrumbs__item,
+			.es-breadcrumbs__label,
+			li > a,
+			li > span,
+			a,
+			span {
+				color: var(--picasso-page-head-text) !important;
+			}
+
+			li + li::before {
+				color: var(--picasso-page-head-sep) !important;
+			}
+
+			svg,
+			.icon {
+				fill: none !important;
+				stroke: var(--picasso-page-head-text) !important;
+			}
+		}
+
 		.sidebar-toggle-btn svg.icon:not(.es-icon) {
 			fill: none !important;
 			stroke: currentColor;
 		}
 
+		/* Legacy primary */
 		.btn-primary,
 		.actions-btn-group .btn-primary,
 		.page-actions .btn-primary {
-			background: var(--picasso-desk-accent) !important;
-			border-color: var(--picasso-desk-accent) !important;
-			color: var(--picasso-on-accent, #ffffff) !important;
+			@include picasso-legacy-primary-btn;
+		}
 
-			svg,
-			.icon,
-			span {
-				color: var(--picasso-on-accent, #ffffff) !important;
-				stroke: currentColor;
-			}
+		/* v16 primary — espresso solid (gray by default in Frappe) */
+		.primary-action-group .es-button[data-variant="solid"],
+		.es-button.primary-action,
+		.es-button.primary-action-menu {
+			@include picasso-solid-accent;
 		}
 	}
 
+	/* Legacy breadcrumb separators (older desk) */
 	.navbar-breadcrumbs a::before {
 		color: var(--picasso-page-head-sep) !important;
 	}

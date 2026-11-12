@@ -233,7 +233,11 @@ html.picasso-desk-theme {
 		border-radius: 6px;
 	}
 
-	&.picasso-hide-sidebar .body-sidebar-container {
-		display: none;
+	/* Hide full left chrome: legacy/v16 sidebar rail and v16 Dock when present */
+	&.picasso-hide-sidebar {
+		.body-sidebar-container,
+		.dock {
+			display: none;
+		}
 	}
 }
