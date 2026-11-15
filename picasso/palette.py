@@ -98,8 +98,8 @@ DEFAULT_PALETTE = "ERPEXTRA"
 STOCK_PALETTES = [
 	{
 		"title": "ERPEXTRA",
-		"description": "Cool slate chrome with mint accent (from erpextra_website).",
-		"accent_color": "#009E6F",
+		"description": "Cool slate chrome with mint accent aligned to the ERPEXTRA logo.",
+		"accent_color": "#00A878",
 		"navbar_color_start": "#F8FAFF",
 		"navbar_color_end": "#EEF4FF",
 		"navbar_text_color": "#0F172A",
@@ -111,7 +111,7 @@ STOCK_PALETTES = [
 		"page_background": "#F8FAFF",
 		"page_head_background": "#FFFFFF",
 		"page_head_text_color": "#0F172A",
-		"page_head_separator_color": "#009E6F",
+		"page_head_separator_color": "#00A878",
 		"list_card_background": "#FFFFFF",
 		"list_filter_background": "#EEF4FF",
 		"list_header_background": "#E2E8F4",

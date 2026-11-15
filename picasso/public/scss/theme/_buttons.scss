@@ -1,15 +1,20 @@
 /* Shared primary accent for legacy Bootstrap .btn-primary and v16 espresso solids.
-   Scope callers carefully — Frappe uses solid gray for Actions menus by design. */
+   Espresso defaults solid to near-black (--surface-gray-10); remap --bt-solid-* to desk accent. */
 
-@mixin picasso-solid-accent {
+@mixin picasso-solid-accent-vars {
 	--bt-solid-bg: var(--picasso-desk-accent);
 	--bt-solid-bg-hover: color-mix(in srgb, var(--picasso-desk-accent) 88%, #000 12%);
 	--bt-solid-bg-active: color-mix(in srgb, var(--picasso-desk-accent) 78%, #000 22%);
 	--bt-solid-fg: var(--picasso-on-accent, #ffffff);
 	--icon-stroke: currentColor;
-	/* Force paint: espresso @layer + page-head text remap can leave dark solid + accent ink. */
+}
+
+@mixin picasso-solid-accent {
+	@include picasso-solid-accent-vars;
+	/* Force paint over espresso @layer defaults */
 	background: var(--bt-solid-bg) !important;
 	color: var(--bt-solid-fg) !important;
+	border-color: transparent !important;
 
 	svg,
 	.icon,
@@ -36,6 +41,37 @@
 }
 
 html.picasso-desk-theme {
+	/* Remap espresso solid tokens on page actions so Save/Actions inherit accent */
+	.page-head .page-actions,
+	.page-head .standard-actions,
+	.page-head .primary-action-group,
+	.page-head .actions-btn-group {
+		@include picasso-solid-accent-vars;
+	}
+
+	.es-button.primary-action,
+	.es-button.primary-action-menu,
+	.primary-action-group .es-button[data-variant="solid"],
+	.actions-btn-group .es-button[data-variant="solid"],
+	.page-actions .es-button.primary-action,
+	.page-actions .es-button[data-variant="solid"].primary-action {
+		@include picasso-solid-accent;
+	}
+
+	.es-button.primary-action:hover,
+	.es-button.primary-action-menu:hover,
+	.primary-action-group .es-button[data-variant="solid"]:hover,
+	.actions-btn-group .es-button[data-variant="solid"]:hover {
+		background: var(--bt-solid-bg-hover) !important;
+	}
+
+	.es-button.primary-action:active,
+	.es-button.primary-action-menu:active,
+	.primary-action-group .es-button[data-variant="solid"]:active,
+	.actions-btn-group .es-button[data-variant="solid"]:active {
+		background: var(--bt-solid-bg-active) !important;
+	}
+
 	/* Modal primary — legacy Bootstrap + v16 espresso */
 	.modal-footer .btn-primary,
 	.modal-footer .btn-modal-primary:not(.es-button) {

@@ -28,7 +28,7 @@ class TestPalette(IntegrationTestCase):
 		self.assertEqual(DEFAULT_PALETTE, "ERPEXTRA")
 		doc = frappe.get_doc("Picasso Palette", DEFAULT_PALETTE)
 		self.assertEqual(cint(doc.is_system), 1)
-		self.assertEqual(doc.accent_color, "#009E6F")
+		self.assertEqual(doc.accent_color, "#00A878")
 
 	def test_seed_palettes_is_idempotent(self):
 		"""Running seed_palettes twice should not create duplicates or error."""

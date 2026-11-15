@@ -134,34 +134,11 @@ html.picasso-desk-theme {
 			stroke: currentColor;
 		}
 
-		/* Legacy primary */
+		/* Legacy primary (espresso solids remapped in _buttons.scss) */
 		.btn-primary,
 		.actions-btn-group .btn-primary,
 		.page-actions .btn-primary {
 			@include picasso-legacy-primary-btn;
-		}
-
-		/* v16 primary — espresso solid (gray by default in Frappe) */
-		.primary-action-group .es-button[data-variant="solid"],
-		.es-button.primary-action,
-		.es-button.primary-action-menu,
-		.actions-btn-group .es-button[data-variant="solid"] {
-			@include picasso-solid-accent;
-		}
-
-		/* Hover/active for forced solid paint above */
-		.primary-action-group .es-button[data-variant="solid"]:hover,
-		.es-button.primary-action:hover,
-		.es-button.primary-action-menu:hover,
-		.actions-btn-group .es-button[data-variant="solid"]:hover {
-			background: var(--bt-solid-bg-hover) !important;
-		}
-
-		.primary-action-group .es-button[data-variant="solid"]:active,
-		.es-button.primary-action:active,
-		.es-button.primary-action-menu:active,
-		.actions-btn-group .es-button[data-variant="solid"]:active {
-			background: var(--bt-solid-bg-active) !important;
 		}
 	}
 
