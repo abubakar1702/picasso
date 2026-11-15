@@ -7,6 +7,19 @@
 	--bt-solid-bg-active: color-mix(in srgb, var(--picasso-desk-accent) 78%, #000 22%);
 	--bt-solid-fg: var(--picasso-on-accent, #ffffff);
 	--icon-stroke: currentColor;
+	/* Force paint: espresso @layer + page-head text remap can leave dark solid + accent ink. */
+	background: var(--bt-solid-bg) !important;
+	color: var(--bt-solid-fg) !important;
+
+	svg,
+	.icon,
+	.es-icon,
+	.es-button__label,
+	span {
+		color: var(--bt-solid-fg) !important;
+		stroke: currentColor;
+		--icon-stroke: currentColor;
+	}
 }
 
 @mixin picasso-legacy-primary-btn {
