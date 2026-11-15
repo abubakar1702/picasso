@@ -50,6 +50,7 @@ COLOR_FIELDS = (
 	"dark_shadow_color",
 )
 
+# Fallback tokens when no palette row is resolved (matches Paper).
 DEFAULT_COLORS = {
 	"accent_color": "#2563EB",
 	"navbar_color_start": "#FFFFFF",
@@ -91,7 +92,52 @@ DEFAULT_COLORS = {
 	"dark_shadow_color": "#000000",
 }
 
+# Default site theme (also first stock palette).
+DEFAULT_PALETTE = "ERPEXTRA"
+
 STOCK_PALETTES = [
+	{
+		"title": "ERPEXTRA",
+		"description": "Cool slate chrome with mint accent (from erpextra_website).",
+		"accent_color": "#009E6F",
+		"navbar_color_start": "#F8FAFF",
+		"navbar_color_end": "#EEF4FF",
+		"navbar_text_color": "#0F172A",
+		"sidebar_color_start": "#F8FAFF",
+		"sidebar_color_end": "#EEF4FF",
+		"sidebar_text_color": "#0F172A",
+		"sidebar_hover_background": "#E2E8F4",
+		"sidebar_selected_background": "#C5D0E4",
+		"page_background": "#F8FAFF",
+		"page_head_background": "#FFFFFF",
+		"page_head_text_color": "#0F172A",
+		"page_head_separator_color": "#009E6F",
+		"list_card_background": "#FFFFFF",
+		"list_filter_background": "#EEF4FF",
+		"list_header_background": "#E2E8F4",
+		"list_row_hover_background": "#EEF4FF",
+		"list_border_color": "#C5D0E4",
+		"shadow_color": "#0F172A",
+		"dark_accent_color": "#00E5A0",
+		"dark_navbar_color_start": "#080C14",
+		"dark_navbar_color_end": "#0F172A",
+		"dark_navbar_text_color": "#F0F4FF",
+		"dark_sidebar_color_start": "#080C14",
+		"dark_sidebar_color_end": "#0F172A",
+		"dark_sidebar_text_color": "#F0F4FF",
+		"dark_sidebar_hover_background": "#1E293B",
+		"dark_sidebar_selected_background": "#334155",
+		"dark_page_background": "#080C14",
+		"dark_page_head_background": "#0F172A",
+		"dark_page_head_text_color": "#F0F4FF",
+		"dark_page_head_separator_color": "#00E5A0",
+		"dark_list_card_background": "#0F172A",
+		"dark_list_filter_background": "#0F172A",
+		"dark_list_header_background": "#1E293B",
+		"dark_list_row_hover_background": "#1E293B",
+		"dark_list_border_color": "#1E293B",
+		"dark_shadow_color": "#000000",
+	},
 	{
 		"title": "Paper",
 		"description": "Clean light desk. White chrome, blue accent.",
@@ -343,9 +389,11 @@ def seed_palettes():
 			payload = {key: spec.get(key) or DEFAULT_COLORS[key] for key in COLOR_FIELDS}
 			if frappe.db.exists("Picasso Palette", title):
 				doc = frappe.get_doc("Picasso Palette", title)
-				if not cint(doc.is_system):
-					continue
+				# Stock titles are always system-owned (promotes site-seeded copies).
 				changed = False
+				if not cint(doc.is_system):
+					doc.is_system = 1
+					changed = True
 				for key, value in payload.items():
 					if doc.get(key) != value:
 						doc.set(key, value)
@@ -420,7 +468,7 @@ def update_desk_settings(key: str, value: Any = None):
 def _ensure_desk_palette():
 	if not frappe.db.exists("DocType", "Picasso Desk Settings"):
 		return
-	if not frappe.db.exists("Picasso Palette", "Paper"):
+	if not frappe.db.exists("Picasso Palette", DEFAULT_PALETTE):
 		return
 	try:
 		desk = frappe.get_single("Picasso Desk Settings")
@@ -428,6 +476,6 @@ def _ensure_desk_palette():
 		return
 	if desk.get("palette"):
 		return
-	desk.db_set("palette", "Paper", update_modified=False)
+	desk.db_set("palette", DEFAULT_PALETTE, update_modified=False)
 	frappe.cache.delete_value("picasso_desk_settings")
 	frappe.cache.delete_value("picasso_login_settings")

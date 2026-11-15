@@ -11,7 +11,7 @@ function preview_markup(doc) {
 	const accent = doc.accent_color || "#2563eb";
 	const title = frappe.utils.escape_html(doc.title || "");
 	return `
-		<div style="border:1px solid var(--border-color);border-radius:10px;overflow:hidden;max-width:420px;font-size:12px;">
+		<div style="border:1px solid var(--border-color);border-radius:10px;overflow:hidden;max-width:420px;font-size:12px;margin:4px 0 20px;">
 			<div style="background:${n};color:${nt};padding:8px 12px;font-weight:600;">Navbar · ${title}</div>
 			<div style="display:flex;min-height:88px;">
 				<div style="width:36%;background:${s};color:${st};padding:8px;">

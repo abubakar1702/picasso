@@ -4,7 +4,7 @@
 import frappe
 from frappe.utils import cint
 
-from picasso.palette import DEFAULT_COLORS, get_palette_colors
+from picasso.palette import DEFAULT_COLORS, DEFAULT_PALETTE, get_palette_colors
 
 
 @frappe.whitelist()
@@ -22,7 +22,7 @@ def get_picasso_desk_settings() -> dict:
 	except frappe.DoesNotExistError:
 		return _defaults(enabled=True)
 
-	palette_name = doc.get("palette") or "Paper"
+	palette_name = doc.get("palette") or DEFAULT_PALETTE
 	raw_enabled = doc.get("enabled")
 	enabled = 1 if raw_enabled in (None, "") else cint(raw_enabled)
 	settings = {
@@ -68,7 +68,7 @@ def _defaults(enabled: bool = True) -> dict:
 		"language_a_label": "EN",
 		"language_b": "bn",
 		"language_b_label": "বাং",
-		"palette": "Paper",
+		"palette": DEFAULT_PALETTE,
 		"enhance_list_ui": 1,
 		"surface_radius": 8,
 		"sidebar_width": 240,

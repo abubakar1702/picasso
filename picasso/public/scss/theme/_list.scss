@@ -126,10 +126,26 @@ html.picasso-desk-theme.picasso-enhanced-list {
 		.list-row-head {
 			background: var(--subtle-accent);
 			margin-top: 0;
+			color: var(--picasso-list-header-text);
+			--icon-stroke: var(--picasso-list-header-text);
+			--text-muted: var(--picasso-list-header-text);
 
 			.level-right {
 				background: var(--subtle-accent);
 				border-radius: 0;
+			}
+
+			.btn,
+			.btn-default,
+			.filter-button,
+			.sort-selector .btn {
+				color: var(--picasso-list-header-text);
+			}
+
+			svg,
+			.icon {
+				stroke: var(--picasso-list-header-text);
+				--icon-stroke: var(--picasso-list-header-text);
 			}
 		}
 
@@ -155,6 +171,24 @@ html.picasso-desk-theme {
 	.layout-main-list > .page-form,
 	.page-form.list-page-form {
 		background: var(--picasso-list-filter-bg) !important;
+		color: var(--picasso-list-header-text);
+		--text-muted: var(--picasso-list-header-text);
+		--icon-stroke: var(--picasso-list-header-text);
+
+		.btn,
+		.btn-default,
+		.filter-button,
+		.sort-selector .btn,
+		.frappe-control .control-label {
+			color: var(--picasso-list-header-text);
+		}
+	}
+
+	/* Header ink when enhance_list_ui is off */
+	.frappe-list .list-row-head {
+		color: var(--picasso-list-header-text);
+		--text-muted: var(--picasso-list-header-text);
+		--icon-stroke: var(--picasso-list-header-text);
 	}
 }
 

@@ -3,6 +3,7 @@
 
 import frappe
 from frappe.tests import IntegrationTestCase
+from frappe.utils import cint
 
 
 class TestPalette(IntegrationTestCase):
@@ -16,7 +17,7 @@ class TestPalette(IntegrationTestCase):
 
 	def test_seed_palettes_creates_stock_palettes(self):
 		"""After seeding, all stock palette titles should exist."""
-		from picasso.palette import STOCK_PALETTES, seed_palettes
+		from picasso.palette import DEFAULT_PALETTE, STOCK_PALETTES, seed_palettes
 
 		seed_palettes()
 		for spec in STOCK_PALETTES:
@@ -24,6 +25,10 @@ class TestPalette(IntegrationTestCase):
 				frappe.db.exists("Picasso Palette", spec["title"]),
 				f"Stock palette '{spec['title']}' should exist after seeding",
 			)
+		self.assertEqual(DEFAULT_PALETTE, "ERPEXTRA")
+		doc = frappe.get_doc("Picasso Palette", DEFAULT_PALETTE)
+		self.assertEqual(cint(doc.is_system), 1)
+		self.assertEqual(doc.accent_color, "#009E6F")
 
 	def test_seed_palettes_is_idempotent(self):
 		"""Running seed_palettes twice should not create duplicates or error."""

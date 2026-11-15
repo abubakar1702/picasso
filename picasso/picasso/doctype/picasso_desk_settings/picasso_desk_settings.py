@@ -4,7 +4,7 @@
 import frappe
 from frappe.model.document import Document
 
-from picasso.palette import DEFAULT_COLORS
+from picasso.palette import DEFAULT_COLORS, DEFAULT_PALETTE
 
 
 class PicassoDeskSettings(Document):
@@ -13,7 +13,7 @@ class PicassoDeskSettings(Document):
 
 	def validate(self):
 		if not self.palette:
-			self.palette = "Paper"
+			self.palette = DEFAULT_PALETTE
 		self.set_default_colors()
 
 	def set_default_colors(self):

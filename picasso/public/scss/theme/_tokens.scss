@@ -25,6 +25,12 @@
 	--sidebar-hover-color: var(--picasso-sidebar-hover);
 	--sidebar-active-color: var(--picasso-sidebar-selected);
 	--sidebar-border-color: var(--picasso-list-border);
+	/* Readable muted ink from page-head text (beats Bootstrap #8d99a6 on cool washes) */
+	--picasso-list-header-text: var(--picasso-page-head-text);
+	--text-color: var(--picasso-page-head-text);
+	--heading-color: var(--picasso-page-head-text);
+	--text-muted: color-mix(in srgb, var(--picasso-page-head-text) 72%, var(--picasso-page-bg));
+	--text-light: color-mix(in srgb, var(--picasso-page-head-text) 55%, var(--picasso-page-bg));
 	/* Frappe v16 Dock shares the sidebar shell */
 	--desk-sidebar-bg: var(--picasso-sidebar-start);
 	--dock-bg: var(--picasso-sidebar-start);
@@ -63,6 +69,16 @@ html.picasso-desk-theme {
 	--sidebar-hover-color: var(--picasso-sidebar-hover);
 	--sidebar-active-color: var(--picasso-sidebar-selected);
 	@include picasso-frappe-remap;
+
+	/* Bootstrap hardcodes .text-muted; bind it to our remapped token */
+	.text-muted {
+		color: var(--text-muted) !important;
+	}
+
+	.text-light,
+	.text-extra-muted {
+		color: var(--text-light) !important;
+	}
 }
 
 html.picasso-desk-theme[data-theme="dark"],
