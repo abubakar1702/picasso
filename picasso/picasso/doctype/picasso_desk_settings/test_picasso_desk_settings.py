@@ -30,7 +30,7 @@ class TestPicassoDeskSettings(IntegrationTestCase):
 		self.assertEqual(first, second)
 
 	def test_on_update_refreshes_cache(self):
-		"""Saving settings should rebuild the cache from the saved palette."""
+		"""Saving must drop the cache, never fill it with uncommitted values."""
 		if not frappe.db.exists("DocType", "Picasso Desk Settings"):
 			self.skipTest("Picasso Desk Settings not installed")
 
@@ -42,6 +42,5 @@ class TestPicassoDeskSettings(IntegrationTestCase):
 		doc = frappe.get_doc("Picasso Desk Settings")
 		doc.save(ignore_permissions=True)
 
-		cached = frappe.cache.get_value("picasso_desk_settings")
-		self.assertIsNotNone(cached)
-		self.assertEqual(cached.get("palette"), doc.palette)
+		self.assertIsNone(frappe.cache.get_value("picasso_desk_settings"))
+		self.assertEqual(get_picasso_desk_settings().get("palette"), doc.palette)

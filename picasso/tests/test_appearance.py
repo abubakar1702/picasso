@@ -29,14 +29,12 @@ class TestAppearance(IntegrationTestCase):
 			studio={
 				"density": "compact",
 				"motion": "off",
-				"accent": "#FF5733",
 				"toast_position": "top-center",
 				"features": {"ripple": False},
 			}
 		)
 		self.assertEqual(result["density"], "compact")
 		self.assertEqual(result["motion"], "off")
-		self.assertEqual(result["accent"], "#FF5733")
 		self.assertEqual(result["toast_position"], "top-center")
 		self.assertFalse(result["features"]["ripple"])
 		# Other features should default to True.
@@ -50,13 +48,11 @@ class TestAppearance(IntegrationTestCase):
 			studio={
 				"density": "invalid_density",
 				"motion": "maybe",
-				"accent": "not-a-hex",
 				"toast_position": "invalid-position",
 			}
 		)
 		self.assertEqual(result["density"], "cozy")  # default
 		self.assertEqual(result["motion"], "on")  # default
-		self.assertEqual(result["accent"], "")  # default (empty)
 		self.assertEqual(result["toast_position"], "bottom-right")  # default
 
 	def test_save_studio_handles_string_json(self):
@@ -86,22 +82,13 @@ class TestAppearance(IntegrationTestCase):
 		self.assertEqual(result["density"], "cozy")
 		self.assertTrue(all(result["features"].values()))
 
-	def test_clean_studio_drops_user_palette(self):
-		"""Per-user palette is not a studio setting."""
+	def test_clean_studio_drops_user_colors(self):
+		"""Per-user palette and accent are not studio settings."""
 		from picasso.appearance import _clean_studio
 
-		result = _clean_studio({"palette": "Ink"})
+		result = _clean_studio({"palette": "Ink", "accent": "#zzz"})
+		self.assertNotIn("accent", result)
 		self.assertNotIn("palette", result)
-
-	def test_clean_studio_validates_accent_format(self):
-		"""Only #RGB and #RRGGBB accents should be accepted."""
-		from picasso.appearance import _clean_studio
-
-		self.assertEqual(_clean_studio({"accent": "#ABC"})["accent"], "#ABC")
-		self.assertEqual(_clean_studio({"accent": "#AABBCC"})["accent"], "#AABBCC")
-		self.assertEqual(_clean_studio({"accent": "red"})["accent"], "")
-		self.assertEqual(_clean_studio({"accent": "#AABBCCDD"})["accent"], "")
-		self.assertEqual(_clean_studio({"accent": ""})["accent"], "")
 
 	def test_clean_studio_validates_dock_corner(self):
 		"""Only valid corner codes should be accepted."""
@@ -120,5 +107,3 @@ class TestAppearance(IntegrationTestCase):
 		result = get_studio(user="Guest")
 		self.assertEqual(result["density"], "cozy")
 		self.assertEqual(result["motion"], "on")
-
-

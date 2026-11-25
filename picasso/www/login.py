@@ -15,6 +15,7 @@ def get_context(context):
 
 	settings = get_picasso_login_settings()
 	context["picasso_login"] = settings
+	context["login_redirect_to"] = frappe.local.request.args.get("redirect-to") or ""
 	context["current_language"] = frappe.local.lang or "en"
 
 	if settings.get("enabled"):
@@ -26,15 +27,24 @@ def get_context(context):
 		if settings.get("logo"):
 			context["logo"] = settings["logo"]
 
-		if settings.get("show_login_with_email_link"):
-			context["login_with_email_link"] = cint(
-				frappe.get_system_settings("login_with_email_link")
-			)
-		else:
-			context["login_with_email_link"] = 0
-
-		if not settings.get("show_social_logins"):
-			context["provider_logins"] = []
-			context["social_login"] = False
+		_apply_login_methods(context, settings)
 
 	return context
+
+
+def _apply_login_methods(context, settings):
+	"""Hide optional login methods, unless that would leave no way to sign in."""
+	ldap = context.get("ldap_settings") or {}
+	has_password = not cint(context.get("disable_user_pass_login")) or bool(ldap.get("enabled"))
+	has_social = bool(context.get("provider_logins"))
+	has_email_link = bool(cint(context.get("login_with_email_link")))
+
+	show_social = has_social and bool(settings.get("show_social_logins"))
+	show_email_link = has_email_link and bool(settings.get("show_login_with_email_link"))
+	if not (has_password or show_social or show_email_link):
+		show_social, show_email_link = has_social, has_email_link
+
+	context["login_with_email_link"] = int(show_email_link)
+	if not show_social:
+		context["provider_logins"] = []
+		context["social_login"] = False

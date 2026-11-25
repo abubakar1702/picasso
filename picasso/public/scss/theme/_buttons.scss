@@ -3,8 +3,8 @@
 
 @mixin picasso-solid-accent-vars {
 	--bt-solid-bg: var(--picasso-desk-accent);
-	--bt-solid-bg-hover: color-mix(in srgb, var(--picasso-desk-accent) 88%, #000 12%);
-	--bt-solid-bg-active: color-mix(in srgb, var(--picasso-desk-accent) 78%, #000 22%);
+	--bt-solid-bg-hover: color-mix(in srgb, var(--picasso-desk-accent) 88%, var(--picasso-accent-shift, #000) 12%);
+	--bt-solid-bg-active: color-mix(in srgb, var(--picasso-desk-accent) 78%, var(--picasso-accent-shift, #000) 22%);
 	--bt-solid-fg: var(--picasso-on-accent, #ffffff);
 	--icon-stroke: currentColor;
 }

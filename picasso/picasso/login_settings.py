@@ -7,11 +7,11 @@ from urllib.parse import quote, urlsplit
 import frappe
 from frappe.utils import cint, sanitize_html
 
-from picasso.palette import DEFAULT_COLORS
+from picasso.palette import DEFAULT_COLORS, blend, ink_on
 from picasso.picasso.desk_settings import get_picasso_desk_settings
 
 # Bump when the cached shape or sanitization changes so stale values are rebuilt.
-CACHE_VERSION = 2
+CACHE_VERSION = 4
 SAFE_URL_SCHEMES = ("", "http", "https", "mailto", "tel")
 CSS_COLOR = re.compile(r"#[0-9a-f]{3,8}|(?:rgb|hsl)a?\([\d\s.,%/]+\)", re.IGNORECASE)
 
@@ -80,7 +80,9 @@ def get_picasso_login_settings() -> dict:
 		"show_visual_panel": show_visual_panel,
 		"has_visual": _should_show_visual(show_visual_panel, slides, visual_video),
 		"show_login_with_email_link": cint(doc.show_login_with_email_link),
-		"show_social_logins": cint(doc.show_social_logins or 1),
+		"show_social_logins": 1
+		if doc.get("show_social_logins") in (None, "")
+		else cint(doc.show_social_logins),
 		"carousel_interval": cint(doc.carousel_interval or 5),
 		"visual_video": visual_video,
 		"logo": safe_url(doc.logo),
@@ -150,15 +152,19 @@ def _login_colors_from_palette(desk: dict | None, mode: str = "light") -> dict:
 					return value
 		return ""
 
+	text = token("page_head_text_color", "navbar_text_color")
+	form = token("list_card_background", "page_head_background")
+	# Separator colors are decorative and too faint for text; derive muted ink instead.
+	muted = blend(text, form)
 	return {
 		"page_background": token("page_background"),
-		"form_background": token("list_card_background", "page_head_background"),
+		"form_background": form,
 		"accent_color": token("accent_color"),
-		"text_color": token("page_head_text_color", "navbar_text_color"),
-		"muted_text_color": token("page_head_separator_color", "navbar_text_color"),
+		"text_color": text,
+		"muted_text_color": muted,
 		"input_background": token("list_filter_background", "list_card_background"),
 		"input_border_color": token("list_border_color"),
-		"copyright_text_color": token("page_head_separator_color", "navbar_text_color"),
+		"copyright_text_color": muted,
 	}
 
 
@@ -183,6 +189,9 @@ def _apply_login_theme(settings: dict, desk: dict | None, doc=None) -> None:
 			or light["copyright_text_color"],
 		}
 		dark = None
+	colors["on_accent_color"] = ink_on(colors["accent_color"])
+	if dark:
+		dark["on_accent_color"] = ink_on(dark["accent_color"])
 	settings.update({key: safe_color(value) for key, value in colors.items()})
 	settings["use_theme_palette"] = use_theme_palette
 	settings["dark"] = {key: safe_color(value) for key, value in dark.items()} if dark else None

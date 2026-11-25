@@ -6,6 +6,8 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.utils import cint
 
+from picasso.cache import clear_settings_cache
+
 
 class PicassoPalette(Document):
 	def validate(self):
@@ -21,9 +23,7 @@ class PicassoPalette(Document):
 		self._clear_desk_cache()
 
 	def _clear_desk_cache(self):
-		frappe.cache.delete_value("picasso_desk_settings")
-		frappe.cache.delete_value("picasso_login_settings")
-		frappe.cache.delete_keys("bootinfo")
+		clear_settings_cache()
 		if frappe.flags.picasso_seeding_palettes:
 			return
 		from picasso.picasso.desk_settings import broadcast_desk_settings

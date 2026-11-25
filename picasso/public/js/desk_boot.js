@@ -10,14 +10,23 @@
 		}
 	}
 
-	/** Hidden list-filter color historically defaulted to white; treat that as unset. */
-	function resolve_list_filter_bg(filter, header, page, fallback) {
-		const value = (filter || "").trim();
-		const upper = value.toUpperCase();
-		if (!value || upper === "#FFFFFF" || upper === "#FFF") {
-			return header || page || fallback;
-		}
-		return value;
+	/** White, or black when white text on the accent would miss WCAG AA (4.5:1). */
+	function ink_on(color) {
+		let hex = String(color || "").trim().replace("#", "");
+		if (hex.length === 3 || hex.length === 4) hex = hex.replace(/./g, "$&$&");
+		if (!/^([0-9a-f]{6}|[0-9a-f]{8})$/i.test(hex)) return "#ffffff";
+		const [r, g, b] = [0, 2, 4].map((i) => {
+			const c = parseInt(hex.slice(i, i + 2), 16) / 255;
+			return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+		});
+		const luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+		return 1.05 / (luminance + 0.05) >= 4.5 ? "#ffffff" : "#000000";
+	}
+
+	/** Re-evaluate Studio features after the theme is switched on or off. */
+	function sync_studio() {
+		const studio = window.picasso && window.picasso.studio;
+		if (studio && studio.apply_dom) studio.apply_dom();
 	}
 
 	function is_dark_mode() {
@@ -77,6 +86,7 @@
 			if (window.picassoPaint) {
 				window.picassoPaint.remember({ enabled: false }, {}, {});
 			}
+			sync_studio();
 			return;
 		}
 
@@ -107,12 +117,7 @@
 			"--picasso-light-page-head-text": desk.page_head_text_color || "#1F2937",
 			"--picasso-light-page-head-sep": desk.page_head_separator_color || "#C4B5A0",
 			"--picasso-light-list-card-bg": desk.list_card_background || "#FFFFFF",
-			"--picasso-light-list-filter-bg": resolve_list_filter_bg(
-				desk.list_filter_background,
-				desk.list_header_background,
-				desk.page_background,
-				"#F3F4F6"
-			),
+			"--picasso-light-list-filter-bg": desk.list_filter_background || desk.list_header_background || "#F3F4F6",
 			"--picasso-light-list-header-bg": desk.list_header_background || "#F3F4F6",
 			"--picasso-light-list-hover-bg": desk.list_row_hover_background || "#F3F4F6",
 			"--picasso-light-list-border": desk.list_border_color || "#E5E7EB",
@@ -131,24 +136,21 @@
 			"--picasso-dark-page-head-text": desk.dark_page_head_text_color || "#E5E7EB",
 			"--picasso-dark-page-head-sep": desk.dark_page_head_separator_color || "#9CA3AF",
 			"--picasso-dark-list-card-bg": desk.dark_list_card_background || "#1A1C24",
-			"--picasso-dark-list-filter-bg": resolve_list_filter_bg(
-				desk.dark_list_filter_background,
-				desk.dark_list_header_background,
-				desk.dark_page_background,
-				"#22252E"
-			),
+			"--picasso-dark-list-filter-bg": desk.dark_list_filter_background || desk.dark_list_header_background || "#22252E",
 			"--picasso-dark-list-header-bg": desk.dark_list_header_background || "#22252E",
 			"--picasso-dark-list-hover-bg": desk.dark_list_row_hover_background || "#2A2D38",
 			"--picasso-dark-list-border": desk.dark_list_border_color || "#2A2D38",
 			"--picasso-dark-sidebar-hover": desk.dark_sidebar_hover_background || "#1E293B",
 			"--picasso-dark-sidebar-selected": desk.dark_sidebar_selected_background || "#1E3A5F",
 			"--picasso-dark-shadow": desk.dark_shadow_color || "#000000",
-			"--picasso-surface-radius": `${desk.surface_radius || 8}px`,
 			"--picasso-sidebar-width": `${desk.sidebar_width || 240}px`,
 		};
-		if (desk.accent_color) {
-			tokens["--picasso-accent"] = desk.accent_color;
-		}
+		["light", "dark"].forEach((mode) => {
+			const ink = ink_on(tokens[`--picasso-${mode}-accent`]);
+			tokens[`--picasso-${mode}-on-accent`] = ink;
+			// Hover/active shades move away from the ink so contrast only improves.
+			tokens[`--picasso-${mode}-accent-shift`] = ink === "#ffffff" ? "#000000" : "#ffffff";
+		});
 		const studio = (frappe.boot && frappe.boot.picasso_studio) || {};
 
 		Object.entries(tokens).forEach(([name, value]) => {
@@ -180,6 +182,7 @@
 		} else if (style) {
 			style.remove();
 		}
+		sync_studio();
 	}
 
 	// Debounce: coalesce multiple rapid events into a single rAF apply.

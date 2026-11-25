@@ -13,6 +13,10 @@ function corner_from_point(x, y) {
 	return (y < cy ? "t" : "b") + (x < cx ? "l" : "r");
 }
 
+function sync_enabled() {
+	root_el.style.display = store.enabled() ? "" : "none";
+}
+
 function render() {
 	if (root_el) root_el.remove();
 	root_el = document.createElement("div");
@@ -20,6 +24,7 @@ function render() {
 	root_el.dataset.corner = store.get().dock_corner;
 	root_el.innerHTML = `<button type="button" class="picasso-dock__gear" data-act="panel" title="Picasso settings" aria-label="Picasso settings">${GEAR}</button>`;
 	root_el.classList.toggle("is-autohide", store.feature("dock_autohide"));
+	sync_enabled();
 	document.body.appendChild(root_el);
 
 	root_el.addEventListener("click", (e) => {
@@ -53,6 +58,7 @@ export function init() {
 		render();
 		document.addEventListener(store.EVENT_NAME, () => {
 			if (!root_el) return;
+			sync_enabled();
 			root_el.dataset.corner = store.get().dock_corner;
 			root_el.classList.toggle("is-autohide", store.feature("dock_autohide"));
 		});

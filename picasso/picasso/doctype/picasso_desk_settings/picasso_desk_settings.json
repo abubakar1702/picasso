@@ -44,7 +44,6 @@
   "list_row_hover_background",
   "list_border_color",
   "tokens_section",
-  "surface_radius",
   "sidebar_width",
   "dark_theme_section",
   "dark_accent_color",
@@ -151,7 +150,7 @@
    "options": "Language"
   },
   {
-   "default": "\u09ac\u09be\u0982",
+   "default": "বাং",
    "depends_on": "show_language_switch",
    "fieldname": "language_b_label",
    "fieldtype": "Data",
@@ -350,13 +349,6 @@
    "label": "Tokens and Custom CSS"
   },
   {
-   "default": "8",
-   "description": "Border radius in px for selected sidebar items and cards.",
-   "fieldname": "surface_radius",
-   "fieldtype": "Int",
-   "label": "Surface Radius (px)"
-  },
-  {
    "default": "240",
    "description": "Preferred left sidebar width in px.",
    "fieldname": "sidebar_width",
@@ -517,7 +509,7 @@
  ],
  "issingle": 1,
  "links": [],
- "modified": "2026-08-24 20:23:00.000000",
+ "modified": "2026-11-25 18:00:00.000000",
  "modified_by": "Administrator",
  "module": "Picasso",
  "name": "Picasso Desk Settings",

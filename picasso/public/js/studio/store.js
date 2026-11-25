@@ -20,7 +20,6 @@ export const FEATURES = [
 const DEFAULTS = {
 	density: "cozy",
 	motion: "on",
-	accent: "",
 	toast_position: "bottom-right",
 	dock_corner: "br",
 	features: FEATURES.reduce((acc, f) => {
@@ -41,7 +40,6 @@ function merge(raw) {
 	if (!raw || typeof raw !== "object") return next;
 	if (["compact", "cozy", "roomy"].includes(raw.density)) next.density = raw.density;
 	if (raw.motion === "on" || raw.motion === "off") next.motion = raw.motion;
-	if (typeof raw.accent === "string" && raw.accent.startsWith("#")) next.accent = raw.accent;
 	if (typeof raw.toast_position === "string") next.toast_position = raw.toast_position;
 	if (typeof raw.dock_corner === "string") next.dock_corner = raw.dock_corner;
 	if (raw.features && typeof raw.features === "object") {
@@ -64,12 +62,16 @@ export function prefers_reduced_motion() {
 	return !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
 }
 
+export function enabled() {
+	return !!(window.frappe && frappe.boot && frappe.boot.picasso_desk && frappe.boot.picasso_desk.enabled);
+}
+
 export function motion_on() {
-	return state.motion === "on" && !prefers_reduced_motion();
+	return enabled() && state.motion === "on" && !prefers_reduced_motion();
 }
 
 export function feature(key) {
-	return state.features[key] !== false;
+	return enabled() && state.features[key] !== false;
 }
 
 export function get() {
@@ -78,11 +80,18 @@ export function get() {
 
 export function apply_dom() {
 	const root = document.documentElement;
-	root.dataset.picassoDensity = state.density;
-	root.dataset.picassoToast = state.toast_position;
-	root.dataset.picassoDock = state.dock_corner;
-	root.classList.toggle("picasso-motion-off", !motion_on());
-	root.classList.toggle("picasso-flat", !feature("gradients"));
+	const on = enabled();
+	if (on) {
+		root.dataset.picassoDensity = state.density;
+		root.dataset.picassoToast = state.toast_position;
+		root.dataset.picassoDock = state.dock_corner;
+	} else {
+		delete root.dataset.picassoDensity;
+		delete root.dataset.picassoToast;
+		delete root.dataset.picassoDock;
+	}
+	root.classList.toggle("picasso-motion-off", on && !motion_on());
+	root.classList.toggle("picasso-flat", on && !feature("gradients"));
 	["reveal", "cards", "app_icons"].forEach((key) => {
 		root.classList.toggle("picasso-feat-" + key, feature(key));
 	});

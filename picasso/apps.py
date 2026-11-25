@@ -3,10 +3,9 @@
 
 import frappe
 from frappe import _
-from frappe.utils import cint, has_common
-
 from frappe.apps import get_apps as frappe_get_apps
 from frappe.apps import get_route as frappe_get_route
+from frappe.utils import cint, has_common
 
 
 def _active_apps() -> list[str]:
@@ -50,6 +49,18 @@ def _overlay(app: dict, doc) -> dict:
 	return out
 
 
+def allowed_permission_methods() -> set[str]:
+	"""Permission checks that installed apps declare in their own hooks.
+
+	Apps without an apps-screen entry can list theirs under `picasso_app_permission`.
+	"""
+	methods = set(frappe.get_hooks("picasso_app_permission") or [])
+	for hook in frappe.get_hooks("add_to_apps_screen") or []:
+		if method := hook.get("has_permission"):
+			methods.add(method)
+	return methods
+
+
 def _user_can_see(doc) -> bool:
 	if cint(doc.hidden):
 		return False
@@ -63,6 +74,8 @@ def _user_can_see(doc) -> bool:
 
 	method = doc.has_permission_method
 	if method:
+		if method not in allowed_permission_methods():
+			return False
 		try:
 			if not frappe.get_attr(method)():
 				return False

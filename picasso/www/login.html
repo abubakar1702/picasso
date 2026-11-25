@@ -113,7 +113,7 @@
 {% endmacro %}
 
 {% macro social_logins() %}
-{% if pl.show_social_logins and (provider_logins or login_with_frappe_cloud_url) %}
+{% if provider_logins or (pl.show_social_logins and login_with_frappe_cloud_url) %}
 <div class="picasso-social">
 	{% if not disable_user_pass_login %}
 	<p class="picasso-social-divider">{{ _("or") }}</p>
@@ -150,7 +150,9 @@
 		--picasso-page-bg: {{ c.page_background or "#F4F5F8" }};
 		--picasso-form-bg: {{ c.form_background or "#FFFFFF" }};
 		--picasso-accent: {{ c.accent_color or "#2563EB" }};
+		--picasso-on-accent: {{ c.on_accent_color or "#FFFFFF" }};
 		--picasso-text: {{ c.text_color or "#1F2937" }};
+		--picasso-copyright: {{ c.copyright_text_color or c.muted_text_color or "#6B7280" }};
 		--picasso-muted: {{ c.muted_text_color or "#6B7280" }};
 		--picasso-input-bg: {{ c.input_background or "#FFFFFF" }};
 		--picasso-input-border: {{ c.input_border_color or "#E5E7EB" }};
@@ -158,13 +160,14 @@
 
 {% macro login_language_switch() %}
 {% if pl.show_language_switch %}
+{% set lang_suffix = ("&redirect-to=" ~ (login_redirect_to | urlencode)) if login_redirect_to else "" %}
 {% set lang_now = current_language or "en" %}
 <div class="picasso-login-lang">
 	<a class="picasso-login-lang__opt {% if lang_now == pl.language_a %}is-active{% endif %}"
-		href="?_lang={{ pl.language_a | urlencode }}">{{ pl.language_a_label | e }}</a>
+		href="?_lang={{ pl.language_a | urlencode }}{{ lang_suffix | e }}">{{ pl.language_a_label | e }}</a>
 	<span class="picasso-login-lang__sep">/</span>
 	<a class="picasso-login-lang__opt {% if lang_now == pl.language_b %}is-active{% endif %}"
-		href="?_lang={{ pl.language_b | urlencode }}">{{ pl.language_b_label | e }}</a>
+		href="?_lang={{ pl.language_b | urlencode }}{{ lang_suffix | e }}">{{ pl.language_b_label | e }}</a>
 </div>
 {% endif %}
 {% endmacro %}

@@ -6,9 +6,6 @@ from typing import Any
 
 import frappe
 from frappe import _
-from frappe.utils import cstr
-
-
 
 STUDIO_KEY = "picasso_studio"
 FEATURE_KEYS = (
@@ -42,7 +39,6 @@ def default_studio() -> dict:
 	return {
 		"density": "cozy",
 		"motion": "on",
-		"accent": "",
 		"toast_position": "bottom-right",
 		"dock_corner": "br",
 		"features": {key: True for key in FEATURE_KEYS},
@@ -56,9 +52,6 @@ def _clean_studio(raw: Any) -> dict:
 		out["density"] = data["density"]
 	if data.get("motion") in ("on", "off"):
 		out["motion"] = data["motion"]
-	accent = cstr(data.get("accent") or "").strip()
-	if accent.startswith("#") and len(accent) in (4, 7):
-		out["accent"] = accent
 	if data.get("toast_position") in TOAST_POS:
 		out["toast_position"] = data["toast_position"]
 	if data.get("dock_corner") in DOCK_CORNERS:
@@ -69,7 +62,6 @@ def _clean_studio(raw: Any) -> dict:
 			if key in features:
 				out["features"][key] = bool(features[key])
 	return out
-
 
 
 def get_studio(user: str | None = None) -> dict:
@@ -95,5 +87,3 @@ def save_studio(studio=None):
 	clean = _clean_studio(studio)
 	frappe.defaults.set_user_default(STUDIO_KEY, frappe.as_json(clean))
 	return clean
-
-

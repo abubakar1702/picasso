@@ -45,9 +45,13 @@ def seed_app_screens():
 
 		has_permission = meta.get("has_permission") or hook.get("has_permission")
 		if has_permission:
+			from picasso.apps import allowed_permission_methods
+
 			try:
 				frappe.get_attr(has_permission)
 			except Exception:
+				has_permission = None
+			if has_permission not in allowed_permission_methods():
 				has_permission = None
 
 		doc = frappe.get_doc(

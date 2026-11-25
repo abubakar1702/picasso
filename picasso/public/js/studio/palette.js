@@ -27,7 +27,7 @@ function collect(query) {
 		run: () => document.dispatchEvent(new CustomEvent("picasso:open-panel")),
 	});
 	store.FEATURES.forEach((f) => {
-		const on = store.feature(f.key);
+		const on = store.get().features[f.key] !== false;
 		out.push({
 			id: "feat-" + f.key,
 			title: f.label,
@@ -150,6 +150,7 @@ export function close() {
 export function init() {
 	document.addEventListener("picasso:open-palette", open);
 	document.addEventListener("keydown", (e) => {
+		if (!overlay && !store.feature("palette")) return;
 		if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === "K" || e.key === "k")) {
 			e.preventDefault();
 			overlay ? close() : open();

@@ -9,6 +9,8 @@ import frappe
 from frappe import _
 from frappe.utils import cint
 
+from picasso.cache import clear_settings_cache
+
 COLOR_FIELDS = (
 	"accent_color",
 	"navbar_color_start",
@@ -356,6 +358,36 @@ STOCK_PALETTES = [
 ]
 
 
+def _rgb(color: str | None) -> tuple[int, int, int] | None:
+	value = (color or "").strip().lstrip("#")
+	if len(value) in (3, 4):
+		value = "".join(ch * 2 for ch in value)
+	if len(value) not in (6, 8):
+		return None
+	try:
+		return tuple(int(value[i : i + 2], 16) for i in (0, 2, 4))
+	except ValueError:
+		return None
+
+
+def ink_on(color: str | None) -> str:
+	"""White, or black when white text on `color` would miss WCAG AA (4.5:1)."""
+	rgb = _rgb(color)
+	if not rgb:
+		return "#ffffff"
+	linear = [c / 255 / 12.92 if c / 255 <= 0.04045 else ((c / 255 + 0.055) / 1.055) ** 2.4 for c in rgb]
+	luminance = 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2]
+	return "#ffffff" if 1.05 / (luminance + 0.05) >= 4.5 else "#000000"
+
+
+def blend(ink: str, surface: str, weight: float = 0.78) -> str:
+	"""Mix `ink` into `surface`; falls back to `ink` when either is not a hex color."""
+	a, b = _rgb(ink), _rgb(surface)
+	if not a or not b:
+		return ink
+	return "#" + "".join(f"{round(x * weight + y * (1 - weight)):02x}" for x, y in zip(a, b, strict=True))
+
+
 def colors_from_doc(doc) -> dict:
 	out = dict(DEFAULT_COLORS)
 	for key in COLOR_FIELDS:
@@ -389,7 +421,11 @@ def seed_palettes():
 			payload = {key: spec.get(key) or DEFAULT_COLORS[key] for key in COLOR_FIELDS}
 			if frappe.db.exists("Picasso Palette", title):
 				doc = frappe.get_doc("Picasso Palette", title)
-				# Stock titles are always system-owned (promotes site-seeded copies).
+				if not cint(doc.is_system) and any(
+					(doc.get(key) or "").upper() != value.upper() for key, value in payload.items()
+				):
+					# A site's own palette that happens to share a stock title: leave it alone.
+					continue
 				changed = False
 				if not cint(doc.is_system):
 					doc.is_system = 1
@@ -421,7 +457,7 @@ def seed_palettes():
 	_ensure_desk_palette()
 
 
-@frappe.whitelist()
+@frappe.whitelist(methods=["POST"])
 def duplicate_palette(source_name: str, title: str | None = None):
 	if not source_name:
 		frappe.throw(_("Missing palette"))
@@ -436,7 +472,7 @@ def duplicate_palette(source_name: str, title: str | None = None):
 	return doc.as_dict()
 
 
-@frappe.whitelist()
+@frappe.whitelist(methods=["POST"])
 def set_desk_palette(palette: str):
 	if "System Manager" not in frappe.get_roles():
 		frappe.throw(_("Only System Managers can change the site palette"), frappe.PermissionError)
@@ -444,25 +480,28 @@ def set_desk_palette(palette: str):
 		frappe.throw(_("Invalid palette {0}").format(palette))
 	desk = frappe.get_single("Picasso Desk Settings")
 	desk.palette = palette
-	desk.save(ignore_permissions=True)
-	frappe.cache.delete_value("picasso_desk_settings")
-	frappe.cache.delete_value("picasso_login_settings")
-	from picasso.picasso.desk_settings import get_picasso_desk_settings
-	return get_picasso_desk_settings()
+	desk.save()
+	from picasso.picasso.desk_settings import build_desk_settings
+
+	return build_desk_settings()
 
 
-@frappe.whitelist()
+# Switches the Studio panel may change; everything else goes through the form.
+PANEL_FIELDS = ("redirect_link_workspaces", "show_left_sidebar", "enhance_list_ui")
+
+
+@frappe.whitelist(methods=["POST"])
 def update_desk_settings(key: str, value: Any = None):
 	if "System Manager" not in frappe.get_roles():
 		frappe.throw(_("Only System Managers can modify Desk Settings"), frappe.PermissionError)
+	if key not in PANEL_FIELDS:
+		frappe.throw(_("{0} cannot be changed here").format(frappe.bold(frappe.utils.escape_html(key))))
 	desk = frappe.get_single("Picasso Desk Settings")
-	if hasattr(desk, key):
-		setattr(desk, key, value)
-		desk.save(ignore_permissions=True)
-		frappe.cache.delete_value("picasso_desk_settings")
-		frappe.cache.delete_value("picasso_login_settings")
-	from picasso.picasso.desk_settings import get_picasso_desk_settings
-	return get_picasso_desk_settings()
+	desk.set(key, 1 if cint(value) else 0)
+	desk.save()
+	from picasso.picasso.desk_settings import build_desk_settings
+
+	return build_desk_settings()
 
 
 def _ensure_desk_palette():
@@ -477,5 +516,4 @@ def _ensure_desk_palette():
 	if desk.get("palette"):
 		return
 	desk.db_set("palette", DEFAULT_PALETTE, update_modified=False)
-	frappe.cache.delete_value("picasso_desk_settings")
-	frappe.cache.delete_value("picasso_login_settings")
+	clear_settings_cache()

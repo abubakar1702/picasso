@@ -1,9 +1,9 @@
 # Copyright (c) 2026, Akash and contributors
 # License: MIT. See LICENSE
 
-import frappe
 from frappe.model.document import Document
 
+from picasso.cache import clear_settings_cache
 from picasso.palette import DEFAULT_COLORS, DEFAULT_PALETTE
 
 
@@ -24,10 +24,7 @@ class PicassoDeskSettings(Document):
 				self.set(field, default_val)
 
 	def on_update(self):
-		frappe.cache.delete_value("picasso_desk_settings")
-		frappe.cache.delete_value("picasso_login_settings")
-		# Invalidate boot session cache so all users pick up the new theme on next load.
-		frappe.cache.delete_keys("bootinfo")
+		clear_settings_cache()
 		from picasso.picasso.desk_settings import broadcast_desk_settings
 
 		broadcast_desk_settings()

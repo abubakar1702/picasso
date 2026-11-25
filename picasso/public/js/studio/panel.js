@@ -77,13 +77,21 @@ function build() {
 	const body = el(`<div class="picasso-panel__body"></div>`);
 
 	// ── Appearance Card ───────────────────────────────────────────────
-	const appearance = el(`<div class="picasso-panel__card" data-filter="appearance motion toast">
+	const appearance = el(`<div class="picasso-panel__card" data-filter="appearance motion toast density rows compact cozy roomy">
 		<div class="picasso-panel__label">Appearance</div>
 		<div class="picasso-panel__field">
 			<span>Motion ${reduced ? "· reduced" : ""}</span>
 			<div class="picasso-panel__seg" data-field="motion">
 				<button type="button" data-val="on" class="${s.motion === "on" ? "is-on" : ""}">On</button>
 				<button type="button" data-val="off" class="${s.motion === "off" ? "is-on" : ""}">Off</button>
+			</div>
+		</div>
+		<div class="picasso-panel__field">
+			<span>List density</span>
+			<div class="picasso-panel__seg" data-field="density">
+				${["compact", "cozy", "roomy"]
+					.map((v) => `<button type="button" data-val="${v}" class="${s.density === v ? "is-on" : ""}">${v}</button>`)
+					.join("")}
 			</div>
 		</div>
 		<div class="picasso-panel__field">
@@ -181,11 +189,14 @@ function bind(box) {
 		document.dispatchEvent(new CustomEvent("picasso:open-palette"));
 	});
 
-	// Motion toggle
-	box.querySelector("[data-field='motion']").addEventListener("click", (e) => {
-		const val = e.target.getAttribute("data-val");
-		if (val) store.set({ motion: val });
-		refresh_seg(box, "motion", val);
+	// Segmented choices
+	["motion", "density"].forEach((field) => {
+		box.querySelector(`[data-field='${field}']`).addEventListener("click", (e) => {
+			const val = e.target.getAttribute("data-val");
+			if (!val) return;
+			store.set({ [field]: val });
+			refresh_seg(box, field, val);
+		});
 	});
 
 	// Toast Position
@@ -241,6 +252,7 @@ function refresh_seg(box, field, val) {
 
 export function open() {
 	close();
+	if (!store.enabled()) return;
 	overlay = el(`<div class="picasso-panel-overlay"></div>`);
 	const box = build();
 	bind(box);
@@ -263,11 +275,15 @@ export function close() {
 
 export function init() {
 	document.addEventListener("picasso:open-panel", open);
+	document.addEventListener(store.EVENT_NAME, () => {
+		if (overlay && !store.enabled()) close();
+	});
 	document.addEventListener("keydown", (e) => {
 		if (e.key === "Escape" && overlay) {
 			e.preventDefault();
 			close();
 		}
+		if (!store.enabled()) return;
 		if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === ",") {
 			e.preventDefault();
 			overlay ? close() : open();

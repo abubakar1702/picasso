@@ -142,7 +142,10 @@
 				if (typeof f.set_value === "function") {
 					const res = f.set_value(target_val);
 					if (res && typeof res.then === "function") {
-						return res;
+						// One failing filter must not stop the rest.
+						return Promise.resolve(res).catch((err) => {
+							console.error("Error resetting filter field:", f.df.fieldname, err);
+						});
 					}
 				} else if (typeof f.set_input === "function") {
 					f.set_input(target_val);
@@ -153,8 +156,10 @@
 			return Promise.resolve();
 		});
 
-		return frappe.run_serially(tasks).then(() => {
+		const unlock = () => {
 			report._no_refresh = false;
+		};
+		return Promise.resolve(frappe.run_serially(tasks)).finally(unlock).then(() => {
 			if (typeof report.refresh_filters_dependency === "function") {
 				report.refresh_filters_dependency();
 			}
@@ -170,7 +175,8 @@
 
 		const page = report.page;
 		const label = page_btn_label();
-		const active = has_active_filters(report);
+		const desk = (frappe.boot && frappe.boot.picasso_desk) || {};
+		const active = !!desk.enabled && has_active_filters(report);
 
 		let $btn = page.inner_toolbar
 			? page.inner_toolbar.find(`button[data-label="${encodeURIComponent(label)}"]`)

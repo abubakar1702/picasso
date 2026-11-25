@@ -43,6 +43,9 @@ function series_colors(count) {
 
 function inject(opts) {
 	if (!store.feature("charts")) return opts;
+	// Heatmaps need a scale, and colors someone chose must win.
+	const colors = (opts || {}).colors;
+	if ((opts || {}).type === "heatmap" || (Array.isArray(colors) && colors.some(Boolean))) return opts;
 	const next = Object.assign({}, opts || {});
 	const n = (((next.data || {}).datasets || []).length) || 4;
 	next.colors = series_colors(n);
@@ -54,8 +57,9 @@ export function init() {
 		if (!window.frappe || !frappe.Chart || frappe.Chart._picasso_wrapped) return;
 		const Orig = frappe.Chart;
 		function PicassoChart(element, options) {
-			const chart = new Orig(element, inject(options));
-			registry.push(new WeakRef(chart));
+			const themed = inject(options);
+			const chart = new Orig(element, themed);
+			if (themed !== options) registry.push(new WeakRef(chart));
 			return chart;
 		}
 		PicassoChart.prototype = Orig.prototype;

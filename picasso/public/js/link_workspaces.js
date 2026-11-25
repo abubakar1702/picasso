@@ -28,14 +28,19 @@
 				slugFn(p.title || "") === slug
 		);
 
-		if (!ws || ws.type !== "Link") return;
+		if (!ws) return;
+
+		if (ws.type === "URL") {
+			// replace() so Back does not land on this workspace and redirect again.
+			if (/^(https?:\/\/|\/)/i.test(ws.external_link || "")) window.location.replace(ws.external_link);
+			return;
+		}
+		if (ws.type !== "Link") return;
 
 		if (ws.link_type === "Page" && ws.link_to) {
 			frappe.set_route(ws.link_to);
 		} else if (ws.link_type === "DocType" && ws.link_to) {
 			frappe.set_route("List", ws.link_to);
-		} else if (ws.type === "URL" && ws.external_link) {
-			window.location.href = ws.external_link;
 		}
 	}
 

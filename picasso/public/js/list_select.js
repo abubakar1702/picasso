@@ -4,12 +4,13 @@
 	function paint_clear(list) {
 		if (!list || !list.$result) return;
 
+		const desk = (frappe.boot && frappe.boot.picasso_desk) || {};
 		const count = (list.$checks && list.$checks.length) || 0;
 		const $actions = list.$checkbox_actions || list.$result.find("header .checkbox-actions");
 		if (!$actions.length) return;
 
 		let $btn = $actions.find("." + BTN);
-		if (!count) {
+		if (!count || !desk.enabled) {
 			$btn.remove();
 			return;
 		}

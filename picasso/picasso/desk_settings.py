@@ -14,6 +14,13 @@ def get_picasso_desk_settings() -> dict:
 	if cached is not None:
 		return cached
 
+	settings = build_desk_settings()
+	frappe.cache.set_value(cache_key, settings)
+	return settings
+
+
+def build_desk_settings() -> dict:
+	"""Read settings from the database, bypassing the shared cache."""
 	if not frappe.db.exists("DocType", "Picasso Desk Settings"):
 		return _defaults(enabled=True)
 
@@ -41,18 +48,16 @@ def get_picasso_desk_settings() -> dict:
 		"enhance_list_ui": 1
 		if doc.enhance_list_ui is None or doc.enhance_list_ui == ""
 		else cint(doc.enhance_list_ui),
-		"surface_radius": cint(doc.surface_radius) or 8,
 		"sidebar_width": cint(doc.sidebar_width) or 240,
 		"custom_css": doc.custom_css or "",
 	}
 	settings.update(get_palette_colors(palette_name))
-	frappe.cache.set_value(cache_key, settings)
 	return settings
 
 
 def broadcast_desk_settings() -> dict:
-	"""Rebuild cached tokens and push them to open Desk sessions."""
-	settings = get_picasso_desk_settings()
+	"""Push the saved tokens to open Desk sessions once the save commits."""
+	settings = build_desk_settings()
 	frappe.publish_realtime("picasso_desk_settings", settings, after_commit=True)
 	return settings
 
@@ -70,7 +75,6 @@ def _defaults(enabled: bool = True) -> dict:
 		"language_b_label": "বাং",
 		"palette": DEFAULT_PALETTE,
 		"enhance_list_ui": 1,
-		"surface_radius": 8,
 		"sidebar_width": 240,
 		"custom_css": "",
 		**DEFAULT_COLORS,

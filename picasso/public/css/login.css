@@ -144,7 +144,7 @@ body[data-path="login"] main {
 .picasso-copyright {
 	margin: 16px 0 0;
 	font-size: 12px;
-	color: var(--picasso-muted, #6b7280);
+	color: var(--picasso-copyright, var(--picasso-muted, #6b7280));
 }
 
 .picasso-copyright a {
@@ -490,13 +490,13 @@ body[data-path="login"] main {
 	border: 0 !important;
 	border-radius: var(--picasso-input-radius) !important;
 	background: var(--picasso-accent, #2563eb) !important;
-	color: #fff !important;
+	color: var(--picasso-on-accent, #fff) !important;
 	font-weight: 600;
 	font-size: 0.95rem;
 	--bt-solid-bg: var(--picasso-accent, #2563eb);
 	--bt-solid-bg-hover: var(--picasso-accent, #2563eb);
 	--bt-solid-bg-active: var(--picasso-accent, #2563eb);
-	--bt-solid-fg: #ffffff;
+	--bt-solid-fg: var(--picasso-on-accent, #ffffff);
 	--icon-stroke: currentColor;
 }
 

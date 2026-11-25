@@ -11,6 +11,18 @@ class PicassoAppScreen(Document):
 		if self.app and self.app not in installed:
 			frappe.throw(frappe._("{0} is not an installed app").format(self.app))
 
+		method = (self.has_permission_method or "").strip()
+		self.has_permission_method = method
+		if method:
+			from picasso.apps import allowed_permission_methods
+
+			if method not in allowed_permission_methods():
+				frappe.throw(
+					frappe._("{0} is not a permission check declared by an installed app").format(
+						frappe.bold(frappe.utils.escape_html(method))
+					)
+				)
+
 	def on_update(self):
 		frappe.clear_document_cache("Picasso App Screen", self.name)
 		frappe.cache.delete_keys("bootinfo")
