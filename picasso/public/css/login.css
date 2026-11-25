@@ -542,6 +542,67 @@ body[data-path="login"] main {
 	margin-bottom: 14px;
 }
 
+/* Feedback elements driven by Frappe's login.js */
+.picasso-login .hidden {
+	display: none !important;
+}
+
+.picasso-login .field-error {
+	display: none;
+	margin: 6px 0 0;
+	color: #c53030;
+	font-size: 13px;
+}
+
+.picasso-login .form-group.invalid .field-error {
+	display: block;
+}
+
+.picasso-login .form-group.invalid .form-control {
+	border-color: var(--red-500, #e24c4c) !important;
+}
+
+.picasso-login .login-error-banner,
+.picasso-login .login-success-banner {
+	margin-bottom: 14px;
+	padding: 10px 14px;
+	border-radius: var(--picasso-input-radius);
+	font-size: 14px;
+	line-height: 1.4;
+}
+
+.picasso-login .login-error-banner {
+	background: #fff0f0;
+	color: #9b1c1c;
+}
+
+.picasso-login .login-success-banner {
+	background: #e9f9ef;
+	color: #14622f;
+}
+
+/* Signup comes from Frappe with its own icon, sized by the stock bundle */
+.picasso-login .es-alert > svg {
+	display: none;
+}
+
+.picasso-login .es-button[data-variant="solid"] {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+}
+
+.picasso-login .es-button:disabled {
+	opacity: 0.6;
+}
+
+.picasso-login .resend-link {
+	margin: 0 0 12px;
+	color: var(--picasso-muted, #6b7280);
+	font-size: 13px;
+}
+
 .picasso-login .page-card-body {
 	margin-bottom: 8px;
 }

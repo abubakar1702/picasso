@@ -35,7 +35,7 @@ Configure from **Picasso Login Settings** (single doctype):
 - Role-based visibility per app
 - Custom permission methods
 - Configurable sort order, logos, and home routes
-- Auto-seeds common apps (Frappe, ERPNext, HRMS, ThriveHR) on install
+- Auto-seeds common apps (Frappe, ERPNext, HRMS) on install
 
 ### 📊 Report Print Formats
 **Picasso Report Print Format** doctype:

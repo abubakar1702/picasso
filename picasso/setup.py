@@ -5,21 +5,18 @@ import frappe
 from frappe.utils import cint
 
 SEED_APPS = {
-	"frappe": {"title": "Frappe", "app_home": "/app", "sort_order": 10, "hidden": 1},
+	"frappe": {"title": "Frappe", "sort_order": 10, "hidden": 1},
 	"erpnext": {
 		"title": "ERPNext",
-		"app_home": "/app",
 		"sort_order": 20,
 		"has_permission": "erpnext.check_app_permission",
 	},
 	"hrms": {
 		"title": "HR",
-		"app_home": "/app/overview",
 		"sort_order": 30,
 		"has_permission": "hrms.hr.utils.check_app_permission",
 	},
-	"thrive": {"title": "ThriveHR", "app_home": "/app/thrivehr", "sort_order": 40},
-	"picasso": {"title": "Picasso", "app_home": "/app", "sort_order": 90, "hidden": 1},
+	"picasso": {"title": "Picasso", "sort_order": 90, "hidden": 1},
 }
 
 
@@ -42,9 +39,7 @@ def seed_app_screens():
 		if frappe.db.exists("Picasso App Screen", app):
 			continue
 
-		meta = SEED_APPS.get(
-			app, {"title": frappe.unscrub(app), "app_home": "/app", "sort_order": 100}
-		)
+		meta = SEED_APPS.get(app, {"sort_order": 100})
 		hooks = frappe.get_hooks("add_to_apps_screen", app_name=app) or []
 		hook = hooks[0] if hooks else {}
 
@@ -60,7 +55,8 @@ def seed_app_screens():
 				"doctype": "Picasso App Screen",
 				"app": app,
 				"title": meta.get("title") or hook.get("title") or frappe.unscrub(app),
-				"app_home": meta.get("app_home") or hook.get("route") or "/app",
+				# Blank means "use the app's own route", which can change between versions.
+				"app_home": "",
 				"logo": hook.get("logo") or "",
 				"sort_order": cint(meta.get("sort_order") or 100),
 				"has_permission_method": has_permission,

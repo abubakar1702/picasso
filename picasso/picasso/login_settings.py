@@ -1,29 +1,47 @@
 # Copyright (c) 2026, Akash and contributors
 # License: MIT. See LICENSE
 
+import re
+from urllib.parse import quote, urlsplit
+
 import frappe
 from frappe.utils import cint, sanitize_html
 
 from picasso.palette import DEFAULT_COLORS
 from picasso.picasso.desk_settings import get_picasso_desk_settings
 
+# Bump when the cached shape or sanitization changes so stale values are rebuilt.
+CACHE_VERSION = 2
+SAFE_URL_SCHEMES = ("", "http", "https", "mailto", "tel")
+CSS_COLOR = re.compile(r"#[0-9a-f]{3,8}|(?:rgb|hsl)a?\([\d\s.,%/]+\)", re.IGNORECASE)
+
+
+def safe_url(value) -> str:
+	"""Return a URL safe for href/src attributes and CSS url(''), or an empty string."""
+	# Browsers ignore control characters, so "java\tscript:" must not slip through.
+	url = re.sub(r"[\x00-\x1f\x7f]", "", value or "").strip()
+	try:
+		scheme = urlsplit(url).scheme
+	except ValueError:
+		return ""
+	if scheme.lower() not in SAFE_URL_SCHEMES:
+		return ""
+	return quote(url, safe="/:?#[]@!$&*+,;=%~")
+
+
+def safe_color(value) -> str:
+	"""Return a plain CSS color, or an empty string so the template default applies."""
+	color = (value or "").strip()
+	return color if CSS_COLOR.fullmatch(color) else ""
+
 
 def get_picasso_login_settings() -> dict:
 	"""Return Picasso Login Settings as a plain dict (cached)."""
 	cache_key = "picasso_login_settings"
 	cached = frappe.cache.get_value(cache_key)
-	if cached is not None and "use_theme_palette" not in cached:
+	if cached is not None and cached.get("cache_version") != CACHE_VERSION:
 		cached = None
 	if cached is not None:
-		if "has_visual" not in cached:
-			cached["slides"] = [
-				s for s in (cached.get("slides") or []) if (s.get("image") or "").strip()
-			]
-			cached["has_visual"] = _should_show_visual(
-				cached.get("show_visual_panel"),
-				cached["slides"],
-				cached.get("visual_video") or "",
-			)
 		return cached
 
 	if not frappe.db.exists("DocType", "Picasso Login Settings"):
@@ -39,8 +57,8 @@ def get_picasso_login_settings() -> dict:
 	links = [
 		{
 			"label": row.label,
-			"url": row.url,
-			"icon": row.icon,
+			"url": safe_url(row.url),
+			"icon": safe_url(row.icon),
 			"placement": row.placement or "form_footer",
 		}
 		for row in (doc.get("links") or [])
@@ -50,13 +68,14 @@ def get_picasso_login_settings() -> dict:
 
 	# Sanitize HTML fields to prevent stored XSS on the public login page.
 	raw_subheading = doc.subheading_html or ""
-	safe_subheading = sanitize_html(raw_subheading) if raw_subheading else ""
+	safe_subheading = sanitize_html(raw_subheading, always_sanitize=True) if raw_subheading else ""
 
 	show_visual_panel = cint(doc.show_visual_panel)
-	visual_video = doc.visual_video or ""
+	visual_video = safe_url(doc.visual_video)
 	raw_enabled = doc.get("enabled")
 	enabled = 1 if raw_enabled in (None, "") else cint(raw_enabled)
 	settings = {
+		"cache_version": CACHE_VERSION,
 		"enabled": enabled,
 		"show_visual_panel": show_visual_panel,
 		"has_visual": _should_show_visual(show_visual_panel, slides, visual_video),
@@ -64,14 +83,14 @@ def get_picasso_login_settings() -> dict:
 		"show_social_logins": cint(doc.show_social_logins or 1),
 		"carousel_interval": cint(doc.carousel_interval or 5),
 		"visual_video": visual_video,
-		"logo": doc.logo,
-		"visual_logo": doc.visual_logo,
+		"logo": safe_url(doc.logo),
+		"visual_logo": safe_url(doc.visual_logo),
 		"heading": doc.heading or "Log in",
 		"subheading_html": safe_subheading,
-		"back_to_website_url": doc.back_to_website_url or "",
+		"back_to_website_url": safe_url(doc.back_to_website_url),
 		"back_to_website_label": doc.back_to_website_label or "Back to website",
 		"copyright_text": doc.copyright_text or "",
-		"copyright_url": doc.copyright_url or "",
+		"copyright_url": safe_url(doc.copyright_url),
 		"copyright_url_label": doc.copyright_url_label or "",
 		"slides": slides,
 		"links": links,
@@ -91,7 +110,7 @@ def _photo_slides(rows) -> list:
 	"""Return carousel slides that actually have an image attached."""
 	out = []
 	for row in rows or []:
-		image = (row.image or "").strip()
+		image = safe_url(row.image)
 		if not image:
 			continue
 		out.append(
@@ -164,9 +183,9 @@ def _apply_login_theme(settings: dict, desk: dict | None, doc=None) -> None:
 			or light["copyright_text_color"],
 		}
 		dark = None
-	settings.update(colors)
+	settings.update({key: safe_color(value) for key, value in colors.items()})
 	settings["use_theme_palette"] = use_theme_palette
-	settings["dark"] = dark
+	settings["dark"] = {key: safe_color(value) for key, value in dark.items()} if dark else None
 
 
 def _default_settings(enabled: bool = True) -> dict:

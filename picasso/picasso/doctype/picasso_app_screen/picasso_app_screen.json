@@ -35,7 +35,7 @@
    "reqd": 1
   },
   {
-   "description": "Desk route after opening this app, e.g. /app/thrivehr or /app.",
+   "description": "Desk route after opening this app, e.g. /desk/hr-setup. Leave blank to use the app's own route.",
    "fieldname": "app_home",
    "fieldtype": "Data",
    "in_list_view": 1,

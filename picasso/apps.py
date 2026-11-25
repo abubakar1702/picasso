@@ -9,27 +9,52 @@ from frappe.apps import get_apps as frappe_get_apps
 from frappe.apps import get_route as frappe_get_route
 
 
-def _screen_to_app(doc) -> dict:
-	workspaces = [row.workspace for row in (doc.get("workspaces") or []) if row.workspace]
-	route = doc.app_home
-	if not route and workspaces:
-		route = "/app/" + frappe.utils.slug(workspaces[0])
-	if not route:
-		route = "/app"
+def _active_apps() -> list[str]:
+	"""Installed apps that are not disabled (older Frappe has no disabled state)."""
+	getter = getattr(frappe, "get_active_apps", None) or frappe.get_installed_apps
+	return getter()
 
+
+def _custom_route(doc) -> str:
+	"""Route chosen on the screen, or "" to use the app's own route."""
+	route = (doc.app_home or "").strip()
+	if route.rstrip("/") == "/app":
+		# Value seeded by older Picasso versions; it never meant a real destination.
+		route = ""
+	if not route:
+		workspaces = [row.workspace for row in (doc.get("workspaces") or []) if row.workspace]
+		route = "/desk/" + frappe.utils.slug(workspaces[0]) if workspaces else ""
+	if route.startswith("/app/"):
+		route = "/desk/" + route[len("/app/") :]
+	return route
+
+
+def _screen_to_app(doc) -> dict:
 	return {
 		"name": doc.app,
 		"logo": doc.logo or "",
 		"title": _(doc.title or frappe.unscrub(doc.app)),
-		"route": route,
+		"route": _custom_route(doc) or "/desk",
 	}
+
+
+def _overlay(app: dict, doc) -> dict:
+	"""Apply a screen's branding on top of Frappe's own entry."""
+	out = dict(app)
+	if doc.title:
+		out["title"] = _(doc.title)
+	if doc.logo:
+		out["logo"] = doc.logo
+	if route := _custom_route(doc):
+		out["route"] = route
+	return out
 
 
 def _user_can_see(doc) -> bool:
 	if cint(doc.hidden):
 		return False
 
-	if doc.app not in frappe.get_installed_apps():
+	if doc.app not in _active_apps():
 		return False
 
 	roles = [row.role for row in (doc.get("roles") or []) if row.role]
@@ -61,46 +86,74 @@ def get_configured_apps(ignore_permission: bool = False) -> list[dict]:
 	if not names:
 		return []
 
-	installed = set(frappe.get_installed_apps())
+	active = set(_active_apps())
 	apps = []
 	for name in names:
 		doc = frappe.get_cached_doc("Picasso App Screen", name)
-		if doc.app not in installed:
+		if doc.app not in active:
 			continue
 		if ignore_permission or _user_can_see(doc):
 			apps.append(_screen_to_app(doc))
 	return apps
 
 
+def _get_screens() -> list:
+	if not frappe.db.exists("DocType", "Picasso App Screen"):
+		return []
+	names = frappe.get_all("Picasso App Screen", pluck="name", order_by="sort_order asc, title asc")
+	return [frappe.get_cached_doc("Picasso App Screen", name) for name in names]
+
+
 @frappe.whitelist()
 def get_apps():
-	if not frappe.db.exists("DocType", "Picasso App Screen"):
-		return frappe_get_apps()
+	"""Frappe's app list with screen branding, order and visibility applied.
 
-	# If any screens have been configured, use them (even if result is empty).
-	if frappe.db.count("Picasso App Screen"):
-		return get_configured_apps()
+	Frappe decides which hooked apps are available (disabled, docked and setup-wizard
+	rules); screens can only restrict those, or add apps that have no hook.
+	"""
+	core_apps = frappe_get_apps()
+	screens = _get_screens()
+	if not screens:
+		return core_apps
 
-	return frappe_get_apps()
+	by_app = {doc.app: doc for doc in screens}
+	entries = []
+	for app in core_apps:
+		doc = by_app.get(app["name"])
+		if not doc:
+			entries.append((100, app))
+		elif _user_can_see(doc):
+			entries.append((cint(doc.sort_order), _overlay(app, doc)))
+
+	listed = {app["name"] for app in core_apps}
+	for doc in screens:
+		if doc.app in listed or not _user_can_see(doc):
+			continue
+		# Frappe never lists itself; any other hooked app was left out on purpose.
+		if doc.app == "frappe" or not frappe.get_hooks("add_to_apps_screen", app_name=doc.app):
+			entries.append((cint(doc.sort_order), _screen_to_app(doc)))
+
+	entries.sort(key=lambda entry: entry[0])
+	return [app for _order, app in entries]
 
 
 def get_route(app_name):
-	if frappe.db.exists("DocType", "Picasso App Screen") and frappe.db.exists(
-		"Picasso App Screen", app_name
-	):
+	route = frappe_get_route(app_name)
+	if app_name not in _active_apps():
+		return route
+	if frappe.db.exists("DocType", "Picasso App Screen") and frappe.db.exists("Picasso App Screen", app_name):
 		doc = frappe.get_cached_doc("Picasso App Screen", app_name)
-		return _screen_to_app(doc).get("route") or "/apps"
-	return frappe_get_route(app_name)
+		if custom := _custom_route(doc):
+			return custom
+		if not frappe.get_hooks("add_to_apps_screen", app_name=app_name):
+			return "/desk"
+	return route
 
 
 def apps_context(context):
 	path = getattr(getattr(frappe, "request", None), "path", "") or ""
-	if path.rstrip("/") != "/apps":
-		return context
-
-	configured = get_configured_apps()
-	if configured:
-		context["apps"] = configured
+	if path.rstrip("/") == "/apps":
+		context["apps"] = get_apps()
 	return context
 
 
